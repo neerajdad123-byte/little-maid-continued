@@ -52,15 +52,15 @@ public class TileEntityGomoku extends TileEntityJoy implements IBoardGameEntityB
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
-        ListTag listTag = getPersistentData().getList(CHESS_DATA, Tag.TAG_BYTE_ARRAY);
+        ListTag listTag = getPersistentData().getListOrEmpty(CHESS_DATA);
         for (int i = 0; i < listTag.size(); i++) {
             ByteArrayTag byteArray = (ByteArrayTag) listTag.get(i);
             this.chessData[i] = byteArray.getAsByteArray();
         }
-        this.statue = getPersistentData().getInt(STATUE);
-        this.playerTurn = getPersistentData().getBoolean(PLAYER_TURN);
-        this.chessCounter = getPersistentData().getInt(CHESS_COUNTER);
-        this.latestChessPoint = Point.fromTag(getPersistentData().getCompound(LATEST_CHESS_POINT));
+        this.statue = getPersistentData().getIntOr(STATUE, 0);
+        this.playerTurn = getPersistentData().getBooleanOr(PLAYER_TURN, false);
+        this.chessCounter = getPersistentData().getIntOr(CHESS_COUNTER, 0);
+        this.latestChessPoint = Point.fromTag(getPersistentData().getCompoundOrEmpty(LATEST_CHESS_POINT));
     }
 
     public void reset() {

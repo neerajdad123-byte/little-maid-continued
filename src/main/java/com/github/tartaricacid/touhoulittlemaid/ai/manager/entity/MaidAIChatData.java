@@ -60,8 +60,8 @@ public abstract class MaidAIChatData extends MaidAIChatSerializable {
                 TouhouLittleMaid.LOGGER.error("Failed to parse MaidHistoryChat", e);
             }
         }
-        this.compressedSummary = tag.getString(MAID_HISTORY_SUMMARY_TAG);
-        this.lastChatTokenUsage = tag.getInt(MAID_LAST_CHAT_TOKEN_USAGE_TAG);
+        this.compressedSummary = tag.getStringOr(MAID_HISTORY_SUMMARY_TAG, "");
+        this.lastChatTokenUsage = tag.getIntOr(MAID_LAST_CHAT_TOKEN_USAGE_TAG, 0);
         return super.readFromTag(tag);
     }
 

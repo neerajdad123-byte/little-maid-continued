@@ -1,14 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.compat.patchouli;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.common.NeoForge;
-
+// Little Maid Continued: no-op stub. The real integration lives in src/compat_disabled and is
+// re-enabled once the mod has a build for this Minecraft version.
 public class PatchouliCompat {
     public static void init() {
-        MultiblockRegistry.init();
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            NeoForge.EVENT_BUS.register(new OpenDefaultBook());
-        }
     }
 }

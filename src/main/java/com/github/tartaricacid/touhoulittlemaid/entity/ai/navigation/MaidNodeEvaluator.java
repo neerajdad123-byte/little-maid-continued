@@ -69,7 +69,7 @@ public class MaidNodeEvaluator extends WalkNodeEvaluator {
         int z = pos.getZ();
 
         PathType pathType = getMaidBlockPathTypeRaw(context, x, y, z);
-        if (pathType == PathType.OPEN && y >= context.level().getMinBuildHeight() + 1) {
+        if (pathType == PathType.OPEN && y >= context.level().getMinY() + 1) {
             return switch (getMaidBlockPathTypeRaw(context, x, y - 1, z)) {
                 case OPEN, WATER, LAVA, WALKABLE -> PathType.OPEN;
                 case DAMAGE_FIRE -> PathType.DAMAGE_FIRE;

@@ -158,13 +158,11 @@ public class LLMSiteEditorScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fillGradient(0, 0, this.width, this.height, 0xc0101010, 0xc0101010);
 
         // 居中标题
-        graphics.drawCenteredString(this.font, llmEditorTitle(this.siteDisplayName),
-                this.startX + BASE_WIDTH / 2, this.startY + 4, 0xFFF3EFE0);
+        graphics.centeredText(this.font, llmEditorTitle(this.siteDisplayName), this.startX + BASE_WIDTH / 2, this.startY + 4, 0xFFF3EFE0);
 
         this.renderInputField(graphics, this.siteIdInput, mouseX, mouseY, partialTick);
         this.renderInputField(graphics, this.urlInput, mouseX, mouseY, partialTick);
@@ -173,14 +171,14 @@ public class LLMSiteEditorScreen extends Screen {
         this.renderModelArea(graphics, mouseX, mouseY, partialTick);
 
         for (Renderable renderable : this.renderables) {
-            renderable.render(graphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(graphics, mouseX, mouseY, partialTick);
         }
 
         // 提示显示 2 秒
         if (System.currentTimeMillis() - this.tipTimestamp < 2000) {
             int x = this.startX + BASE_WIDTH - 155;
             int y = this.startY + BASE_HEIGHT - 35;
-            graphics.drawCenteredString(this.font, this.statusMessage, x, y, 0xFFFF7777);
+            graphics.centeredText(this.font, this.statusMessage, x, y, 0xFFFF7777);
         }
     }
 
@@ -190,9 +188,9 @@ public class LLMSiteEditorScreen extends Screen {
         int width = box.getInnerWidth() + 12;
         int height = box.getHeight() + 3;
 
-        graphics.drawString(this.font, box.getMessage(), x + 2, y - 10, LABEL_COLOR, false);
+        graphics.text(this.font, box.getMessage(), x + 2, y - 10, LABEL_COLOR, false);
         graphics.fill(x, y, x + width, y + height, 0xAA111111);
-        box.render(graphics, mouseX, mouseY, partialTick);
+        box.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
     private void renderModelArea(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
@@ -200,7 +198,7 @@ public class LLMSiteEditorScreen extends Screen {
         int top = (int) this.modelArea.y;
 
         // 标题
-        graphics.drawString(this.font, MODELS_NAME, left + 2, top - 12, LABEL_COLOR);
+        graphics.text(this.font, MODELS_NAME, left + 2, top - 12, LABEL_COLOR);
 
         // 确定滚动起始值
         int visibleCount = this.getVisibleModelCount();
@@ -219,7 +217,7 @@ public class LLMSiteEditorScreen extends Screen {
             if (row.nameBox != null) {
                 int rowLeft = (int) this.modelArea.x;
                 graphics.fill(rowLeft, rowY - 4, rowLeft + row.nameBox.getInnerWidth(), rowY + 20 - 4, 0xAA111111);
-                row.nameBox.render(graphics, mouseX, mouseY, partialTick);
+                row.nameBox.extractRenderState(graphics, mouseX, mouseY, partialTick);
             }
         }
         graphics.disableScissor();
@@ -237,11 +235,7 @@ public class LLMSiteEditorScreen extends Screen {
             // 根据当前滚动偏移量，按比例计算滑块在轨道中的 Y 偏移
             int thumbOffset = (trackHeight - thumbHeight) * this.modelScrollOffset / scrollRange;
             // 在模型区域的右侧绘制一个 2px 宽的绿色滑块
-            graphics.fill((int) this.modelArea.right() - 4,
-                    trackTop + thumbOffset,
-                    (int) this.modelArea.right() - 2,
-                    trackTop + thumbOffset + thumbHeight,
-                    0xFF55FF55);
+            graphics.fill((int) this.modelArea.right() - 4, trackTop + thumbOffset, (int) this.modelArea.right() - 2, trackTop + thumbOffset + thumbHeight, 0xFF55FF55);
         }
     }
 

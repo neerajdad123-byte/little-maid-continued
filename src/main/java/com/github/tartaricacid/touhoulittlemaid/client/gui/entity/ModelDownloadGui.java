@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.download.InfoGetManager;
@@ -80,7 +82,7 @@ public class ModelDownloadGui extends Screen {
         textField.setTextColor(0xF3EFE0);
         textField.setFocused(focus);
         textField.setValue(textCache);
-        textField.moveCursorToEnd(Screen.hasShiftDown());
+        textField.moveCursorToEnd(Minecraft.getInstance().hasShiftDown());
         this.addWidget(this.textField);
     }
 
@@ -183,13 +185,13 @@ public class ModelDownloadGui extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
         super.renderBlurredBackground(pPartialTick);
         this.renderBase(graphics);
         this.renderSearchBox(graphics, mouseX, mouseY, pPartialTick);
         this.renderPageNumber(graphics);
         for (Renderable renderable : this.renderables) {
-            renderable.render(graphics, mouseX, mouseY, pPartialTick);
+            renderable.extractRenderState(graphics, mouseX, mouseY, pPartialTick);
         }
         this.renderBaseButtons(graphics);
         this.renderPackHandleButtons(graphics);
@@ -204,7 +206,7 @@ public class ModelDownloadGui extends Screen {
         List<FormattedCharSequence> split = font.split(Component.translatable("gui.touhou_little_maid.resources_download.fail"), 200);
         int yOffset = y + 100;
         for (FormattedCharSequence sequence : split) {
-            graphics.drawCenteredString(font, sequence, x + 134, yOffset, ChatFormatting.RED.getColor());
+            graphics.centeredText(font, sequence, x + 134, yOffset, PortUtil.color(ChatFormatting.RED));
             yOffset += 12;
         }
     }
@@ -212,28 +214,28 @@ public class ModelDownloadGui extends Screen {
     private void renderPageNumber(GuiGraphicsExtractor graphics) {
         int maxPage = (this.showInfos.size() - 1) / 4;
         String pageInfo = String.format("%d/%d", currentPage + 1, maxPage + 1);
-        graphics.drawString(font, pageInfo, x + 134 - font.width(pageInfo) / 2, y + 227 - font.lineHeight / 2, 0xF3EFE0);
+        graphics.text(font, pageInfo, x + 134 - font.width(pageInfo) / 2, y + 227 - font.lineHeight / 2, 0xFFF3EFE0);
     }
 
     private void renderPackHandleButtons(GuiGraphicsExtractor graphics) {
         if (0 <= this.selectIndex && this.selectIndex < this.showInfos.size()) {
             DownloadInfo info = this.showInfos.get(this.selectIndex);
-            graphics.drawCenteredString(font, Component.translatable(info.getName()), x + 345, y + 34, 0xffffff);
-            graphics.blit(BG, x + 400, y + 52, 0, 16, 16, 16);
-            graphics.blit(BG, x + 274, y + 52, 16, 16, 16, 16);
+            graphics.centeredText(font, Component.translatable(info.getName()), x + 345, y + 34, 0xFFFFFFFF);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BG, x + 400, y + 52, 0, 16, 16, 16, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BG, x + 274, y + 52, 16, 16, 16, 16, 256, 256);
         }
     }
 
     private void renderBaseButtons(GuiGraphicsExtractor graphics) {
-        graphics.blit(BG, x + 402, y + 4, 32, 16, 16, 16);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG, x + 402, y + 4, 32, 16, 16, 16, 256, 256);
     }
 
     private void renderSearchBox(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        graphics.drawString(font, Component.translatable("gui.touhou_little_maid.resources_download.hot_search"), x + 274, y + 102, 0xffffff);
-        graphics.drawWordWrap(font, Component.translatable("gui.touhou_little_maid.resources_download.hot_search_key"), x + 274, y + 115, 146, ChatFormatting.GRAY.getColor());
-        textField.render(graphics, pMouseX, pMouseY, pPartialTick);
+        graphics.text(font, Component.translatable("gui.touhou_little_maid.resources_download.hot_search"), x + 274, y + 102, 0xFFFFFFFF);
+        graphics.textWithWordWrap(font, Component.translatable("gui.touhou_little_maid.resources_download.hot_search_key"), x + 274, y + 115, 146, PortUtil.color(ChatFormatting.GRAY));
+        textField.extractRenderState(graphics, pMouseX, pMouseY, pPartialTick);
         if (textField.getValue().isEmpty() && !textField.isFocused()) {
-            graphics.drawString(font, Component.translatable("gui.touhou_little_maid.resources_download.search").withStyle(ChatFormatting.ITALIC), x + 277, y + 83, 0x777777);
+            graphics.text(font, Component.translatable("gui.touhou_little_maid.resources_download.search").withStyle(ChatFormatting.ITALIC), x + 277, y + 83, 0xFF777777);
         }
     }
 

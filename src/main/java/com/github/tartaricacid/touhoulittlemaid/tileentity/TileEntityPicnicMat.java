@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
@@ -86,7 +87,7 @@ public class TileEntityPicnicMat extends BlockEntity {
 
     @Override
     protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        getPersistentData().put(CENTER_POS_NAME, NbtUtils.writeBlockPos(centerPos));
+        getPersistentData().put(CENTER_POS_NAME, PortUtil.writeBlockPos(centerPos));
         getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
         ListTag listTag = new ListTag();
         for (UUID uuid : sitIds) {
@@ -101,7 +102,7 @@ public class TileEntityPicnicMat extends BlockEntity {
         super.loadAdditional(pTag, pRegistries);
         NbtUtils.readBlockPos(getPersistentData(), CENTER_POS_NAME).ifPresent(pos -> centerPos = pos);
         this.handler.deserializeNBT(pRegistries, getPersistentData().getCompound(STORAGE_ITEM));
-        ListTag sitIdsTag = getPersistentData().getList(SIT_IDS, Tag.TAG_INT_ARRAY);
+        ListTag sitIdsTag = getPersistentData().getListOrEmpty(SIT_IDS);
         int i = 0;
         for (Tag tag : sitIdsTag) {
             this.sitIds[i] = NbtUtils.loadUUID(tag);

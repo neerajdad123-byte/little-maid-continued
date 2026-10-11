@@ -21,7 +21,7 @@ public class MaidUpdateActivityFromSchedule extends Behavior<EntityMaid> {
     @Override
     protected void start(ServerLevel level, EntityMaid maid, long gameTime) {
         Brain<EntityMaid> brain = maid.getBrain();
-        long dayTime = level.getDayTime();
+        long dayTime = level.getOverworldClockTime();
 
         // 让女仆在切换日程表时能够改变自己的活动范围
         if (gameTime - brain.lastScheduleUpdate > 20L) {
@@ -56,7 +56,7 @@ public class MaidUpdateActivityFromSchedule extends Behavior<EntityMaid> {
     }
 
     private static void updateActivityFromSchedule(ServerLevel level, EntityMaid maid, Brain<EntityMaid> brain, long gameTime) {
-        long dayTime = level.getDayTime();
+        long dayTime = level.getOverworldClockTime();
         if (maid.isMaidInSittingPose() || maid.isPassenger()) {
             if (gameTime - brain.lastScheduleUpdate > 20L) {
                 brain.lastScheduleUpdate = gameTime;

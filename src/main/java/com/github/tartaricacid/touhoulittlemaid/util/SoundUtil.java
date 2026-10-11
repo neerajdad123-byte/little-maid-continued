@@ -18,7 +18,7 @@ public final class SoundUtil {
         Level world = maid.level();
         RandomSource rand = maid.getRandom();
         BlockPos pos = maid.blockPosition();
-        long dayTime = world.getDayTime();
+        long dayTime = world.getOverworldClockTime();
         Biome biome = world.getBiome(pos).value();
 
         // 差不多早上 6:00 - 9:00

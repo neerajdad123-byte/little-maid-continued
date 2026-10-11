@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.game.chess.Position;
 import com.github.tartaricacid.touhoulittlemaid.block.BlockGomoku;
@@ -102,7 +103,7 @@ public class TileEntityWChessRenderer implements BlockEntityRenderer<TileEntityW
 
     private void renderPiece(TileEntityWChess cchess, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn, Direction facing) {
         if (inRenderDistance(cchess, PIECE_RENDER_DISTANCE)) {
-            VertexConsumer piecesBuff = bufferIn.getBuffer(RenderType.entityCutoutNoCull(PIECES_TEXTURE));
+            VertexConsumer piecesBuff = bufferIn.getBuffer(RenderTypes.entityCutout(PIECES_TEXTURE));
             int selectX = Position.FILE_X(cchess.getSelectChessPoint());
             int selectY = Position.RANK_Y(cchess.getSelectChessPoint());
             byte[] data = cchess.getChessData().squares;
@@ -152,7 +153,7 @@ public class TileEntityWChessRenderer implements BlockEntityRenderer<TileEntityW
         if (facing == Direction.SOUTH || facing == Direction.NORTH) {
             poseStack.mulPose(Axis.YN.rotationDegrees(180));
         }
-        VertexConsumer checkerBoardBuff = bufferIn.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
+        VertexConsumer checkerBoardBuff = bufferIn.getBuffer(RenderTypes.entityCutout(TEXTURE));
         chessModel.renderToBuffer(poseStack, checkerBoardBuff, combinedLightIn, combinedOverlayIn);
         poseStack.popPose();
     }

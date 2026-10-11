@@ -45,14 +45,14 @@ public class EmojiChatBubbleData implements IChatBubbleData {
     public static class EmojiChatSerializer implements IChatBubbleData.ChatSerializer {
         @Override
         public IChatBubbleData readFromBuff(FriendlyByteBuf buf) {
-            Identifier bg = buf.readResourceLocation();
+            Identifier bg = buf.readIdentifier();
             return new EmojiChatBubbleData(bg);
         }
 
         @Override
         public void writeToBuff(FriendlyByteBuf buf, IChatBubbleData data) {
             EmojiChatBubbleData emojiChat = (EmojiChatBubbleData) data;
-            buf.writeResourceLocation(emojiChat.bg);
+            buf.writeIdentifier(emojiChat.bg);
         }
     }
 }

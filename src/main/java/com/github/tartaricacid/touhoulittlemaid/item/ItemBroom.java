@@ -51,7 +51,7 @@ public class ItemBroom extends Item {
                     world.playSound(null, broom.getX(), broom.getY(), broom.getZ(), SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
                 }
                 stack.shrink(1);
-                return InteractionResult.sidedSuccess(world.isClientSide());
+                return InteractionResult.SUCCESS;
             }
         }
         return InteractionResult.FAIL;

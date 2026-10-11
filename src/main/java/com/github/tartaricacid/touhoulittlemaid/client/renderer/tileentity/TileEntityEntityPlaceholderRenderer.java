@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.model.EntityPlaceholderModel;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemEntityPlaceholder;
@@ -64,7 +65,7 @@ public class TileEntityEntityPlaceholderRenderer extends BlockEntityWithoutLevel
             Identifier texture = getTexture(recipeId);
             poseStack.translate(0.5, 1.5, 0.5);
             poseStack.mulPose(Axis.ZN.rotationDegrees(180));
-            VertexConsumer buffer = bufferIn.getBuffer(RenderType.entityCutoutNoCull(texture));
+            VertexConsumer buffer = bufferIn.getBuffer(RenderTypes.entityCutout(texture));
             BASE_MODEL.renderToBuffer(poseStack, buffer, combinedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
         }
         poseStack.popPose();

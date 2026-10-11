@@ -6,7 +6,6 @@ import com.github.tartaricacid.touhoulittlemaid.ai.agent.skill.SkillLoader;
 import com.github.tartaricacid.touhoulittlemaid.ai.agent.tool.ToolRegister;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.SerializerRegister;
 import com.github.tartaricacid.touhoulittlemaid.block.multiblock.MultiBlockManager;
-import com.github.tartaricacid.touhoulittlemaid.compat.curios.menu.CuriosContainer;
 import com.github.tartaricacid.touhoulittlemaid.compat.ysm.YsmCompat;
 import com.github.tartaricacid.touhoulittlemaid.debug.target.DebugMaidManager;
 import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.ExtraMaidBrainManager;
@@ -43,11 +42,7 @@ public final class CommonRegistry {
     @SubscribeEvent
     public static void onRegisterEvent(RegisterEvent event) {
         if (event.getRegistry().equals(BuiltInRegistries.MENU)) {
-            // Curios 兼容
-            if (ModList.get().isLoaded(CompatRegistry.CURIOS)) {
-                Identifier id = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "curios_container");
-                event.register(BuiltInRegistries.MENU.key(), id, () -> CuriosContainer.TYPE);
-            }
+            // Curios 兼容 (Little Maid Continued: disabled until Curios compat is re-enabled)
         }
     }
 

@@ -270,7 +270,7 @@ public class BlockGomoku extends BlockJoy implements IBoardGameBlock {
 
             // 然后是下棋，必须空手
             if (!itemStack.isEmpty()) {
-                return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.PASS;
             }
 
             if (isClickChessBox(location.x, location.z, part, facing)) {
@@ -335,7 +335,7 @@ public class BlockGomoku extends BlockJoy implements IBoardGameBlock {
                 return InteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
     @Nullable

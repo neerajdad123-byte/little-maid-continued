@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.client.gui.ITooltipButton;
 import com.google.common.collect.Lists;
@@ -28,12 +29,11 @@ public class MaidTabButton extends Button implements ITooltipButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.enableDepthTest();
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         if (!this.active) {
-            graphics.blit(SIDE, this.getX(), this.getY(), left, 21, this.width, this.height, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, SIDE, this.getX(), this.getY(), left, 21, this.width, this.height, 256, 256);
         }
-        graphics.blit(SIDE, this.getX() + 4, this.getY() + 6, left, 47, 16, 16, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, SIDE, this.getX() + 4, this.getY() + 6, left, 47, 16, 16, 256, 256);
     }
 
     @Override
@@ -44,6 +44,6 @@ public class MaidTabButton extends Button implements ITooltipButton {
     @Override
     public void renderTooltip(GuiGraphicsExtractor graphics, Minecraft mc, int mouseX, int mouseY) {
         Font font = Minecraft.getInstance().font;
-        graphics.renderComponentTooltip(font, tooltips, mouseX, mouseY);
+        graphics.setComponentTooltipForNextFrame(font, tooltips, mouseX, mouseY);
     }
 }

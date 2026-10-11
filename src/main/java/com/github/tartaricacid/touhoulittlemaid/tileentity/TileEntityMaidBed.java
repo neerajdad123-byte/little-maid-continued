@@ -38,7 +38,7 @@ public class TileEntityMaidBed extends BlockEntity {
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        color = DyeColor.byId(getPersistentData().getInt(COLOR_TAG));
+        color = DyeColor.byId(getPersistentData().getIntOr(COLOR_TAG, 0));
     }
 
     @Override

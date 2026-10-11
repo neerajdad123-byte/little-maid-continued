@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.layer;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockPart;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IMaid;
@@ -62,7 +63,7 @@ public class LayerMaidBanner extends RenderLayer<Mob, BedrockModel<Mob>> {
             matrixStack.translate(0, 0.5, 0.025);
             matrixStack.scale(0.5F, 0.5F, 0.5F);
             matrixStack.mulPose(Axis.XN.rotationDegrees(5));
-            VertexConsumer buffer = bufferIn.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
+            VertexConsumer buffer = bufferIn.getBuffer(RenderTypes.entityCutout(TEXTURE));
             this.bannerModel.renderToBuffer(matrixStack, buffer, packedLightIn, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
             BannerPatternLayers patterns = maid.getBackpackShowItem().get(DataComponents.BANNER_PATTERNS);
             DyeColor dyeColor = ((AbstractBannerBlock) bannerItem.getBlock()).getColor();

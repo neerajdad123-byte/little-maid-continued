@@ -17,7 +17,7 @@ public class ItemPowerPoint extends Item {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.EXPERIENCE_BOTTLE_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (player.getRandom().nextFloat() * 0.4F + 0.8F));
         if (!world.isClientSide()) {
@@ -30,6 +30,6 @@ public class ItemPowerPoint extends Item {
         if (!player.isCreative()) {
             stack.shrink(1);
         }
-        return InteractionResult.sidedSuccess(stack, world.isClientSide());
+        return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
     }
 }

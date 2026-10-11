@@ -80,7 +80,7 @@ public class BlockMaidBeacon extends BaseEntityBlock {
             if (!worldIn.isClientSide() && player instanceof ServerPlayer serverPlayer) {
                 PacketDistributor.sendToPlayer(serverPlayer, new OpenBeaconGuiPackage(pos));
             }
-            return InteractionResult.sidedSuccess(worldIn.isClientSide());
+            return InteractionResult.SUCCESS;
         }
         return super.useItemOn(itemStack, state, worldIn, pos, player, handIn, hit);
     }
@@ -151,7 +151,7 @@ public class BlockMaidBeacon extends BaseEntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos blockpos = context.getClickedPos();
         Level world = context.getLevel();
-        int maxHeight = world.getMaxBuildHeight() - 1;
+        int maxHeight = world.getMaxY() + 1 - 1;
         if (blockpos.getY() < maxHeight && world.getBlockState(blockpos.above()).canBeReplaced(context)) {
             return super.getStateForPlacement(context);
         }

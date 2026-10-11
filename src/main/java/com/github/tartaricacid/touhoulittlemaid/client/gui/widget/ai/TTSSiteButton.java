@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.ai;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.tts.TTSSite;
@@ -36,7 +37,7 @@ public class TTSSiteButton extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, 0xbf_090909, 0xbf_090909);
         if (this.isHoveredOrFocused()) {
             graphics.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, 0x2f_F3EFE0, 0x2f_F3EFE0);
@@ -44,14 +45,12 @@ public class TTSSiteButton extends Button {
 
         this.renderString(graphics, Minecraft.getInstance().font, 0xF3EFE0);
 
-        RenderSystem.enableBlend();
         // 站点图标（左侧）
-        graphics.blit(this.site.icon(), this.getX() + 6, this.getY() + 4, 0, 0, 16, 16, 16, 16);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, this.site.icon(), this.getX() + 6, this.getY() + 4, 0, 0, 16, 16, 16, 16);
         // 启用按钮（右侧）
-        graphics.blit(MISC, this.getX() + this.width - 46, this.getY() + 4, this.site.enabled() ? 16 : 0, 0, 16, 16);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, MISC, this.getX() + this.width - 46, this.getY() + 4, this.site.enabled() ? 16 : 0, 0, 16, 16, 256, 256);
         // 编辑按钮（最右侧）
-        graphics.blit(MISC, this.getX() + this.width - 24, this.getY() + 4, 16, 16, 16, 16);
-        RenderSystem.disableBlend();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, MISC, this.getX() + this.width - 24, this.getY() + 4, 16, 16, 16, 16, 256, 256);
     }
 
     @Override
@@ -72,7 +71,6 @@ public class TTSSiteButton extends Button {
 
     @Override
     public void renderString(GuiGraphicsExtractor graphics, Font font, int color) {
-        graphics.drawString(font, this.getMessage(), this.getX() + 28, this.getY() + (this.height - 8) / 2,
-                this.site.enabled() ? 0xFF999999 : 0xFF444444, false);
+        graphics.text(font, this.getMessage(), this.getX() + 28, this.getY() + (this.height - 8) / 2, this.site.enabled() ? 0xFF999999 : 0xFF444444, false);
     }
 }

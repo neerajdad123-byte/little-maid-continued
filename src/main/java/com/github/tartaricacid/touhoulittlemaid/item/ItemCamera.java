@@ -38,7 +38,7 @@ public class ItemCamera extends Item {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         if (handIn == InteractionHand.MAIN_HAND) {
             int searchDistance = 8;
             ItemStack camera = playerIn.getItemInHand(handIn);
@@ -56,7 +56,7 @@ public class ItemCamera extends Item {
                 }
                 maid.spawnExplosionParticle();
                 playerIn.playSound(InitSounds.CAMERA_USE.get(), 1.0f, 1.0f);
-                return InteractionResult.sidedSuccess(camera, worldIn.isClientSide());
+                return InteractionResult.SUCCESS.heldItemTransformedTo(camera);
             }
         }
         return super.use(worldIn, playerIn, handIn);

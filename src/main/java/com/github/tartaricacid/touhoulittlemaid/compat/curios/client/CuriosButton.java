@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.compat.curios.client;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.client.gui.ITooltipButton;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -25,7 +26,7 @@ public class CuriosButton extends Button implements ITooltipButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.renderTexture(guiGraphics, TEXTURE, this.getX(), this.getY(),
                 108, this.vStart, 0, this.getWidth(), this.getHeight(),
                 256, 256);
@@ -38,7 +39,7 @@ public class CuriosButton extends Button implements ITooltipButton {
 
     @Override
     public void renderTooltip(GuiGraphicsExtractor graphics, Minecraft mc, int mouseX, int mouseY) {
-        graphics.renderTooltip(mc.font, this.tooltip, mouseX, mouseY);
+        graphics.setTooltipForNextFrame(mc.font, this.tooltip, mouseX, mouseY);
     }
 
     public void renderTexture(GuiGraphicsExtractor pGuiGraphics, Identifier pTexture, int pX, int pY, int uOffset,
@@ -50,7 +51,6 @@ public class CuriosButton extends Button implements ITooltipButton {
             i = vOffset + yDiff;
         }
 
-        RenderSystem.enableDepthTest();
-        pGuiGraphics.blit(pTexture, pX, pY, (float) uOffset, (float) i, pWidth, pHeight, pTextureWidth, pTextureHeight);
+        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, pTexture, pX, pY, (float) uOffset, (float) i, pWidth, pHeight, pTextureWidth, pTextureHeight);
     }
 }

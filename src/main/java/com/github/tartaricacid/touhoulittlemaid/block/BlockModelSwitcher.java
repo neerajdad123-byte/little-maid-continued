@@ -139,7 +139,7 @@ public class BlockModelSwitcher extends BaseEntityBlock {
             if (!worldIn.isClientSide() && player instanceof ServerPlayer serverPlayer) {
                 PacketDistributor.sendToPlayer(serverPlayer, new OpenSwitcherGuiPackage(pos));
             }
-            return InteractionResult.sidedSuccess(worldIn.isClientSide());
+            return InteractionResult.SUCCESS;
         }
         return super.useItemOn(stack, state, worldIn, pos, player, handIn, hit);
     }

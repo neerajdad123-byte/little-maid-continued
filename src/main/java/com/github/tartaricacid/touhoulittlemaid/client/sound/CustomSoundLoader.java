@@ -272,7 +272,7 @@ public class CustomSoundLoader {
     }
 
     private static void loadSounds(ZipFile zipFile, Map<Identifier, List<SoundData>> buffers, ZipEntry zipEntry, String subDir, String fileName, SoundEvent soundEvent, String checkSubDir, String checkFileName) {
-        List<SoundData> sounds = buffers.computeIfAbsent(soundEvent.getLocation(), res -> Lists.newArrayList());
+        List<SoundData> sounds = buffers.computeIfAbsent(soundEvent.location(), res -> Lists.newArrayList());
         if (checkSubDir.equals(subDir) && checkFileName(checkFileName, fileName)) {
             OggReader.readSoundDataFromZip(zipFile, zipEntry, fileName, sounds, MARKER);
         }

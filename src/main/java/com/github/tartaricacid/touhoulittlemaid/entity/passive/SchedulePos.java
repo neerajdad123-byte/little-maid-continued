@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.passive;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MaidConfig;
 import com.github.tartaricacid.touhoulittlemaid.util.TeleportHelper;
 import net.minecraft.core.BlockPos;
@@ -84,22 +85,22 @@ public final class SchedulePos {
 
     public void save(CompoundTag compound) {
         CompoundTag data = new CompoundTag();
-        data.put("Work", NbtUtils.writeBlockPos(this.workPos));
-        data.put("Idle", NbtUtils.writeBlockPos(this.idlePos));
-        data.put("Sleep", NbtUtils.writeBlockPos(this.sleepPos));
+        data.put("Work", PortUtil.writeBlockPos(this.workPos));
+        data.put("Idle", PortUtil.writeBlockPos(this.idlePos));
+        data.put("Sleep", PortUtil.writeBlockPos(this.sleepPos));
         data.putString("Dimension", this.dimension.toString());
         data.putBoolean("Configured", this.configured);
         compound.put("MaidSchedulePos", data);
     }
 
     public void load(CompoundTag compound, EntityMaid maid) {
-        if (compound.contains("MaidSchedulePos", Tag.TAG_COMPOUND)) {
-            CompoundTag data = compound.getCompound("MaidSchedulePos");
-            this.workPos = NbtUtils.readBlockPos(data, "Work").orElse(null);
-            this.idlePos = NbtUtils.readBlockPos(data, "Idle").orElse(null);
-            this.sleepPos = NbtUtils.readBlockPos(data, "Sleep").orElse(null);
-            this.dimension = Identifier.parse(data.getString("Dimension"));
-            this.configured = data.getBoolean("Configured");
+        if (compound.contains("MaidSchedulePos")) {
+            CompoundTag data = compound.getCompoundOrEmpty("MaidSchedulePos");
+            this.workPos = data.read("Work", BlockPos.CODEC).orElse(null);
+            this.idlePos = data.read("Idle", BlockPos.CODEC).orElse(null);
+            this.sleepPos = data.read("Sleep", BlockPos.CODEC).orElse(null);
+            this.dimension = Identifier.parse(data.getStringOr("Dimension", ""));
+            this.configured = data.getBooleanOr("Configured", false);
             this.restrictTo(maid);
         }
     }

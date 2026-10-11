@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.client.render.MaidRenderState;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.SimpleBedrockModel;
@@ -55,7 +56,7 @@ public class TileEntityItemStackGarageKitRenderer extends BlockEntityWithoutLeve
         poseStack.scale(0.5f, 0.5f, 0.5f);
         poseStack.translate(1, 1.5, 1);
         poseStack.mulPose(Axis.ZN.rotationDegrees(180));
-        VertexConsumer buffer = bufferIn.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
+        VertexConsumer buffer = bufferIn.getBuffer(RenderTypes.entityCutout(TEXTURE));
         BASE_MODEL.renderToBuffer(poseStack, buffer, combinedLightIn, combinedOverlayIn);
         poseStack.popPose();
 
@@ -90,8 +91,8 @@ public class TileEntityItemStackGarageKitRenderer extends BlockEntityWithoutLeve
         entity.load(data);
         if (entity instanceof EntityMaid maid) {
             clearMaidDataResidue(maid, true);
-            if (data.contains(EntityMaid.MODEL_ID_TAG, Tag.TAG_STRING)) {
-                String modelId = data.getString(EntityMaid.MODEL_ID_TAG);
+            if (data.contains(EntityMaid.MODEL_ID_TAG)) {
+                String modelId = data.getStringOr(EntityMaid.MODEL_ID_TAG, "");
                 renderItemScale = CustomPackLoader.MAID_MODELS.getModelRenderItemScale(modelId);
             }
             maid.renderState = MaidRenderState.GARAGE_KIT;

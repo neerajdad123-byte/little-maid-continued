@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.world.backups;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.config.ServerConfig;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.google.common.collect.Lists;
@@ -152,7 +153,7 @@ public final class MaidBackupsManager {
         CompoundTag indexData = new CompoundTag();
         indexData.putString("Name", Component.Serializer.toJson(maid.getName(), maid.level.registryAccess()));
         indexData.putString("Dimension", maid.level.dimension().location().toString());
-        indexData.put("Pos", NbtUtils.writeBlockPos(maid.blockPosition()));
+        indexData.put("Pos", PortUtil.writeBlockPos(maid.blockPosition()));
         indexData.putLong("Timestamp", System.currentTimeMillis());
         return indexData;
     }
@@ -160,13 +161,13 @@ public final class MaidBackupsManager {
     public static Map<UUID, IndexData> getMaidIndexMap(ServerPlayer player) {
         CompoundTag indexTag = getMaidIndex(player);
         Map<UUID, IndexData> map = Maps.newHashMap();
-        for (String s : indexTag.getAllKeys()) {
-            CompoundTag maidTag = indexTag.getCompound(s);
+        for (String s : indexTag.keySet()) {
+            CompoundTag maidTag = indexTag.getCompoundOrEmpty(s);
             UUID maidUuid = UUID.fromString(s);
             Component name = Component.Serializer.fromJson(maidTag.getString("Name"), player.level.registryAccess());
-            BlockPos pos = NbtUtils.readBlockPos(maidTag, "Pos").orElse(BlockPos.ZERO);
-            String dimension = maidTag.getString("Dimension");
-            long timestamp = maidTag.getLong("Timestamp");
+            BlockPos pos = maidTag.read("Pos", BlockPos.CODEC).orElse(BlockPos.ZERO);
+            String dimension = maidTag.getStringOr("Dimension", "");
+            long timestamp = maidTag.getLongOr("Timestamp", 0L);
             map.put(maidUuid, new IndexData(name, pos, dimension, timestamp));
         }
         return map;

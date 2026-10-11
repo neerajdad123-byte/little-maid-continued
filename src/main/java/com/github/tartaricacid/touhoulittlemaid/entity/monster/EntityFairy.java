@@ -196,11 +196,11 @@ public class EntityFairy extends Monster implements RangedAttackMob, FlyingAnima
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains(FAIRY_TYPE_TAG_NAME, Tag.TAG_INT)) {
-            setFairyTypeOrdinal(compound.getInt(FAIRY_TYPE_TAG_NAME));
+        if (compound.contains(FAIRY_TYPE_TAG_NAME)) {
+            setFairyTypeOrdinal(compound.getIntOr(FAIRY_TYPE_TAG_NAME, 0));
         }
-        if (compound.contains(BABY_TAG_NAME, Tag.TAG_BYTE)) {
-            this.setBaby(compound.getBoolean(BABY_TAG_NAME));
+        if (compound.contains(BABY_TAG_NAME)) {
+            this.setBaby(compound.getBooleanOr(BABY_TAG_NAME, false));
         }
     }
 

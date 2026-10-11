@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.client.gui.ITooltipButton;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -27,13 +28,12 @@ public class MaidSideTabButton extends Button implements ITooltipButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.enableDepthTest();
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         if (!this.active) {
-            graphics.blit(SIDE, this.getX() + 2, this.getY(), 209, top, this.width, this.height, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, SIDE, this.getX() + 2, this.getY(), 209, top, this.width, this.height, 256, 256);
         }
         // 193, 111
-        graphics.blit(SIDE, this.getX() + 6, this.getY() + 4, 193, top + 4, 16, 16, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, SIDE, this.getX() + 6, this.getY() + 4, 193, top + 4, 16, 16, 256, 256);
     }
 
     @Override
@@ -43,6 +43,6 @@ public class MaidSideTabButton extends Button implements ITooltipButton {
 
     @Override
     public void renderTooltip(GuiGraphicsExtractor graphics, Minecraft mc, int mouseX, int mouseY) {
-        graphics.renderComponentTooltip(mc.font, this.tooltips, mouseX, mouseY);
+        graphics.setComponentTooltipForNextFrame(mc.font, this.tooltips, mouseX, mouseY);
     }
 }

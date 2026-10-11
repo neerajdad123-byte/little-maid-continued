@@ -59,15 +59,15 @@ public class MaidAIChatSerializable {
 
     public CompoundTag readFromTag(CompoundTag tag) {
         if (tag.contains("MaidAIChat")) {
-            CompoundTag data = tag.getCompound("MaidAIChat");
-            llmSite = data.getString("LLMSite");
-            llmModel = data.getString("LLMModel");
-            ttsSite = data.getString("TTSSiteName");
-            ttsModel = data.getString("TTSModel");
-            ttsLanguage = data.getString("TTSLanguage");
-            chatLanguage = data.getString("ChatLanguage");
-            ownerName = data.getString("OwnerName");
-            customSetting = data.getString("CustomSetting");
+            CompoundTag data = tag.getCompoundOrEmpty("MaidAIChat");
+            llmSite = data.getStringOr("LLMSite", "");
+            llmModel = data.getStringOr("LLMModel", "");
+            ttsSite = data.getStringOr("TTSSiteName", "");
+            ttsModel = data.getStringOr("TTSModel", "");
+            ttsLanguage = data.getStringOr("TTSLanguage", "");
+            chatLanguage = data.getStringOr("ChatLanguage", "");
+            ownerName = data.getStringOr("OwnerName", "");
+            customSetting = data.getStringOr("CustomSetting", "");
         }
         return tag;
     }

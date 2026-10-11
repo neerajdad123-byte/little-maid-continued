@@ -56,10 +56,10 @@ public final class MaidTaskDataMaps {
     public void readSaveData(CompoundTag entityTag) {
         dataMaps.clear();
         CompoundTag dataTags = readOrCreateTag(entityTag);
-        for (String key : dataTags.getAllKeys()) {
+        for (String key : dataTags.keySet()) {
             TaskDataKey<?> dataKey = TaskDataRegister.getValue(Identifier.parse(key));
             if (dataKey != null) {
-                CompoundTag tag = dataTags.getCompound(key);
+                CompoundTag tag = dataTags.getCompoundOrEmpty(key);
                 dataMaps.put(dataKey, Optional.of(dataKey.readSaveData(tag)));
             }
         }
@@ -81,10 +81,10 @@ public final class MaidTaskDataMaps {
     @OnlyIn(Dist.CLIENT)
     public void readFromServer(CompoundTag taskTags) {
         dataMaps.clear();
-        for (String key : taskTags.getAllKeys()) {
+        for (String key : taskTags.keySet()) {
             TaskDataKey<?> dataKey = TaskDataRegister.getValue(Identifier.parse(key));
             if (dataKey != null) {
-                CompoundTag tag = taskTags.getCompound(key);
+                CompoundTag tag = taskTags.getCompoundOrEmpty(key);
                 dataMaps.put(dataKey, Optional.of(dataKey.readSyncData(tag)));
             }
         }
@@ -93,7 +93,7 @@ public final class MaidTaskDataMaps {
     @NotNull
     private CompoundTag readOrCreateTag(CompoundTag entityTag) {
         if (entityTag.contains(TAG_NAME)) {
-            return entityTag.getCompound(TAG_NAME);
+            return entityTag.getCompoundOrEmpty(TAG_NAME);
         } else {
             CompoundTag dataTags = new CompoundTag();
             entityTag.put(TAG_NAME, dataTags);

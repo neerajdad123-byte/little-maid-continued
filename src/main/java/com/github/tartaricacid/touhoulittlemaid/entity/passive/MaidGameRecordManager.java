@@ -30,8 +30,8 @@ public class MaidGameRecordManager {
     }
 
     void readAdditionalSaveData(CompoundTag compound) {
-        if (compound.contains(GAME_SKILL_TAG, Tag.TAG_COMPOUND)) {
-            setGameSkill(compound.getCompound(GAME_SKILL_TAG));
+        if (compound.contains(GAME_SKILL_TAG)) {
+            setGameSkill(compound.getCompoundOrEmpty(GAME_SKILL_TAG));
         }
     }
 
@@ -59,15 +59,15 @@ public class MaidGameRecordManager {
 
     public int getGomokuWinCount() {
         CompoundTag gameSkill = this.getGameSkill();
-        if (gameSkill.contains(GOMOKU, Tag.TAG_INT)) {
-            return gameSkill.getInt(GOMOKU);
+        if (gameSkill.contains(GOMOKU)) {
+            return gameSkill.getIntOr(GOMOKU, 0);
         }
         return 0;
     }
 
     public void increaseGomokuWinCount() {
         CompoundTag gameSkill = this.getGameSkill();
-        if (gameSkill.contains(GOMOKU, Tag.TAG_INT)) {
+        if (gameSkill.contains(GOMOKU)) {
             gameSkill.putInt(GOMOKU, gameSkill.getInt(GOMOKU) + 1);
         } else {
             gameSkill.putInt(GOMOKU, 1);

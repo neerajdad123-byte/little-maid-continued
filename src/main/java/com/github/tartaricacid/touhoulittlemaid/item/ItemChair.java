@@ -102,7 +102,7 @@ public class ItemChair extends Item {
                     world.playSound(null, chair.getX(), chair.getY(), chair.getZ(), SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
                 }
                 stack.shrink(1);
-                return InteractionResult.sidedSuccess(world.isClientSide());
+                return InteractionResult.SUCCESS;
             }
         }
         return InteractionResult.FAIL;
@@ -156,7 +156,7 @@ public class ItemChair extends Item {
         tooltip.add(Component.translatable("tooltips.touhou_little_maid.chair.destroy.desc").withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("tooltips.touhou_little_maid.chair.gui.desc").withStyle(ChatFormatting.GRAY));
         // 调试模式，不加国际化
-        if (flagIn.isAdvanced() && Screen.hasShiftDown()) {
+        if (flagIn.isAdvanced() && Minecraft.getInstance().hasShiftDown()) {
             Data data = Data.deserialization(stack);
             tooltip.add(Component.literal("Model Id: " + data.modelId()).withStyle(ChatFormatting.GRAY));
             tooltip.add(Component.literal("Mounted Height: " + data.height()).withStyle(ChatFormatting.GRAY));

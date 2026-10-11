@@ -59,8 +59,8 @@ public class CacheScreen<T extends LivingEntity, E extends IModelInfo> extends S
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
 
         if (modelInfos.isEmpty()) {
             stopWatch.stop();
@@ -71,19 +71,19 @@ public class CacheScreen<T extends LivingEntity, E extends IModelInfo> extends S
         }
 
         // 每帧尝试缓存 5 个
-        graphics.pose().pushPose();
+        graphics.pose().pushMatrix();
         for (int i = 0; i < 5; i++) {
             if (modelInfos.isEmpty()) {
                 return;
             }
-            graphics.pose().translate(0, 0, 200);
+            graphics.pose().translate(0, 0);
             doCacheIcon(graphics);
         }
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
 
         int finishSize = totalCount - modelInfos.size();
-        graphics.drawCenteredString(font, Component.translatable("gui.touhou_little_maid.cache_screen.progress", finishSize, totalCount), this.width / 2, this.height - 42, 0xFFFFFF);
-        graphics.drawCenteredString(font, Component.translatable("gui.touhou_little_maid.cache_screen.desc"), this.width / 2, this.height - 30, 0xFFFFFF);
+        graphics.centeredText(font, Component.translatable("gui.touhou_little_maid.cache_screen.progress", finishSize, totalCount), this.width / 2, this.height - 42, 0xFFFFFFFF);
+        graphics.centeredText(font, Component.translatable("gui.touhou_little_maid.cache_screen.desc"), this.width / 2, this.height - 30, 0xFFFFFFFF);
     }
 
     protected void doCacheIcon(GuiGraphicsExtractor graphics) {

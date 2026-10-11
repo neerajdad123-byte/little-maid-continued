@@ -38,8 +38,8 @@ public class QueryBinding extends ContextBinding {
         var("head_x_rotation", ctx -> ctx.data().netHeadYaw);
         var("head_y_rotation", ctx -> ctx.data().headPitch);
         var("moon_phase", ctx -> ctx.level().getMoonPhase());
-        var("time_of_day", ctx -> MolangUtils.normalizeTime(ctx.level().getDayTime()));
-        var("time_stamp", ctx -> ctx.level().getDayTime());
+        var("time_of_day", ctx -> MolangUtils.normalizeTime(ctx.level().getOverworldClockTime()));
+        var("time_stamp", ctx -> ctx.level().getOverworldClockTime());
 
         entityVar("yaw_speed", ctx -> getYawSpeed(ctx.entity()));
         entityVar("cardinal_facing_2d", ctx -> ctx.entity().getDirection().get3DDataValue());

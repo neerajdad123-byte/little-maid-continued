@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.FlatColorButton;
 import com.github.tartaricacid.touhoulittlemaid.network.message.FoxScrollPackage;
@@ -89,17 +90,16 @@ public class FoxScrollScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (this.data.isEmpty()) {
             int x = this.width / 2;
             int y = this.height / 2 - 5;
-            graphics.drawCenteredString(font, Component.translatable("gui.touhou_little_maid.fox_scroll.empty"), x, y, 0xFF0000);
+            graphics.centeredText(font, Component.translatable("gui.touhou_little_maid.fox_scroll.empty"), x, y, 0xFFFF0000);
             return;
         }
         this.renderMain(graphics);
         for (Renderable renderable : this.renderables) {
-            renderable.render(graphics, pMouseX, pMouseY, pPartialTick);
+            renderable.extractRenderState(graphics, pMouseX, pMouseY, pPartialTick);
         }
     }
 
@@ -122,15 +122,15 @@ public class FoxScrollScreen extends Screen {
                     }
                     Component posText = Component.translatable("gui.touhou_little_maid.fox_scroll.position", pos.toShortString());
                     graphics.fill(leftPos + 152, offsetIn, leftPos + 400 - 22, offsetIn + 40, 0xef58626b);
-                    graphics.drawString(font, info.name(), leftPos + 160, offsetIn + 4, ChatFormatting.GOLD.getColor());
-                    graphics.drawString(font, posText, leftPos + 160, offsetIn + 16, ChatFormatting.GRAY.getColor(), false);
-                    graphics.drawString(font, distanceText, leftPos + 160, offsetIn + 28, ChatFormatting.GRAY.getColor(), false);
+                    graphics.text(font, info.name(), leftPos + 160, offsetIn + 4, PortUtil.color(ChatFormatting.GOLD));
+                    graphics.text(font, posText, leftPos + 160, offsetIn + 16, PortUtil.color(ChatFormatting.GRAY), false);
+                    graphics.text(font, distanceText, leftPos + 160, offsetIn + 28, PortUtil.color(ChatFormatting.GRAY), false);
                     offsetIn = offsetIn + 42;
                 }
             }
             if (scrollData.size() > PER_PAGE_COUNT) {
                 String pageText = String.format("%d/%d", this.page + 1, (scrollData.size() - 1) / PER_PAGE_COUNT + 1);
-                graphics.drawCenteredString(font, pageText, leftPos + 400 - 8, topPos + 104 - 5, ChatFormatting.GRAY.getColor());
+                graphics.centeredText(font, pageText, leftPos + 400 - 8, topPos + 104 - 5, PortUtil.color(ChatFormatting.GRAY));
             }
         }
     }

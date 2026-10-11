@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.core.UUIDUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IBroomControl;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.control.BroomControlManager;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -76,7 +77,7 @@ public class EntityBroom extends AbstractEntityFromItem implements OwnableEntity
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        this.entityData.get(OWNER_ID).ifPresent(uuid -> compound.putUUID(OWNER_UUID_TAG_NAME, uuid));
+        this.entityData.get(OWNER_ID).ifPresent(uuid -> compound.store(OWNER_UUID_TAG_NAME, UUIDUtil.CODEC, uuid));
     }
 
     @Override
@@ -196,12 +197,12 @@ public class EntityBroom extends AbstractEntityFromItem implements OwnableEntity
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (!player.isDiscrete() && !this.isPassenger() && !(this.getControllingPassenger() instanceof Player)) {
             if (this.getPassengers().size() > 1) {
-                return InteractionResult.sidedSuccess(this.level.isClientSide());
+                return InteractionResult.SUCCESS;
             }
             if (!level.isClientSide()) {
                 player.startRiding(this);
             }
-            return InteractionResult.sidedSuccess(this.level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
         return super.interact(player, hand);
     }

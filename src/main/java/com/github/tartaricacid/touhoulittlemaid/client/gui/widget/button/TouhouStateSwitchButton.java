@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -40,8 +41,7 @@ public class TouhouStateSwitchButton extends AbstractWidget {
         this.defaultButtonNarrationText(pNarrationElementOutput);
     }
 
-    public void renderWidget(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        RenderSystem.disableDepthTest();
+    protected void extractWidgetRenderState(GuiGraphicsExtractor pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         int i = this.xTexStart;
         int j = this.yTexStart;
         if (this.isStateTriggered) {
@@ -52,7 +52,6 @@ public class TouhouStateSwitchButton extends AbstractWidget {
             j += this.yDiffTex;
         }
 
-        pGuiGraphics.blit(this.resourceLocation, this.getX(), this.getY(), i, j, this.width, this.height);
-        RenderSystem.enableDepthTest();
+        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, this.resourceLocation, this.getX(), this.getY(), i, j, this.width, this.height, 256, 256);
     }
 }

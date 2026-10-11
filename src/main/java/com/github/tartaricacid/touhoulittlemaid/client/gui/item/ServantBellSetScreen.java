@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.network.message.ServantBellSetPackage;
@@ -49,15 +50,15 @@ public class ServantBellSetScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         int middleX = this.width / 2;
         int middleY = this.height / 2;
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        textField.render(graphics, mouseX, mouseY, partialTicks);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+        textField.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         if (textField.getValue().isEmpty()) {
-            graphics.drawString(font, Component.translatable("gui.touhou_little_maid.servant_bell.edit_box").withStyle(ChatFormatting.ITALIC), middleX - 94, middleY - 20, ChatFormatting.DARK_GRAY.getColor(), false);
+            graphics.text(font, Component.translatable("gui.touhou_little_maid.servant_bell.edit_box").withStyle(ChatFormatting.ITALIC), middleX - 94, middleY - 20, PortUtil.color(ChatFormatting.DARK_GRAY), false);
         }
-        graphics.drawCenteredString(font, Component.translatable("tooltips.touhou_little_maid.servant_bell.uuid", this.maidUuid.toString()), middleX, middleY - 50, 0xFFFFFF);
+        graphics.centeredText(font, Component.translatable("tooltips.touhou_little_maid.servant_bell.uuid", this.maidUuid.toString()), middleX, middleY - 50, 0xFFFFFFFF);
     }
 
     @Override

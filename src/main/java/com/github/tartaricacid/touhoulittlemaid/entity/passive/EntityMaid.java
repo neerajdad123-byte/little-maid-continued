@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.passive;
 
+import net.minecraft.util.profiling.Profiler;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockPart;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.advancements.maid.TriggerType;
@@ -510,11 +511,11 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
     @Override
     protected void customServerAiStep() {
         long timeRecord = Util.getNanos();
-        this.level.getProfiler().push("maidBrain");
+        Profiler.get().push("maidBrain");
         if (!guiOpening) {
             this.getBrain().tick((ServerLevel) this.level, this);
         }
-        this.level.getProfiler().pop();
+        Profiler.get().pop();
         timeRecord = Util.getNanos() - timeRecord;
         if (MAID_AI_TIME_DEBUG.get() && timeRecord > WARNING_TIME_NANOS) {
             double timeMs = timeRecord / 1000000.0;
@@ -622,20 +623,20 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
         if (!level.isClientSide()) {
             this.chatBubbleManager.tick();
             if (this.backpackData != null) {
-                this.level.getProfiler().push("maidBackpackData");
+                Profiler.get().push("maidBackpackData");
                 this.backpackData.serverTick(this);
-                this.level.getProfiler().pop();
+                Profiler.get().pop();
             }
 
-            this.level.getProfiler().push("maidFavorability");
+            Profiler.get().push("maidFavorability");
             this.favorabilityManager.tick();
-            this.level.getProfiler().pop();
+            Profiler.get().pop();
 
-            this.level.getProfiler().push("maidSchedulePos");
+            Profiler.get().push("maidSchedulePos");
             this.schedulePos.tick(this);
-            this.level.getProfiler().pop();
+            Profiler.get().pop();
 
-            this.level.getProfiler().push("maidCooldowns");
+            Profiler.get().push("maidCooldowns");
             this.cooldowns.tick();
             if (this.passiveUseShieldTick > 0) {
                 // 如果没有拿着盾牌，直接取消计时，避免疯狂挥手
@@ -650,7 +651,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
                     this.stopUsingItem();
                 }
             }
-            this.level.getProfiler().pop();
+            Profiler.get().pop();
         }
     }
 
@@ -1396,46 +1397,46 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
         super.readAdditionalSaveData(compound);
         this.taskDataMaps.readSaveData(compound);
         this.setSyncTaskData(this.taskDataMaps.getUpdateTag());
-        if (compound.contains(MODEL_ID_TAG_NAME, Tag.TAG_STRING)) {
-            setModelId(compound.getString(MODEL_ID_TAG_NAME));
+        if (compound.contains(MODEL_ID_TAG_NAME)) {
+            setModelId(compound.getStringOr(MODEL_ID_TAG_NAME, ""));
         }
-        if (compound.contains(IS_YSM_MODEL_TAG, Tag.TAG_BYTE)) {
-            setIsYsmModel(compound.getBoolean(IS_YSM_MODEL_TAG));
+        if (compound.contains(IS_YSM_MODEL_TAG)) {
+            setIsYsmModel(compound.getBooleanOr(IS_YSM_MODEL_TAG, false));
         }
-        if (compound.contains(YSM_MODEL_ID_TAG, Tag.TAG_STRING)) {
-            setYsmModelId(compound.getString(YSM_MODEL_ID_TAG));
+        if (compound.contains(YSM_MODEL_ID_TAG)) {
+            setYsmModelId(compound.getStringOr(YSM_MODEL_ID_TAG, ""));
         }
-        if (compound.contains(YSM_MODEL_TEXTURE_TAG, Tag.TAG_STRING)) {
-            setYsmModelTexture(compound.getString(YSM_MODEL_TEXTURE_TAG));
+        if (compound.contains(YSM_MODEL_TEXTURE_TAG)) {
+            setYsmModelTexture(compound.getStringOr(YSM_MODEL_TEXTURE_TAG, ""));
         }
-        if (compound.contains(YSM_MODEL_NAME_TAG, Tag.TAG_STRING)) {
+        if (compound.contains(YSM_MODEL_NAME_TAG)) {
             MutableComponent component = Component.Serializer.fromJson(compound.getString(YSM_MODEL_NAME_TAG), this.registryAccess());
             setYsmModelName(Objects.requireNonNullElse(component, Component.empty()));
         }
-        if (compound.contains(YSM_ROULETTE_ANIM_TAG, Tag.TAG_STRING)) {
-            rouletteAnim = compound.getString(YSM_ROULETTE_ANIM_TAG);
+        if (compound.contains(YSM_ROULETTE_ANIM_TAG)) {
+            rouletteAnim = compound.getStringOr(YSM_ROULETTE_ANIM_TAG, "");
         }
-        if (compound.contains(YSM_ROAMING_UPDATE_FLAG_TAG, Tag.TAG_INT)) {
-            roamingVarsUpdateFlag = compound.getInt(YSM_ROAMING_UPDATE_FLAG_TAG);
+        if (compound.contains(YSM_ROAMING_UPDATE_FLAG_TAG)) {
+            roamingVarsUpdateFlag = compound.getIntOr(YSM_ROAMING_UPDATE_FLAG_TAG, 0);
         }
-        if (compound.contains(YSM_ROAMING_VARS_TAG, Tag.TAG_COMPOUND)) {
-            CompoundTag roamingVarsTag = compound.getCompound(YSM_ROAMING_VARS_TAG);
-            roamingVarsTag.getAllKeys().forEach(key -> roamingVars.put(key, roamingVarsTag.getFloat(key)));
+        if (compound.contains(YSM_ROAMING_VARS_TAG)) {
+            CompoundTag roamingVarsTag = compound.getCompoundOrEmpty(YSM_ROAMING_VARS_TAG);
+            roamingVarsTag.keySet().forEach(key -> roamingVars.put(key, roamingVarsTag.getFloat(key)));
         }
-        if (compound.contains(SOUND_PACK_ID_TAG, Tag.TAG_STRING)) {
-            setSoundPackId(compound.getString(SOUND_PACK_ID_TAG));
+        if (compound.contains(SOUND_PACK_ID_TAG)) {
+            setSoundPackId(compound.getStringOr(SOUND_PACK_ID_TAG, ""));
         }
-        if (compound.contains(SCHEDULE_MODE_TAG, Tag.TAG_STRING)) {
+        if (compound.contains(SCHEDULE_MODE_TAG)) {
             setSchedule(MaidSchedule.valueOf(compound.getString(SCHEDULE_MODE_TAG)));
         }
-        if (compound.contains(TASK_TAG, Tag.TAG_STRING)) {
-            Identifier uid = Identifier.parse(compound.getString(TASK_TAG));
+        if (compound.contains(TASK_TAG)) {
+            Identifier uid = Identifier.parse(compound.getStringOr(TASK_TAG, ""));
             IMaidTask task = TaskManager.findTask(uid).orElse(TaskManager.getIdleTask());
             setTask(task);
         }
-        if (compound.contains(BACKPACK_LEVEL_TAG, Tag.TAG_INT)) {
+        if (compound.contains(BACKPACK_LEVEL_TAG)) {
             // 存档迁移
-            int backpackLevel = compound.getInt(BACKPACK_LEVEL_TAG);
+            int backpackLevel = compound.getIntOr(BACKPACK_LEVEL_TAG, 0);
             if (backpackLevel == 1) {
                 BackpackManager.findBackpack(SmallBackpack.ID).ifPresent(this::setMaidBackpackType);
             }
@@ -1447,55 +1448,55 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
             }
             compound.remove(BACKPACK_LEVEL_TAG);
         }
-        if (compound.contains(MAID_INVENTORY_TAG, Tag.TAG_COMPOUND)) {
+        if (compound.contains(MAID_INVENTORY_TAG)) {
             maidInv.deserializeNBT(this.registryAccess(), compound.getCompound(MAID_INVENTORY_TAG));
         }
-        if (compound.contains(MAID_BAUBLE_INVENTORY_TAG, Tag.TAG_COMPOUND)) {
-            CompoundTag baubleTag = compound.getCompound(MAID_BAUBLE_INVENTORY_TAG);
-            if (baubleTag.contains("Size", Tag.TAG_INT)) {
+        if (compound.contains(MAID_BAUBLE_INVENTORY_TAG)) {
+            CompoundTag baubleTag = compound.getCompoundOrEmpty(MAID_BAUBLE_INVENTORY_TAG);
+            if (baubleTag.contains("Size")) {
                 // 1.4.2 版本起，饰品栏拓展了数量，需要在这里进行修正
-                int oldSize = baubleTag.getInt("Size");
+                int oldSize = baubleTag.getIntOr("Size", 0);
                 if (oldSize < BAUBLE_INV_SIZE) {
                     baubleTag.putInt("Size", BAUBLE_INV_SIZE);
                 }
             }
             maidBauble.deserializeNBT(this.registryAccess(), baubleTag);
         }
-        if (compound.contains(MAID_HIDE_INVENTORY_TAG, Tag.TAG_COMPOUND)) {
+        if (compound.contains(MAID_HIDE_INVENTORY_TAG)) {
             hideInv.deserializeNBT(this.registryAccess(), compound.getCompound(MAID_HIDE_INVENTORY_TAG));
         }
-        if (compound.contains(MAID_TASK_INVENTORY_TAG, Tag.TAG_COMPOUND)) {
+        if (compound.contains(MAID_TASK_INVENTORY_TAG)) {
             taskInv.deserializeNBT(this.registryAccess(), compound.getCompound(MAID_TASK_INVENTORY_TAG));
         }
-        if (compound.contains(STRUCK_BY_LIGHTNING_TAG, Tag.TAG_BYTE)) {
-            setStruckByLightning(compound.getBoolean(STRUCK_BY_LIGHTNING_TAG));
+        if (compound.contains(STRUCK_BY_LIGHTNING_TAG)) {
+            setStruckByLightning(compound.getBooleanOr(STRUCK_BY_LIGHTNING_TAG, false));
         }
-        if (compound.contains(INVULNERABLE_TAG, Tag.TAG_BYTE)) {
-            setEntityInvulnerable(compound.getBoolean(INVULNERABLE_TAG));
+        if (compound.contains(INVULNERABLE_TAG)) {
+            setEntityInvulnerable(compound.getBooleanOr(INVULNERABLE_TAG, false));
         }
-        if (compound.contains(HUNGER_TAG, Tag.TAG_INT)) {
-            setHunger(compound.getInt(HUNGER_TAG));
+        if (compound.contains(HUNGER_TAG)) {
+            setHunger(compound.getIntOr(HUNGER_TAG, 0));
         }
-        if (compound.contains(FAVORABILITY_TAG, Tag.TAG_INT)) {
-            setFavorability(compound.getInt(FAVORABILITY_TAG));
+        if (compound.contains(FAVORABILITY_TAG)) {
+            setFavorability(compound.getIntOr(FAVORABILITY_TAG, 0));
         }
-        if (compound.contains(EXPERIENCE_TAG, Tag.TAG_INT)) {
-            setExperience(compound.getInt(EXPERIENCE_TAG));
+        if (compound.contains(EXPERIENCE_TAG)) {
+            setExperience(compound.getIntOr(EXPERIENCE_TAG, 0));
         }
-        if (compound.contains(STRUCTURE_SPAWN_TAG, Tag.TAG_BYTE)) {
-            this.structureSpawn = compound.getBoolean(STRUCTURE_SPAWN_TAG);
+        if (compound.contains(STRUCTURE_SPAWN_TAG)) {
+            this.structureSpawn = compound.getBooleanOr(STRUCTURE_SPAWN_TAG, false);
         }
-        if (compound.contains(RESTRICT_CENTER_TAG, Tag.TAG_COMPOUND)) {
+        if (compound.contains(RESTRICT_CENTER_TAG)) {
             // 存档迁移
-            NbtUtils.readBlockPos(compound, RESTRICT_CENTER_TAG).ifPresent(blockPos -> this.schedulePos.setHomeModeEnable(this, blockPos));
+            compound.read(RESTRICT_CENTER_TAG, BlockPos.CODEC).ifPresent(blockPos -> this.schedulePos.setHomeModeEnable(this, blockPos));
             compound.remove(RESTRICT_CENTER_TAG);
         }
-        if (compound.contains(MAID_BACKPACK_TYPE, Tag.TAG_STRING)) {
-            Identifier id = Identifier.parse(compound.getString(MAID_BACKPACK_TYPE));
+        if (compound.contains(MAID_BACKPACK_TYPE)) {
+            Identifier id = Identifier.parse(compound.getStringOr(MAID_BACKPACK_TYPE, ""));
             IMaidBackpack backpack = BackpackManager.findBackpack(id).orElse(BackpackManager.getEmptyBackpack());
             setMaidBackpackType(backpack);
-            if (this.backpackData != null && compound.contains(BACKPACK_DATA_TAG, Tag.TAG_COMPOUND)) {
-                this.backpackData.load(compound.getCompound(BACKPACK_DATA_TAG), this);
+            if (this.backpackData != null && compound.contains(BACKPACK_DATA_TAG)) {
+                this.backpackData.load(compound.getCompoundOrEmpty(BACKPACK_DATA_TAG), this);
             }
         }
         this.configManager.readAdditionalSaveData(compound);
@@ -1537,11 +1538,11 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
             // 掉出世界的判断
             Vec3 position = Vec3.atBottomCenterOf(blockPosition());
             // 防止卡在基岩里？
-            if (this.getY() < this.level.getMinBuildHeight() + 5) {
-                position = new Vec3(position.x, this.level.getMinBuildHeight() + 5, position.z);
+            if (this.getY() < this.level.getMinY() + 5) {
+                position = new Vec3(position.x, this.level.getMinY() + 5, position.z);
             }
-            if (this.getY() > this.level.getMaxBuildHeight()) {
-                position = new Vec3(position.x, this.level.getMaxBuildHeight(), position.z);
+            if (this.getY() > this.level.getMaxY() + 1) {
+                position = new Vec3(position.x, this.level.getMaxY() + 1, position.z);
             }
             EntityTombstone tombstone = new EntityTombstone(level, this.getOwnerUUID(), position);
             tombstone.setMaidName(this.getDisplayName());
@@ -1755,8 +1756,8 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
 
     @Override
     public void playSound(SoundEvent soundEvent, float volume, float pitch) {
-        if (soundEvent.getLocation().getPath().startsWith("maid") && !level.isClientSide()) {
-            NetworkHandler.sendToNearby(this, new PlayMaidSoundPackage(soundEvent.getLocation(), this.getSoundPackId(), this.getId()), 16);
+        if (soundEvent.location().getPath().startsWith("maid") && !level.isClientSide()) {
+            NetworkHandler.sendToNearby(this, new PlayMaidSoundPackage(soundEvent.location(), this.getSoundPackId(), this.getId()), 16);
         } else {
             super.playSound(soundEvent, volume, pitch);
         }
@@ -2223,7 +2224,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
 
     public Activity getScheduleDetail() {
         MaidSchedule schedule = this.getSchedule();
-        int time = (int) (this.level.getDayTime() % 24000L);
+        int time = (int) (this.level.getOverworldClockTime() % 24000L);
         switch (schedule) {
             case ALL -> {
                 return Activity.WORK;

@@ -46,9 +46,9 @@ public class ItemMaidBeacon extends DoubleHighBlockItem {
 
     public static void itemStackToTileEntity(ItemStack stack, TileEntityMaidBeacon beacon) {
         CompoundTag tag = stack.get(STORAGE_DATA_TAG);
-        if (tag != null && tag.contains(NEO_FORGE_DATA_TAG, Tag.TAG_COMPOUND)) {
+        if (tag != null && tag.contains(NEO_FORGE_DATA_TAG)) {
             // 正确读取tag数据
-            CompoundTag forgeTag = tag.getCompound(NEO_FORGE_DATA_TAG);
+            CompoundTag forgeTag = tag.getCompoundOrEmpty(NEO_FORGE_DATA_TAG);
             beacon.loadData(forgeTag);
         }
     }
@@ -58,10 +58,10 @@ public class ItemMaidBeacon extends DoubleHighBlockItem {
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         float numPower = 0f;
         CompoundTag tag = stack.get(STORAGE_DATA_TAG);
-        if (tag != null && tag.contains(NEO_FORGE_DATA_TAG, Tag.TAG_COMPOUND)) {
-            CompoundTag forgeTag = tag.getCompound(NEO_FORGE_DATA_TAG);
-            if (forgeTag.contains(TileEntityMaidBeacon.STORAGE_POWER_TAG, Tag.TAG_FLOAT)) {
-                numPower = forgeTag.getFloat(TileEntityMaidBeacon.STORAGE_POWER_TAG);
+        if (tag != null && tag.contains(NEO_FORGE_DATA_TAG)) {
+            CompoundTag forgeTag = tag.getCompoundOrEmpty(NEO_FORGE_DATA_TAG);
+            if (forgeTag.contains(TileEntityMaidBeacon.STORAGE_POWER_TAG)) {
+                numPower = forgeTag.getFloatOr(TileEntityMaidBeacon.STORAGE_POWER_TAG, 0F);
             }
         }
         tooltip.add(Component.translatable("tooltips.touhou_little_maid.maid_beacon.desc", DECIMAL_FORMAT.format(numPower)).withStyle(ChatFormatting.GRAY));

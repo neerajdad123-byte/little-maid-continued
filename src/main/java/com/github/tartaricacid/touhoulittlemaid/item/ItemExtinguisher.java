@@ -14,7 +14,7 @@ public class ItemExtinguisher extends Item {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         if (worldIn.isClientSide()) {
             playerIn.sendSystemMessage(Component.translatable("message.touhou_little_maid.extinguisher.player_cannot_use"));
         }

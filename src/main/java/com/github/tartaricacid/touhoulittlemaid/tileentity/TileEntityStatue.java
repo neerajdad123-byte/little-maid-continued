@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
@@ -57,11 +58,11 @@ public class TileEntityStatue extends BlockEntity {
     public void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         getPersistentData().putInt(STATUE_SIZE_TAG, size.ordinal());
         getPersistentData().putBoolean(CORE_BLOCK_TAG, isCoreBlock);
-        getPersistentData().put(CORE_BLOCK_POS_TAG, NbtUtils.writeBlockPos(coreBlockPos));
+        getPersistentData().put(CORE_BLOCK_POS_TAG, PortUtil.writeBlockPos(coreBlockPos));
         getPersistentData().putString(STATUE_FACING_TAG, facing.getSerializedName());
         ListTag blockList = new ListTag();
         for (BlockPos pos : allBlocks) {
-            blockList.add(NbtUtils.writeBlockPos(pos));
+            blockList.add(PortUtil.writeBlockPos(pos));
         }
         getPersistentData().put(ALL_BLOCKS_TAG, blockList);
         if (extraMaidData != null) {
@@ -73,18 +74,18 @@ public class TileEntityStatue extends BlockEntity {
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
-        size = Size.getSizeByIndex(getPersistentData().getInt(STATUE_SIZE_TAG));
-        isCoreBlock = getPersistentData().getBoolean(CORE_BLOCK_TAG);
+        size = Size.getSizeByIndex(getPersistentData().getIntOr(STATUE_SIZE_TAG, 0));
+        isCoreBlock = getPersistentData().getBooleanOr(CORE_BLOCK_TAG, false);
         NbtUtils.readBlockPos(getPersistentData(), CORE_BLOCK_POS_TAG).ifPresent(pos -> coreBlockPos = pos);
-        facing = Direction.byName(getPersistentData().getString(STATUE_FACING_TAG));
+        facing = Direction.byName(getPersistentData().getStringOr(STATUE_FACING_TAG, ""));
         allBlocks.clear();
-        ListTag blockList = getPersistentData().getList(ALL_BLOCKS_TAG, Tag.TAG_COMPOUND);
+        ListTag blockList = getPersistentData().getListOrEmpty(ALL_BLOCKS_TAG);
         for (int i = 0; i < blockList.size(); i++) {
-            int[] pos = blockList.getIntArray(i);
+            int[] pos = blockList.getIntArray(i).orElse(new int[0]);
             allBlocks.add(new BlockPos(pos[0], pos[1], pos[2]));
         }
-        if (getPersistentData().contains(EXTRA_MAID_DATA, Tag.TAG_COMPOUND)) {
-            extraMaidData = getPersistentData().getCompound(EXTRA_MAID_DATA);
+        if (getPersistentData().contains(EXTRA_MAID_DATA)) {
+            extraMaidData = getPersistentData().getCompoundOrEmpty(EXTRA_MAID_DATA);
         }
     }
 

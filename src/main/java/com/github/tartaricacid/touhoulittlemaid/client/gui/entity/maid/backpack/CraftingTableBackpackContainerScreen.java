@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.backpack;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.AbstractMaidContainerGui;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.BaubleButton;
@@ -12,16 +13,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import org.anti_ad.mc.ipn.api.IPNButton;
-import org.anti_ad.mc.ipn.api.IPNGuiHint;
-import org.anti_ad.mc.ipn.api.IPNPlayerSideOnly;
-
-@IPNPlayerSideOnly
-@IPNGuiHint(button = IPNButton.SORT, horizontalOffset = -36, bottom = -12)
-@IPNGuiHint(button = IPNButton.SORT_COLUMNS, horizontalOffset = -24, bottom = -24)
-@IPNGuiHint(button = IPNButton.SORT_ROWS, horizontalOffset = -12, bottom = -36)
-@IPNGuiHint(button = IPNButton.SHOW_EDITOR, horizontalOffset = -5)
-@IPNGuiHint(button = IPNButton.SETTINGS, horizontalOffset = -5)
 public class CraftingTableBackpackContainerScreen extends AbstractMaidContainerGui<CraftingTableBackpackContainer> implements IBackpackContainerScreen {
     private static final Identifier BACKPACK = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/maid_crafting_table.png");
     private final EntityMaid maid;
@@ -45,10 +36,11 @@ public class CraftingTableBackpackContainerScreen extends AbstractMaidContainerG
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor graphics, float partialTicks, int x, int y) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
+        super.extractBackground(graphics, x, y, partialTicks);
         super.renderBg(graphics, partialTicks, x, y);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, BACKPACK);
-        graphics.blit(BACKPACK, leftPos + 85, topPos + 36, 0, 0, 165, 128);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKPACK, leftPos + 85, topPos + 36, 0, 0, 165, 128, 256, 256);
     }
 }

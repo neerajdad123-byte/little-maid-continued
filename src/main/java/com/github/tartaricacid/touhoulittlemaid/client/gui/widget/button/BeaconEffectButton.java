@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.network.message.SetBeaconPotionPackage;
@@ -41,14 +42,14 @@ public class BeaconEffectButton extends TouhouStateSwitchButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
         graphics.blit(this.getX() + 2, this.getY() + 2, 0, 18, 18, this.sprite);
     }
 
     public void renderToolTip(GuiGraphicsExtractor graphics, Screen screen, int pMouseX, int pMouseY) {
         if (this.isHovered) {
-            graphics.renderTooltip(screen.getMinecraft().font, tooltips, pMouseX, pMouseY);
+            graphics.setTooltipForNextFrame(screen.getMinecraft().font, tooltips, pMouseX, pMouseY);
         }
     }
 }

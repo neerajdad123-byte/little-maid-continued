@@ -197,10 +197,6 @@ sourceSets.main {
     resources {
         srcDir 'src/generated/resources'
     }
-    java {
-        // Little Maid Continued: compat modules disabled until their mods are available for this MC version
-        project.disabled_compat.split(',').each { exclude "com/github/tartaricacid/touhoulittlemaid/compat/${it.trim()}/**" }
-    }
 }
 
 configurations {

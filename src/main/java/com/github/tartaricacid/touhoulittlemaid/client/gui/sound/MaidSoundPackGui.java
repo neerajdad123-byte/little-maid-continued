@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.sound;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.FlatColorButton;
@@ -193,22 +194,21 @@ public class MaidSoundPackGui extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
         graphics.fill(startX, startY, startX + 240, startY + 220, 0xFF2A2A2A);
         graphics.fill(startX + 242, startY, startX + 400, startY + 220, 0xFF2A2A2A);
-        graphics.drawCenteredString(font, Component.translatable("gui.touhou_little_maid.custom_sound.pack.title"), startX + 120, startY + 6, 0xFFFFFF);
-        graphics.drawCenteredString(font, Component.translatable("gui.touhou_little_maid.custom_sound.sounds.preview"), startX + 321, startY + 6, 0xFFFFFF);
-        graphics.drawCenteredString(font, String.format("%d/%d", packPage + 1, packMaxPage + 1), startX + 120, startY + 206, 0xBBBBBB);
+        graphics.centeredText(font, Component.translatable("gui.touhou_little_maid.custom_sound.pack.title"), startX + 120, startY + 6, 0xFFFFFFFF);
+        graphics.centeredText(font, Component.translatable("gui.touhou_little_maid.custom_sound.sounds.preview"), startX + 321, startY + 6, 0xFFFFFFFF);
+        graphics.centeredText(font, String.format("%d/%d", packPage + 1, packMaxPage + 1), startX + 120, startY + 206, 0xFFBBBBBB);
         for (Renderable renderable : this.renderables) {
-            renderable.render(graphics, pMouseX, pMouseY, pPartialTick);
+            renderable.extractRenderState(graphics, pMouseX, pMouseY, pPartialTick);
         }
         if (StringUtils.isNotBlank(selectSoundId) && CustomSoundLoader.CACHE.containsKey(selectSoundId)) {
-            graphics.drawCenteredString(font, String.format("%d/%d", soundPage + 1, soundMaxPage + 1), startX + 321, startY + 206, 0xBBBBBB);
+            graphics.centeredText(font, String.format("%d/%d", soundPage + 1, soundMaxPage + 1), startX + 321, startY + 206, 0xFFBBBBBB);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, ICON);
-            graphics.blit(ICON, startX + 359, startY + 20, 0, 0, 16, 16, 256, 256);
-            graphics.blit(ICON, startX + 380, startY + 20, 16, 0, 16, 16, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, startX + 359, startY + 20, 0, 0, 16, 16, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, startX + 380, startY + 20, 16, 0, 16, 16, 256, 256);
         }
         this.renderables.stream().filter(b -> b instanceof FlatColorButton).forEach(b -> ((FlatColorButton) b).renderToolTip(graphics, this, pMouseX, pMouseY));
     }

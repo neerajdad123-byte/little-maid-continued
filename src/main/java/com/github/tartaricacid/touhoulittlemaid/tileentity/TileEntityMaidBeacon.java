@@ -86,15 +86,15 @@ public class TileEntityMaidBeacon extends BlockEntity {
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
-        potionIndex = getPersistentData().getInt(POTION_INDEX_TAG);
-        storagePower = getPersistentData().getFloat(STORAGE_POWER_TAG);
-        overflowDelete = getPersistentData().getBoolean(OVERFLOW_DELETE_TAG);
+        potionIndex = getPersistentData().getIntOr(POTION_INDEX_TAG, 0);
+        storagePower = getPersistentData().getFloatOr(STORAGE_POWER_TAG, 0F);
+        overflowDelete = getPersistentData().getBooleanOr(OVERFLOW_DELETE_TAG, false);
     }
 
     public void loadData(CompoundTag data) {
-        potionIndex = data.getInt(POTION_INDEX_TAG);
-        storagePower = data.getFloat(STORAGE_POWER_TAG);
-        overflowDelete = data.getBoolean(OVERFLOW_DELETE_TAG);
+        potionIndex = data.getIntOr(POTION_INDEX_TAG, 0);
+        storagePower = data.getFloatOr(STORAGE_POWER_TAG, 0F);
+        overflowDelete = data.getBooleanOr(OVERFLOW_DELETE_TAG, false);
     }
 
     @Override

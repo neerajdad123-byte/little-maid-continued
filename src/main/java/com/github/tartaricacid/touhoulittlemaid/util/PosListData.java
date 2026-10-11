@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.ListTag;
@@ -13,7 +14,7 @@ public final class PosListData {
     public ListTag serialize() {
         ListTag nbt = new ListTag();
         for (BlockPos pos : data) {
-            nbt.add(NbtUtils.writeBlockPos(pos));
+            nbt.add(PortUtil.writeBlockPos(pos));
         }
         return nbt;
     }
@@ -21,7 +22,7 @@ public final class PosListData {
     public void deserialize(ListTag nbt) {
         data.clear();
         for (int i = 0; i < nbt.size(); i++) {
-            int[] pos = nbt.getIntArray(i);
+            int[] pos = nbt.getIntArray(i).orElse(new int[0]);
             data.add(new BlockPos(pos[0], pos[1], pos[2]));
         }
     }

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.tooltip;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.inventory.tooltip.ItemContainerTooltip;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -49,13 +50,13 @@ public class ClientItemContainerTooltip implements ClientTooltipComponent {
     @Override
     public void renderImage(Font font, int pX, int pY, GuiGraphicsExtractor guiGraphics) {
         if (emptyTip != null) {
-            guiGraphics.drawString(font, emptyTip, pX, pY, ChatFormatting.GRAY.getColor());
+            guiGraphics.text(font, emptyTip, pX, pY, PortUtil.color(ChatFormatting.GRAY));
         } else {
             int i = 0;
             for (ItemStack stack : this.items) {
                 int xOffset = pX + i * 20;
-                guiGraphics.renderFakeItem(stack, xOffset, pY);
-                guiGraphics.renderItemDecorations(font, stack, xOffset, pY);
+                guiGraphics.fakeItem(stack, xOffset, pY);
+                guiGraphics.itemDecorations(font, stack, xOffset, pY);
                 i++;
             }
         }

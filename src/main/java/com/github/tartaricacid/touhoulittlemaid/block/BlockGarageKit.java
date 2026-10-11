@@ -160,16 +160,16 @@ public class BlockGarageKit extends Block implements EntityBlock {
     public InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit) {
         ItemStack stack = playerIn.getItemInHand(hand);
         if (!(worldIn instanceof ServerLevel) || !(stack.getItem() instanceof SpawnEggItem)) {
-            return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.PASS;
         }
         BlockEntity tile = worldIn.getBlockEntity(pos);
         if (!(tile instanceof TileEntityGarageKit garageKit)) {
-            return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.PASS;
         }
         EntityType<?> type = ((SpawnEggItem) stack.getItem()).getType(stack);
         Identifier key = BuiltInRegistries.ENTITY_TYPE.getKey(type);
         if (key == null) {
-            return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.PASS;
         }
 
         String id = key.toString();
@@ -203,9 +203,9 @@ public class BlockGarageKit extends Block implements EntityBlock {
 
     @Nullable
     public EntityType<?> getType(@Nullable CompoundTag nbt) {
-        if (nbt != null && nbt.contains("EntityTag", Tag.TAG_COMPOUND)) {
-            CompoundTag compound = nbt.getCompound("EntityTag");
-            if (compound.contains("id", Tag.TAG_STRING)) {
+        if (nbt != null && nbt.contains("EntityTag")) {
+            CompoundTag compound = nbt.getCompoundOrEmpty("EntityTag");
+            if (compound.contains("id")) {
                 return EntityType.byString(compound.getString("id")).orElse(null);
             }
         }

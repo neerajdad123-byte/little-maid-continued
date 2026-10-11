@@ -36,8 +36,8 @@ public class TileEntityGarageKit extends BlockEntity {
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
-        facing = Direction.byName(getPersistentData().getString(FACING_TAG));
-        extraData = getPersistentData().getCompound(EXTRA_DATA);
+        facing = Direction.byName(getPersistentData().getStringOr(FACING_TAG, ""));
+        extraData = getPersistentData().getCompoundOrEmpty(EXTRA_DATA);
     }
 
     @Override

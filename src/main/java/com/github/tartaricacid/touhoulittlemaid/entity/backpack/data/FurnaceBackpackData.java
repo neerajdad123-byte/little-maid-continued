@@ -67,11 +67,11 @@ public class FurnaceBackpackData extends SimpleContainer implements IBackpackDat
 
     @Override
     public void load(CompoundTag tag, EntityMaid maid) {
-        this.litTime = tag.getInt("BurnTime");
-        this.cookingProgress = tag.getInt("CookTime");
-        this.cookingTotalTime = tag.getInt("CookTimeTotal");
+        this.litTime = tag.getIntOr("BurnTime", 0);
+        this.cookingProgress = tag.getIntOr("CookTime", 0);
+        this.cookingTotalTime = tag.getIntOr("CookTimeTotal", 0);
         this.litDuration = this.getBurnDuration(this.getItem(FUEL_INDEX));
-        this.fromTag(tag.getList("Items", Tag.TAG_COMPOUND), this.level.registryAccess());
+        this.fromTag(tag.getListOrEmpty("Items"), this.level.registryAccess());
     }
 
     @Override

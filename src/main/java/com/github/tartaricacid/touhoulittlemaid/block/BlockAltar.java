@@ -135,7 +135,7 @@ public class BlockAltar extends Block implements EntityBlock {
                 takeInOrCraft(worldIn, altar, player);
             }
             altar.refresh();
-            return InteractionResult.sidedSuccess(worldIn.isClientSide());
+            return InteractionResult.SUCCESS;
         }).orElse(super.useItemOn(itemStack, state, worldIn, pos, player, handIn, hit));
     }
 

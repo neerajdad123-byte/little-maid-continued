@@ -132,17 +132,17 @@ public class ItemWirelessIO extends Item implements MenuProvider {
             if (type.canOpenByPlayer(te, player)) {
                 ItemStack stack = player.getMainHandItem();
                 setBindingPos(stack, pos);
-                return InteractionResult.sidedSuccess(worldIn.isClientSide());
+                return InteractionResult.SUCCESS;
             }
         }
         return super.useOn(context);
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         if (handIn == InteractionHand.MAIN_HAND && playerIn instanceof ServerPlayer) {
             playerIn.openMenu(this, buffer -> ItemStack.STREAM_CODEC.encode(buffer, playerIn.getMainHandItem()));
-            return InteractionResult.success(playerIn.getMainHandItem());
+            return InteractionResult.SUCCESS.heldItemTransformedTo(playerIn.getMainHandItem());
         }
         return super.use(worldIn, playerIn, handIn);
     }

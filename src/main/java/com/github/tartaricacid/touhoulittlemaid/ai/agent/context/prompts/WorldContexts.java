@@ -33,7 +33,7 @@ public final class WorldContexts {
 
         @Override
         public String getValue(EntityMaid maid) {
-            long time = maid.level.getDayTime();
+            long time = maid.level.getOverworldClockTime();
             long hours = (time / 1000 + 6) % 24;
             long minutes = (time % 1000) / (50 / 3);
             return TIME_FORMAT.formatted(hours, minutes);

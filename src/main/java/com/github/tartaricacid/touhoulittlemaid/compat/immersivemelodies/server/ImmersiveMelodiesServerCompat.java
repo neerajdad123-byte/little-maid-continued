@@ -2,17 +2,13 @@ package com.github.tartaricacid.touhoulittlemaid.compat.immersivemelodies.server
 
 import net.minecraft.world.item.ItemStack;
 
+// Little Maid Continued: no-op stub. The real integration lives in src/compat_disabled and is
+// re-enabled once the mod has a build for this Minecraft version.
 public class ImmersiveMelodiesServerCompat {
-    private static boolean IS_LOADED = false;
-
     public static void init() {
-        IS_LOADED = true;
     }
 
     public static boolean isInstrumentItem(ItemStack stack) {
-        if (IS_LOADED) {
-            return ImmersiveMelodiesCompatServerInner.isInstrumentItem(stack);
-        }
         return false;
     }
 }

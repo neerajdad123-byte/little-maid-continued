@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.task;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.MonsterListButton;
@@ -22,9 +23,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.anti_ad.mc.ipn.api.IPNButton;
-import org.anti_ad.mc.ipn.api.IPNGuiHint;
-import org.anti_ad.mc.ipn.api.IPNPlayerSideOnly;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 
@@ -33,13 +31,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.github.tartaricacid.touhoulittlemaid.util.ResourceLocationUtil.isValidResourceLocation;
-
-@IPNPlayerSideOnly
-@IPNGuiHint(button = IPNButton.SORT, horizontalOffset = -36, bottom = -12)
-@IPNGuiHint(button = IPNButton.SORT_COLUMNS, horizontalOffset = -24, bottom = -24)
-@IPNGuiHint(button = IPNButton.SORT_ROWS, horizontalOffset = -12, bottom = -36)
-@IPNGuiHint(button = IPNButton.SHOW_EDITOR, horizontalOffset = -5)
-@IPNGuiHint(button = IPNButton.SETTINGS, horizontalOffset = -5)
 public class AttackTaskConfigGui extends MaidTaskConfigGui<TaskConfigContainer> {
     private static final Identifier BG = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/attack_task_config.png");
 
@@ -148,17 +139,18 @@ public class AttackTaskConfigGui extends MaidTaskConfigGui<TaskConfigContainer> 
 
     @Override
     protected void renderAddition(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        this.inputField.render(graphics, mouseX, mouseY, partialTicks);
+        this.inputField.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
         MutableComponent pageText = Component.literal(String.format("%d/%d", this.page + 1, (this.attackGroupsKey.size() - 1) / 7 + 1));
-        graphics.drawCenteredString(font, pageText, leftPos + 228, topPos + 57, 0xFFFFFF);
-        graphics.drawCenteredString(font, Component.translatable("gui.touhou_little_maid.monster_type.title"), leftPos + 147, topPos + 57, 0xFFFFFF);
+        graphics.centeredText(font, pageText, leftPos + 228, topPos + 57, 0xFFFFFFFF);
+        graphics.centeredText(font, Component.translatable("gui.touhou_little_maid.monster_type.title"), leftPos + 147, topPos + 57, 0xFFFFFFFF);
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor graphics, float partialTicks, int x, int y) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
+        super.extractBackground(graphics, x, y, partialTicks);
         super.renderBg(graphics, partialTicks, x, y);
-        graphics.blit(BG, leftPos + 80, topPos + 28, 0, 0, imageWidth, 137);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG, leftPos + 80, topPos + 28, 0, 0, imageWidth, 137, 256, 256);
     }
 
     @Override

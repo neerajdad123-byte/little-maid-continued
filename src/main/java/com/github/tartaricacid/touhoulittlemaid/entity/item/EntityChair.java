@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.core.UUIDUtil;
 import com.github.tartaricacid.touhoulittlemaid.client.entity.GeckoChairEntity;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.BedrockModel;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.CustomPackLoader;
@@ -159,14 +160,14 @@ public class EntityChair extends AbstractEntityFromItem {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains(MODEL_ID_TAG_NAME, Tag.TAG_STRING)) {
-            setModelId(compound.getString(MODEL_ID_TAG_NAME));
+        if (compound.contains(MODEL_ID_TAG_NAME)) {
+            setModelId(compound.getStringOr(MODEL_ID_TAG_NAME, ""));
         }
-        if (compound.contains(MOUNTED_HEIGHT_TAG_NAME, Tag.TAG_FLOAT)) {
-            setMountedHeight(compound.getFloat(MOUNTED_HEIGHT_TAG_NAME));
+        if (compound.contains(MOUNTED_HEIGHT_TAG_NAME)) {
+            setMountedHeight(compound.getFloatOr(MOUNTED_HEIGHT_TAG_NAME, 0F));
         }
-        if (compound.contains(TAMEABLE_CAN_RIDE_TAG_NAME, Tag.TAG_BYTE)) {
-            setTameableCanRide(compound.getBoolean(TAMEABLE_CAN_RIDE_TAG_NAME));
+        if (compound.contains(TAMEABLE_CAN_RIDE_TAG_NAME)) {
+            setTameableCanRide(compound.getBooleanOr(TAMEABLE_CAN_RIDE_TAG_NAME, false));
         }
         if (compound.contains(OWNER_UUID_TAG_NAME)) {
             setOwnerUUID(NbtUtils.loadUUID(Objects.requireNonNull(compound.get(OWNER_UUID_TAG_NAME))));
@@ -179,7 +180,7 @@ public class EntityChair extends AbstractEntityFromItem {
         compound.putString(MODEL_ID_TAG_NAME, getModelId());
         compound.putFloat(MOUNTED_HEIGHT_TAG_NAME, getMountedHeight());
         compound.putBoolean(TAMEABLE_CAN_RIDE_TAG_NAME, isTameableCanRide());
-        this.getOwnerUUID().ifPresent(uuid -> compound.putUUID(OWNER_UUID_TAG_NAME, uuid));
+        this.getOwnerUUID().ifPresent(uuid -> compound.store(OWNER_UUID_TAG_NAME, UUIDUtil.CODEC, uuid));
     }
 
     @Nullable

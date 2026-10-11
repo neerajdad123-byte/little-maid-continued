@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.task.IMaidTask;
 import com.github.tartaricacid.touhoulittlemaid.entity.favorability.FavorabilityManager;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -48,11 +49,11 @@ public class EntitySit extends Entity {
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        if (tag.contains("SitJoyType", Tag.TAG_STRING)) {
-            this.setJoyType(tag.getString("SitJoyType"));
+        if (tag.contains("SitJoyType")) {
+            this.setJoyType(tag.getStringOr("SitJoyType", ""));
         }
-        if (tag.contains("AssociatedBlockPos", Tag.TAG_INT_ARRAY)) {
-            Optional<BlockPos> blockPosOptional = NbtUtils.readBlockPos(tag, "AssociatedBlockPos");
+        if (tag.contains("AssociatedBlockPos")) {
+            Optional<BlockPos> blockPosOptional = tag.read("AssociatedBlockPos", BlockPos.CODEC);
             blockPosOptional.ifPresent(blockPos -> this.associatedBlockPos = blockPos);
         }
     }
@@ -62,7 +63,7 @@ public class EntitySit extends Entity {
         if (StringUtils.isNotBlank(this.getJoyType())) {
             tag.putString("SitJoyType", this.getJoyType());
         }
-        tag.put("AssociatedBlockPos", NbtUtils.writeBlockPos(this.associatedBlockPos));
+        tag.put("AssociatedBlockPos", PortUtil.writeBlockPos(this.associatedBlockPos));
     }
 
     @Override

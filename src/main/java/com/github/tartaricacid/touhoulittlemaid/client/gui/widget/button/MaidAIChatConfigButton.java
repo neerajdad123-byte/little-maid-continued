@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -32,13 +33,12 @@ public class MaidAIChatConfigButton extends Button {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
         Minecraft mc = Minecraft.getInstance();
-        RenderSystem.enableDepthTest();
         if (this.isHovered) {
-            graphics.blit(ICON, this.getX(), this.getY(), 6, 150, this.width, this.height, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX(), this.getY(), 6, 150, this.width, this.height, 256, 256);
         } else {
-            graphics.blit(ICON, this.getX(), this.getY(), 6, 137, this.width, this.height, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX(), this.getY(), 6, 137, this.width, this.height, 256, 256);
         }
         drawButtonText(graphics, mc.font);
     }
@@ -86,11 +86,11 @@ public class MaidAIChatConfigButton extends Button {
         float rightTextX = (this.getX() + 113 - font.width(rightText) * scale / 2f) / scale;
         float rightTextY = (this.getY() + 4) / scale;
 
-        graphics.pose().pushPose();
-        graphics.pose().scale(scale, scale, 1);
-        graphics.drawString(font, leftText, leftTextX, leftTextY, 0x444444, false);
-        graphics.drawString(font, rightText, rightTextX, rightTextY, 0x55ff55, false);
-        graphics.pose().popPose();
+        graphics.pose().pushMatrix();
+        graphics.pose().scale(scale, scale);
+        graphics.text(font, leftText, leftTextX, leftTextY, 0xFF444444, false);
+        graphics.text(font, rightText, rightTextX, rightTextY, 0xFF55FF55, false);
+        graphics.pose().popMatrix();
     }
 
     @OnlyIn(Dist.CLIENT)

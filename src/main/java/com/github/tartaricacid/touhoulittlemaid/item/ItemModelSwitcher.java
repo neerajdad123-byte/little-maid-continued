@@ -40,7 +40,7 @@ public class ItemModelSwitcher extends BlockItem {
 
     public static void itemStackToTileEntity(HolderLookup.Provider provider, ItemStack stack, TileEntityModelSwitcher switcher) {
         CompoundTag tag = stack.get(STORAGE_DATA_TAG);
-        if (tag != null && tag.contains(NEO_FORGE_DATA_TAG, Tag.TAG_COMPOUND)) {
+        if (tag != null && tag.contains(NEO_FORGE_DATA_TAG)) {
             switcher.loadAdditional(tag, provider);
         }
     }
@@ -50,8 +50,8 @@ public class ItemModelSwitcher extends BlockItem {
         if (pInteractionTarget instanceof EntityMaid maid) {
             CompoundTag tag = stack.getOrDefault(STORAGE_DATA_TAG, new CompoundTag());
             CompoundTag forgeData;
-            if (tag.contains(NEO_FORGE_DATA_TAG, Tag.TAG_COMPOUND)) {
-                forgeData = tag.getCompound(NEO_FORGE_DATA_TAG);
+            if (tag.contains(NEO_FORGE_DATA_TAG)) {
+                forgeData = tag.getCompoundOrEmpty(NEO_FORGE_DATA_TAG);
             } else {
                 forgeData = new CompoundTag();
             }
@@ -65,9 +65,9 @@ public class ItemModelSwitcher extends BlockItem {
 
     private boolean hasMaidInfo(ItemStack stack) {
         CompoundTag tag = stack.get(STORAGE_DATA_TAG);
-        if (tag != null && tag.contains(NEO_FORGE_DATA_TAG, Tag.TAG_COMPOUND)) {
-            CompoundTag forgeTag = tag.getCompound(NEO_FORGE_DATA_TAG);
-            return forgeTag.contains(TileEntityModelSwitcher.ENTITY_UUID, Tag.TAG_INT_ARRAY);
+        if (tag != null && tag.contains(NEO_FORGE_DATA_TAG)) {
+            CompoundTag forgeTag = tag.getCompoundOrEmpty(NEO_FORGE_DATA_TAG);
+            return forgeTag.contains(TileEntityModelSwitcher.ENTITY_UUID);
         }
         return false;
     }

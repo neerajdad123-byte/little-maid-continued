@@ -77,8 +77,8 @@ public class TankBackpackData extends SimpleContainer implements IBackpackData {
 
     @Override
     public void load(CompoundTag tag, EntityMaid maid) {
-        this.loadTank(tag.getCompound("Tanks"), maid);
-        this.fromTag(tag.getList("Items", Tag.TAG_COMPOUND), this.maid.registryAccess());
+        this.loadTank(tag.getCompoundOrEmpty("Tanks"), maid);
+        this.fromTag(tag.getListOrEmpty("Items"), this.maid.registryAccess());
     }
 
     @Override

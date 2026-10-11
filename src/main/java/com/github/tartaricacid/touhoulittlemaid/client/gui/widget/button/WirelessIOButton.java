@@ -23,8 +23,8 @@ public class WirelessIOButton extends TouhouStateSwitchButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
         if (this.isHovered()) {
             this.onTooltip.onTooltip(graphics, mouseX, mouseY);
         }

@@ -62,40 +62,40 @@ public class MaidConfigManager {
     }
 
     void readAdditionalSaveData(CompoundTag compound) {
-        if (compound.contains(PICKUP_TAG, Tag.TAG_BYTE)) {
-            setPickup(compound.getBoolean(PICKUP_TAG));
+        if (compound.contains(PICKUP_TAG)) {
+            setPickup(compound.getBooleanOr(PICKUP_TAG, false));
         }
-        if (compound.contains(HOME_TAG, Tag.TAG_BYTE)) {
-            setHomeModeEnable(compound.getBoolean(HOME_TAG));
+        if (compound.contains(HOME_TAG)) {
+            setHomeModeEnable(compound.getBooleanOr(HOME_TAG, false));
         }
-        if (compound.contains(RIDEABLE_TAG, Tag.TAG_BYTE)) {
-            setRideable(compound.getBoolean(RIDEABLE_TAG));
+        if (compound.contains(RIDEABLE_TAG)) {
+            setRideable(compound.getBooleanOr(RIDEABLE_TAG, false));
         }
-        if (compound.contains(MAID_SUB_CONFIG_TAG, Tag.TAG_COMPOUND)) {
-            CompoundTag maidSubConfig = compound.getCompound(MAID_SUB_CONFIG_TAG);
+        if (compound.contains(MAID_SUB_CONFIG_TAG)) {
+            CompoundTag maidSubConfig = compound.getCompoundOrEmpty(MAID_SUB_CONFIG_TAG);
             if (maidSubConfig.contains(BACKPACK_SHOW_TAG)) {
-                setShowBackpack(maidSubConfig.getBoolean(BACKPACK_SHOW_TAG));
+                setShowBackpack(maidSubConfig.getBooleanOr(BACKPACK_SHOW_TAG, false));
             }
             if (maidSubConfig.contains(BACK_ITEM_SHOW_TAG)) {
-                setShowBackItem(maidSubConfig.getBoolean(BACK_ITEM_SHOW_TAG));
+                setShowBackItem(maidSubConfig.getBooleanOr(BACK_ITEM_SHOW_TAG, false));
             }
             if (maidSubConfig.contains(CHATBUBBLE_SHOW_TAG)) {
-                setChatBubbleShow(maidSubConfig.getBoolean(CHATBUBBLE_SHOW_TAG));
+                setChatBubbleShow(maidSubConfig.getBooleanOr(CHATBUBBLE_SHOW_TAG, false));
             }
             if (maidSubConfig.contains(SOUND_FREQ_TAG)) {
-                setSoundFreq(maidSubConfig.getFloat(SOUND_FREQ_TAG));
+                setSoundFreq(maidSubConfig.getFloatOr(SOUND_FREQ_TAG, 0F));
             }
             if (maidSubConfig.contains(PICKUP_TYPE_TAG)) {
-                setPickupType(PickType.values()[maidSubConfig.getInt(PICKUP_TYPE_TAG)]);
+                setPickupType(PickType.values()[maidSubConfig.getIntOr(PICKUP_TYPE_TAG, 0)]);
             }
             if (maidSubConfig.contains(OPEN_DOOR_TAG)) {
-                setOpenDoor(maidSubConfig.getBoolean(OPEN_DOOR_TAG));
+                setOpenDoor(maidSubConfig.getBooleanOr(OPEN_DOOR_TAG, false));
             }
             if (maidSubConfig.contains(OPEN_FENCE_GATE_TAG)) {
-                setOpenFenceGate(maidSubConfig.getBoolean(OPEN_FENCE_GATE_TAG));
+                setOpenFenceGate(maidSubConfig.getBooleanOr(OPEN_FENCE_GATE_TAG, false));
             }
             if (maidSubConfig.contains(ACTIVE_CLIMBING_TAG)) {
-                setActiveClimbing(maidSubConfig.getBoolean(ACTIVE_CLIMBING_TAG));
+                setActiveClimbing(maidSubConfig.getBooleanOr(ACTIVE_CLIMBING_TAG, false));
             }
         }
     }

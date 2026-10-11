@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockPart;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.block.BlockSnackCabinet;
@@ -55,7 +56,7 @@ public class TileEntitySnackCabinetRenderer implements BlockEntityRenderer<TileE
         poseStack.translate(0.5, 1.5, 0.5);
         poseStack.mulPose(Axis.ZN.rotationDegrees(180));
         poseStack.mulPose(Axis.YN.rotationDegrees(180 - facing.get2DDataValue() * 90));
-        VertexConsumer consumer = bufferIn.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
+        VertexConsumer consumer = bufferIn.getBuffer(RenderTypes.entityCutout(TEXTURE));
         this.model.renderToBuffer(poseStack, consumer, combinedLightIn, combinedOverlayIn, -1);
         poseStack.popPose();
     }

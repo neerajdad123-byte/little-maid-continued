@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.SimpleBedrockModel;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader;
@@ -51,7 +52,7 @@ public class TileEntityMaidBedRenderer implements BlockEntityRenderer<TileEntity
         if (dyeColor == DyeColor.BLUE) {
             vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(texture));
         } else {
-            vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
+            vertexConsumer = buffer.getBuffer(RenderTypes.entityCutout(texture));
         }
         model.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay);
         poseStack.popPose();

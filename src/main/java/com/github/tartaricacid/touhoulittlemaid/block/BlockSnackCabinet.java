@@ -78,7 +78,7 @@ public class BlockSnackCabinet extends BaseEntityBlock {
         // 如果是手持方块物品并点击上方，那么不打开界面，方便放置方块
         Direction direction = hit.getDirection();
         if (direction == Direction.UP && heldItem.getItem() instanceof BlockItem) {
-            return InteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         // 否则打开界面

@@ -127,13 +127,7 @@ public abstract class AIChatSettingsHubScreen extends Screen {
         int thumbHeight = Math.max(12, visibleCount * trackHeight / totalCount);
         int scrollRange = Math.max(1, totalCount - visibleCount);
         int thumbOffset = (trackHeight - thumbHeight) * this.listScrollOffset / scrollRange;
-        graphics.fill(
-                (int) this.listArea.right() + 2,
-                trackTop + thumbOffset,
-                (int) this.listArea.right() + 4,
-                trackTop + thumbOffset + thumbHeight,
-                0xFF55FF55
-        );
+        graphics.fill((int) this.listArea.right() + 2, trackTop + thumbOffset, (int) this.listArea.right() + 4, trackTop + thumbOffset + thumbHeight, 0xFF55FF55);
     }
 
     /**
@@ -142,7 +136,7 @@ public abstract class AIChatSettingsHubScreen extends Screen {
     protected void renderInsufficientPermissions(GuiGraphicsExtractor graphics) {
         if (this.insufficientPermissions) {
             MutableComponent text = Component.translatable("ai.touhou_little_maid.chat.settings.hub.insufficient_permissions");
-            graphics.drawWordWrap(font, text, getContentX() + 20, getContentY() + 20, getContentWidth() - 60, 0xFFFF5555);
+            graphics.textWithWordWrap(font, text, getContentX() + 20, getContentY() + 20, getContentWidth() - 60, 0xFFFF5555);
         }
     }
 
@@ -229,9 +223,8 @@ public abstract class AIChatSettingsHubScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(graphics, mouseX, mouseY, partialTick);
-        super.render(graphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override

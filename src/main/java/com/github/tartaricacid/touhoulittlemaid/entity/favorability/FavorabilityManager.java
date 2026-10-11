@@ -327,10 +327,10 @@ public class FavorabilityManager {
     }
 
     public void readAdditionalSaveData(CompoundTag compound) {
-        if (compound.contains(TAG_NAME, Tag.TAG_COMPOUND)) {
-            CompoundTag data = compound.getCompound(TAG_NAME);
-            for (String name : data.getAllKeys()) {
-                this.counter.put(name, new Time(data.getInt(name)));
+        if (compound.contains(TAG_NAME)) {
+            CompoundTag data = compound.getCompoundOrEmpty(TAG_NAME);
+            for (String name : data.keySet()) {
+                this.counter.put(name, new Time(data.getIntOr(name, 0)));
             }
         }
     }

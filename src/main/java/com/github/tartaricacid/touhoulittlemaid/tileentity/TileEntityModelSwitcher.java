@@ -58,17 +58,17 @@ public class TileEntityModelSwitcher extends BlockEntity {
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
         infoList.clear();
-        ListTag listTag = getPersistentData().getList(INFO_LIST, Tag.TAG_COMPOUND);
+        ListTag listTag = getPersistentData().getListOrEmpty(INFO_LIST);
         for (int i = 0; i < listTag.size(); i++) {
             ModeInfo info = new ModeInfo();
-            info.deserialize(listTag.getCompound(i));
+            info.deserialize(listTag.getCompoundOrEmpty(i));
             infoList.add(info);
         }
         Tag uuidTag = getPersistentData().get(ENTITY_UUID);
         if (uuidTag != null) {
             this.uuid = NbtUtils.loadUUID(uuidTag);
         }
-        this.index = getPersistentData().getInt(LIST_INDEX);
+        this.index = getPersistentData().getIntOr(LIST_INDEX, 0);
     }
 
     @Override
@@ -153,7 +153,7 @@ public class TileEntityModelSwitcher extends BlockEntity {
         }
 
         public static ModeInfo fromBuf(FriendlyByteBuf buf) {
-            return new ModeInfo(buf.readResourceLocation(), buf.readUtf(), Direction.from2DDataValue(buf.readVarInt()));
+            return new ModeInfo(buf.readIdentifier(), buf.readUtf(), Direction.from2DDataValue(buf.readVarInt()));
         }
 
         public Identifier getModelId() {
@@ -181,7 +181,7 @@ public class TileEntityModelSwitcher extends BlockEntity {
         }
 
         public void toBuf(FriendlyByteBuf buf) {
-            buf.writeResourceLocation(this.modelId);
+            buf.writeIdentifier(this.modelId);
             buf.writeUtf(this.text);
             buf.writeVarInt(this.direction.get2DDataValue());
         }
@@ -195,9 +195,9 @@ public class TileEntityModelSwitcher extends BlockEntity {
         }
 
         public void deserialize(CompoundTag nbt) {
-            this.modelId = Identifier.parse(nbt.getString("model_id"));
-            this.text = nbt.getString("text");
-            this.direction = Direction.from2DDataValue(nbt.getInt("direction"));
+            this.modelId = Identifier.parse(nbt.getStringOr("model_id", ""));
+            this.text = nbt.getStringOr("text", "");
+            this.direction = Direction.from2DDataValue(nbt.getIntOr("direction", 0));
         }
     }
 

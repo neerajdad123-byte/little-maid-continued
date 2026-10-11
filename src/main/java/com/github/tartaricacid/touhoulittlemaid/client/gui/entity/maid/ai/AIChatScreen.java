@@ -364,7 +364,7 @@ public class AIChatScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         if (this.input != null) {
             int x = this.input.getX();
             int y = this.input.getY();
@@ -373,12 +373,12 @@ public class AIChatScreen extends Screen {
             String value = this.input.getValue();
 
             graphics.fill(x - 8, y - 8, x + w + 8, y + h - 6, 0xBF090909);
-            this.input.render(graphics, mouseX, mouseY, partialTicks);
+            this.input.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
             if (StringUtils.isEmpty(value)) {
                 MutableComponent text = Component.translatable("ai.touhou_little_maid.chat.input.tip")
                         .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
-                graphics.drawCenteredString(this.font, text, x + w / 2, y + (h - 22) / 2, 0xFFFFFF);
+                graphics.centeredText(this.font, text, x + w / 2, y + (h - 22) / 2, 0xFFFFFFFF);
             }
         }
 
@@ -386,7 +386,7 @@ public class AIChatScreen extends Screen {
         this.renderTokenUsage(graphics);
 
         for (Renderable renderable : this.renderables) {
-            renderable.render(graphics, mouseX, mouseY, partialTicks);
+            renderable.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         }
 
         if (this.openPopup != null) {
@@ -408,8 +408,8 @@ public class AIChatScreen extends Screen {
         int halfWidth = (right - left) / 2;
         float scale = 0.5f;
 
-        graphics.pose().pushPose();
-        graphics.pose().scale(scale, scale, 1.0f);
+        graphics.pose().pushMatrix();
+        graphics.pose().scale(scale, scale);
 
         int scaledLeft = Math.round(left / scale);
         int scaledRight = Math.round(right / scale);
@@ -422,7 +422,7 @@ public class AIChatScreen extends Screen {
         );
         MutableComponent llmSummary = Component.translatable("ai.touhou_little_maid.chat.summary.llm", llmModelSummary);
         String trimmedLeft = this.trimToWidth(llmSummary.getString(), scaledHalfWidth);
-        graphics.drawString(this.font, trimmedLeft, scaledLeft, scaledY, 0xFFADADAD);
+        graphics.text(this.font, trimmedLeft, scaledLeft, scaledY, 0xFFADADAD);
 
         String ttsModelSummary;
         if (MaidAIChatSerializable.isNoTTSSite(this.manager.ttsSite)) {
@@ -438,9 +438,9 @@ public class AIChatScreen extends Screen {
                 ttsModelSummary, SupportLanguage.getLanguageName(this.manager.ttsLanguage));
         String trimmedRight = this.trimToWidth(ttsSummary.getString(), scaledHalfWidth);
         int rightX = scaledRight - this.font.width(trimmedRight);
-        graphics.drawString(this.font, trimmedRight, rightX, scaledY, 0xFFADADAD);
+        graphics.text(this.font, trimmedRight, rightX, scaledY, 0xFFADADAD);
 
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     private void renderTokenUsage(GuiGraphicsExtractor graphics) {
@@ -459,12 +459,12 @@ public class AIChatScreen extends Screen {
             text = "Token: %s / %s (%.1f%%)".formatted(currentStr, maxStr, percent);
         }
 
-        graphics.pose().pushPose();
-        graphics.pose().scale(scale, scale, 1.0f);
+        graphics.pose().pushMatrix();
+        graphics.pose().scale(scale, scale);
         int scaledX = Math.round((left + right) / 2.0f / scale) - this.font.width(text) / 2;
         int scaledY = Math.round(tokenY / scale);
-        graphics.drawString(this.font, text, scaledX, scaledY, 0xFFADADAD, false);
-        graphics.pose().popPose();
+        graphics.text(this.font, text, scaledX, scaledY, 0xFFADADAD, false);
+        graphics.pose().popMatrix();
     }
 
     private static String formatTokenCount(int count) {
@@ -654,7 +654,7 @@ public class AIChatScreen extends Screen {
     }
 
     private void drawPopupText(GuiGraphicsExtractor graphics, String text, int x, int y, int maxWidth, int color) {
-        graphics.drawString(this.font, this.trimToWidth(text, maxWidth), x, y, color, false);
+        graphics.text(this.font, this.trimToWidth(text, maxWidth), x, y, color, false);
     }
 
     private boolean tryClickPopup(double mouseX, double mouseY) {

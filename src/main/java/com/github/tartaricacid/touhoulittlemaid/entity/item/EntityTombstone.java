@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.core.UUIDUtil;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.world.data.MaidWorldData;
 import net.minecraft.util.Util;
@@ -92,7 +93,7 @@ public class EntityTombstone extends Entity {
 
             // 所有物品处理完毕后，再销毁实体
             this.discard();
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
 
         // 其他逻辑...
@@ -119,14 +120,14 @@ public class EntityTombstone extends Entity {
             items.deserializeNBT(this.registryAccess(), tag.getCompound(TOMBSTONE_ITEMS_TAG));
         }
         if (tag.contains(MAID_NAME_TAG)) {
-            String nameJson = tag.getString(MAID_NAME_TAG);
+            String nameJson = tag.getStringOr(MAID_NAME_TAG, "");
             setMaidName(Component.Serializer.fromJson(nameJson, this.registryAccess()));
         }
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tag.putUUID(OWNER_ID_TAG, this.ownerId);
+        tag.store(OWNER_ID_TAG, UUIDUtil.CODEC, this.ownerId);
         tag.put(TOMBSTONE_ITEMS_TAG, this.items.serializeNBT(this.registryAccess()));
         tag.putString(MAID_NAME_TAG, Component.Serializer.toJson(this.getMaidName(), this.registryAccess()));
     }

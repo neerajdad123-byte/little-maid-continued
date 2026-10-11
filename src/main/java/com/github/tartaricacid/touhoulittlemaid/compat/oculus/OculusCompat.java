@@ -1,14 +1,12 @@
 package com.github.tartaricacid.touhoulittlemaid.compat.oculus;
 
+// Little Maid Continued: no-op stub. The real integration lives in src/compat_disabled and is
+// re-enabled once the mod has a build for this Minecraft version.
 public final class OculusCompat {
-    public static final String OCULUS = "oculus";
-    public static boolean IS_OCULUS_INSTALLED = false;
-
     public static void init() {
-        IS_OCULUS_INSTALLED = net.neoforged.fml.ModList.get().getModContainerById(OCULUS).isPresent();
     }
 
     public static boolean isOculusInstalled() {
-        return IS_OCULUS_INSTALLED;
+        return false;
     }
 }

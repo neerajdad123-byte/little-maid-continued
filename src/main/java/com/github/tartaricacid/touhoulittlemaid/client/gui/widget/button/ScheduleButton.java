@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.AbstractMaidContainerGui;
@@ -43,13 +44,12 @@ public class ScheduleButton<T extends AbstractMaidContainer> extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        RenderSystem.enableDepthTest();
-        graphics.blit(BUTTON, this.getX(), this.getY(), 82, 43 + 14 * mode.ordinal(), this.width, this.height, 256, 256);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BUTTON, this.getX(), this.getY(), 82, 43 + 14 * mode.ordinal(), this.width, this.height, 256, 256);
     }
 
     public List<Component> getTooltips() {
-        int time = (int) (maid.level().getDayTime() % 24000L);
+        int time = (int) (maid.level().getOverworldClockTime() % 24000L);
         int hour = (time / 1000 + 6) % 24;
         int minute = (time % 1000) * 60 / 1000;
         Activity activity = maid.getScheduleDetail();

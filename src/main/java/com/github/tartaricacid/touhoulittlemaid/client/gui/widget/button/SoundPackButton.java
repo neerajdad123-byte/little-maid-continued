@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.texture.SizeTexture;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.pojo.CustomModelPack;
@@ -31,34 +33,31 @@ public class SoundPackButton extends FlatColorButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
-        super.renderWidget(graphics, mouseX, mouseY, pPartialTick);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, pPartialTick);
         Identifier icon = info.getIcon();
         if (icon == null) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, ICON);
-            graphics.blit(ICON, this.getX() + 4, this.getY() + 5, 0, 16, 32, 32, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX() + 4, this.getY() + 5, 0, 16, 32, 32, 256, 256);
         } else {
             if (info.getIconAnimation() == CustomModelPack.AnimationState.UNCHECK) {
                 checkIconAnimation(info, icon);
             }
             if (info.getIconAnimation() == CustomModelPack.AnimationState.FALSE) {
-                graphics.blit(icon, this.getX() + 4, this.getY() + 5,
-                        0, 0, 32, 32, 32, 32);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, icon, this.getX() + 4, this.getY() + 5, 0, 0, 32, 32, 32, 32);
             } else {
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, icon);
                 int time = getTickTime() / info.getIconDelay();
                 int iconIndex = time % info.getIconAspectRatio();
-                graphics.blit(icon, this.getX() + 4, this.getY() + 5,
-                        0, iconIndex * 32, 32,
-                        32, 32, 32 * info.getIconAspectRatio());
+                graphics.blit(RenderPipelines.GUI_TEXTURED, icon, this.getX() + 4, this.getY() + 5, 0, iconIndex * 32, 32, 32, 32, 32 * info.getIconAspectRatio());
             }
         }
         if (isUse) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, ICON);
-            graphics.blit(ICON, this.getX() + this.getWidth() - 20, this.getY() + 13, 32, 0, 16, 16, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX() + this.getWidth() - 20, this.getY() + 13, 32, 0, 16, 16, 256, 256);
         }
     }
 
@@ -73,24 +72,24 @@ public class SoundPackButton extends FlatColorButton {
         List<String> author = info.getAuthor();
         String date = info.getDate();
 
-        graphics.drawString(font, packName, startX, startY, ChatFormatting.WHITE.getColor());
+        graphics.text(font, packName, startX, startY, PortUtil.color(ChatFormatting.WHITE));
 
         if (StringUtils.isNotBlank(version)) {
             int titleWidth = font.width(packName);
-            graphics.drawString(font, "§nv" + version, startX + titleWidth + 5, startY, ChatFormatting.AQUA.getColor());
+            graphics.text(font, "§nv" + version, startX + titleWidth + 5, startY, PortUtil.color(ChatFormatting.AQUA));
         }
 
         if (!author.isEmpty()) {
             startY += 10;
             String authorListText = StringUtils.joinWith(I18n.get("gui.touhou_little_maid.resources_download.author.delimiter"), author);
             String authorText = I18n.get("gui.touhou_little_maid.resources_download.author", authorListText);
-            graphics.drawString(font, authorText, startX, startY, ChatFormatting.GOLD.getColor());
+            graphics.text(font, authorText, startX, startY, PortUtil.color(ChatFormatting.GOLD));
         }
 
         if (StringUtils.isNotBlank(date)) {
             startY += 10;
             MutableComponent dateText = Component.translatable("gui.touhou_little_maid.skin.text.date", date);
-            graphics.drawString(font, dateText, startX, startY, ChatFormatting.GREEN.getColor());
+            graphics.text(font, dateText, startX, startY, PortUtil.color(ChatFormatting.GREEN));
         }
     }
 

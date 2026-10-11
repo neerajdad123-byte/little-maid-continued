@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.block;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.cache.CacheIconManager;
@@ -158,18 +159,17 @@ public class ModelSwitcherGui extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (this.maid == null) {
             return;
         }
-        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
-        graphics.blit(BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
         if (bindUuid != null) {
-            graphics.drawCenteredString(font, bindUuid.toString(), leftPos + 128, topPos - 10, 0xffffff);
+            graphics.centeredText(font, bindUuid.toString(), leftPos + 128, topPos - 10, 0xFFFFFFFF);
         } else {
-            graphics.drawCenteredString(font, Component.translatable("gui.touhou_little_maid.model_switcher.uuid.empty"), leftPos + 128, topPos - 10, 0xffffff);
+            graphics.centeredText(font, Component.translatable("gui.touhou_little_maid.model_switcher.uuid.empty"), leftPos + 128, topPos - 10, 0xFFFFFFFF);
         }
-        graphics.drawCenteredString(font, String.format("%d/%d", page + 1, (infoList.size() - 1) / maxRow + 1), leftPos + 193, topPos + 12, 0xffffff);
+        graphics.centeredText(font, String.format("%d/%d", page + 1, (infoList.size() - 1) / maxRow + 1), leftPos + 193, topPos + 12, 0xFFFFFFFF);
         if (this.description != null) {
             InventoryScreen.renderEntityInInventoryFollowsMouse(
                     graphics,
@@ -182,10 +182,10 @@ public class ModelSwitcherGui extends Screen {
                     leftPos + 45,
                     topPos + 45,
                     maid);
-            this.description.render(graphics, pMouseX, pMouseY, pPartialTick);
+            this.description.extractRenderState(graphics, pMouseX, pMouseY, pPartialTick);
         }
         for (Renderable renderable : this.renderables) {
-            renderable.render(graphics, pMouseX, pMouseY, pPartialTick);
+            renderable.extractRenderState(graphics, pMouseX, pMouseY, pPartialTick);
         }
         this.renderListButtonName(graphics);
     }
@@ -197,7 +197,7 @@ public class ModelSwitcherGui extends Screen {
             if (CustomPackLoader.MAID_MODELS.getInfo(modelId).isPresent()) {
                 MaidModelInfo info = CustomPackLoader.MAID_MODELS.getInfo(modelId).get();
                 MutableComponent component = Component.translatable(ParseI18n.getI18nKey(info.getName()));
-                graphics.drawCenteredString(font, component, leftPos + 193, startOffsetY, 0xffffff);
+                graphics.centeredText(font, component, leftPos + 193, startOffsetY, 0xFFFFFFFF);
             }
             startOffsetY += 19;
         }

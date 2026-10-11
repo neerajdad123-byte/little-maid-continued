@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.VanillaConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,7 +21,7 @@ import org.joml.Vector3f;
 
 public class ReplaceExperienceOrbRenderer extends EntityRenderer<ExperienceOrb> {
     private static final Identifier POINT_ITEM_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/entity/point_item.png");
-    private static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(POINT_ITEM_TEXTURE);
+    private static final RenderType RENDER_TYPE = RenderTypes.entityCutout(POINT_ITEM_TEXTURE);
     private final ExperienceOrbRenderer vanillaRender;
 
     public ReplaceExperienceOrbRenderer(EntityRendererProvider.Context context) {

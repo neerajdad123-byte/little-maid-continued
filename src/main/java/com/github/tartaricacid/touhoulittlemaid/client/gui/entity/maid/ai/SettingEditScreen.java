@@ -162,12 +162,10 @@ public class SettingEditScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        graphics.drawString(font, Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.owner_name"),
-                ownerName.getX() + 2, ownerName.getY() - 12, 0xFFFFFF);
-        graphics.drawString(font, Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.custom_setting"),
-                customSetting.getX() + 2, customSetting.getY() - 12, 0xFFFFFF);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+        graphics.text(font, Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.owner_name"), ownerName.getX() + 2, ownerName.getY() - 12, 0xFFFFFFFF);
+        graphics.text(font, Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.custom_setting"), customSetting.getX() + 2, customSetting.getY() - 12, 0xFFFFFFFF);
         drawMaid(graphics, customSetting.getX() + customSetting.getWidth() + 73, customSetting.getY() + 96, maid);
 
         long time = System.currentTimeMillis() - this.tipTimestamp;
@@ -175,8 +173,7 @@ public class SettingEditScreen extends Screen {
             double value = (double) (time) / MAX_TIP_TIME * Math.PI;
             int alpha = (int) (Math.sin(value) * 0xFF);
             alpha = Mth.clamp(alpha, 15, 240);
-            graphics.drawCenteredString(font, Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.edit_custom_setting.saved"),
-                    customSetting.getX() + customSetting.getWidth() + 73, customSetting.getY() - 12, (alpha << 24) + 0xFF1111);
+            graphics.centeredText(font, Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.edit_custom_setting.saved"), customSetting.getX() + customSetting.getWidth() + 73, customSetting.getY() - 12, (alpha << 24) + 0xFF1111);
         }
     }
 

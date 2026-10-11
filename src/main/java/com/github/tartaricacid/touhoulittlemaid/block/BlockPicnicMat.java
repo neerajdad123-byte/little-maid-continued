@@ -104,10 +104,10 @@ public class BlockPicnicMat extends Block implements EntityBlock {
     @Override
     public InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit) {
         if (worldIn.isClientSide()) {
-            return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.PASS;
         }
         if (hand != InteractionHand.MAIN_HAND) {
-            return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.PASS;
         }
         if (!(worldIn.getBlockEntity(pos) instanceof TileEntityPicnicMat picnicMat)) {
             return InteractionResult.FAIL;
@@ -123,7 +123,7 @@ public class BlockPicnicMat extends Block implements EntityBlock {
         if (itemInHand.isEmpty() && playerIn.isDiscrete()) {
             return takeFood(playerIn, picnicMatCenter);
         }
-        return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
 

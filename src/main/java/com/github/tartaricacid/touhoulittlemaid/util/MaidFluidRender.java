@@ -53,10 +53,10 @@ public final class MaidFluidRender {
             if (scaledAmount > height) {
                 scaledAmount = height;
             }
-            graphics.pose().pushPose();
-            graphics.pose().translate(x, y, 0);
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(x, y);
             drawTiledSprite(graphics, width, height, fluidColor, scaledAmount, fluidStillSprite);
-            graphics.pose().popPose();
+            graphics.pose().popMatrix();
         });
     }
 

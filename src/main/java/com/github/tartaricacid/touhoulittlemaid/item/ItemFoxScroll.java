@@ -47,7 +47,7 @@ public class ItemFoxScroll extends Item {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide() && hand == InteractionHand.MAIN_HAND) {
             ItemStack item = player.getMainHandItem();
             MaidWorldData maidWorldData = MaidWorldData.get(level);
@@ -76,7 +76,7 @@ public class ItemFoxScroll extends Item {
                     InitTrigger.MAID_EVENT.get().trigger(serverPlayer, TriggerType.USE_WHITE_FOX_SCROLL);
                 }
             }
-            return InteractionResult.success(item);
+            return InteractionResult.SUCCESS.heldItemTransformedTo(item);
         }
         return super.use(level, player, hand);
     }

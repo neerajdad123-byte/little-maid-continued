@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.geckolayer;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.api.backpack.IMaidBackpack;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IMaid;
 import com.github.tartaricacid.touhoulittlemaid.entity.backpack.BackpackManager;
@@ -25,7 +26,7 @@ public class GeckoLayerMaidBackpack<T extends Mob, R extends IGeoEntityRenderer<
     }
 
     protected static <T extends LivingEntity> void renderColoredCutoutModel(EntityModel<T> pModel, Identifier pTextureLocation, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pEntity, float pRed, float pGreen, float pBlue) {
-        VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityCutoutNoCull(pTextureLocation));
+        VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderTypes.entityCutout(pTextureLocation));
         pModel.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, LivingEntityRenderer.getOverlayCoords(pEntity, 0.0F));
     }
 

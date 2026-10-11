@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.world.data;
 
+import net.minecraft.core.UUIDUtil;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityTombstone;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.google.common.collect.Lists;
@@ -54,40 +56,40 @@ public class MaidWorldData extends SavedData {
 
     public static MaidWorldData load(CompoundTag tag, HolderLookup.@NotNull Provider provider) {
         MaidWorldData data = new MaidWorldData();
-        if (tag.contains(MAID_INFOS_TAG, Tag.TAG_COMPOUND)) {
-            CompoundTag infosTag = tag.getCompound(MAID_INFOS_TAG);
-            for (String key : infosTag.getAllKeys()) {
-                ListTag listTag = infosTag.getList(key, Tag.TAG_COMPOUND);
+        if (tag.contains(MAID_INFOS_TAG)) {
+            CompoundTag infosTag = tag.getCompoundOrEmpty(MAID_INFOS_TAG);
+            for (String key : infosTag.keySet()) {
+                ListTag listTag = infosTag.getListOrEmpty(key);
                 for (int i = 0; i < listTag.size(); i++) {
-                    CompoundTag infoTag = listTag.getCompound(i);
-                    String dimension = infoTag.getString("Dimension");
-                    @Nullable BlockPos chunkPos = NbtUtils.readBlockPos(infoTag, "ChunkPos").orElse(null);
+                    CompoundTag infoTag = listTag.getCompoundOrEmpty(i);
+                    String dimension = infoTag.getStringOr("Dimension", "");
+                    @Nullable BlockPos chunkPos = infoTag.read("ChunkPos", BlockPos.CODEC).orElse(null);
                     if (chunkPos == null) {
                         continue;
                     }
-                    UUID ownerId = infoTag.getUUID("OwnerId");
-                    UUID maidId = infoTag.getUUID("MaidId");
-                    long timestamp = infoTag.getLong("Timestamp");
+                    UUID ownerId = infoTag.read("OwnerId", UUIDUtil.CODEC).orElseThrow();
+                    UUID maidId = infoTag.read("MaidId", UUIDUtil.CODEC).orElseThrow();
+                    long timestamp = infoTag.getLongOr("Timestamp", 0L);
                     MutableComponent name = Component.Serializer.fromJson(infoTag.getString("Name"), provider);
                     List<MaidInfo> maidInfos = data.infos.computeIfAbsent(ownerId, uuid -> Lists.newArrayList());
                     maidInfos.add(new MaidInfo(dimension, chunkPos, ownerId, maidId, timestamp, name));
                 }
             }
         }
-        if (tag.contains(MAID_TOMBSTONES_TAG, Tag.TAG_COMPOUND)) {
-            CompoundTag tombstonesTag = tag.getCompound(MAID_TOMBSTONES_TAG);
-            for (String key : tombstonesTag.getAllKeys()) {
-                ListTag listTag = tombstonesTag.getList(key, Tag.TAG_COMPOUND);
+        if (tag.contains(MAID_TOMBSTONES_TAG)) {
+            CompoundTag tombstonesTag = tag.getCompoundOrEmpty(MAID_TOMBSTONES_TAG);
+            for (String key : tombstonesTag.keySet()) {
+                ListTag listTag = tombstonesTag.getListOrEmpty(key);
                 for (int i = 0; i < listTag.size(); i++) {
-                    CompoundTag infoTag = listTag.getCompound(i);
-                    String dimension = infoTag.getString("Dimension");
-                    @Nullable BlockPos chunkPos = NbtUtils.readBlockPos(infoTag, "ChunkPos").orElse(null);
+                    CompoundTag infoTag = listTag.getCompoundOrEmpty(i);
+                    String dimension = infoTag.getStringOr("Dimension", "");
+                    @Nullable BlockPos chunkPos = infoTag.read("ChunkPos", BlockPos.CODEC).orElse(null);
                     if (chunkPos == null) {
                         continue;
                     }
-                    UUID ownerId = infoTag.getUUID("OwnerId");
-                    UUID tombstoneId = infoTag.getUUID("TombstoneId");
-                    long timestamp = infoTag.getLong("Timestamp");
+                    UUID ownerId = infoTag.read("OwnerId", UUIDUtil.CODEC).orElseThrow();
+                    UUID tombstoneId = infoTag.read("TombstoneId", UUIDUtil.CODEC).orElseThrow();
+                    long timestamp = infoTag.getLongOr("Timestamp", 0L);
                     MutableComponent name = Component.Serializer.fromJson(infoTag.getString("Name"), provider);
                     List<MaidInfo> tombstoneInfos = data.tombstones.computeIfAbsent(ownerId, uuid -> Lists.newArrayList());
                     tombstoneInfos.add(new MaidInfo(dimension, chunkPos, ownerId, tombstoneId, timestamp, name));
@@ -108,9 +110,9 @@ public class MaidWorldData extends SavedData {
                 }
                 CompoundTag infoTag = new CompoundTag();
                 infoTag.putString("Dimension", info.getDimension());
-                infoTag.put("ChunkPos", NbtUtils.writeBlockPos(info.getChunkPos()));
-                infoTag.putUUID("OwnerId", info.getOwnerId());
-                infoTag.putUUID("MaidId", info.getEntityId());
+                infoTag.put("ChunkPos", PortUtil.writeBlockPos(info.getChunkPos()));
+                infoTag.store("OwnerId", UUIDUtil.CODEC, info.getOwnerId());
+                infoTag.store("MaidId", UUIDUtil.CODEC, info.getEntityId());
                 infoTag.putLong("Timestamp", info.getTimestamp());
                 infoTag.putString("Name", Component.Serializer.toJson(info.getName(), provider));
                 listTag.add(infoTag);
@@ -127,9 +129,9 @@ public class MaidWorldData extends SavedData {
                 }
                 CompoundTag infoTag = new CompoundTag();
                 infoTag.putString("Dimension", info.getDimension());
-                infoTag.put("ChunkPos", NbtUtils.writeBlockPos(info.getChunkPos()));
-                infoTag.putUUID("OwnerId", info.getOwnerId());
-                infoTag.putUUID("TombstoneId", info.getEntityId());
+                infoTag.put("ChunkPos", PortUtil.writeBlockPos(info.getChunkPos()));
+                infoTag.store("OwnerId", UUIDUtil.CODEC, info.getOwnerId());
+                infoTag.store("TombstoneId", UUIDUtil.CODEC, info.getEntityId());
                 infoTag.putLong("Timestamp", info.getTimestamp());
                 infoTag.putString("Name", Component.Serializer.toJson(info.getName(), provider));
                 listTag.add(infoTag);

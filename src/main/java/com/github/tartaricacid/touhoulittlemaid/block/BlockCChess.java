@@ -270,7 +270,7 @@ public class BlockCChess extends BlockJoy implements IBoardGameBlock {
             // 没有点击到棋盘上，返回
             int nowClick = CChessUtil.getClickPosition(clickPos);
             if (nowClick < 0 || !Position.IN_BOARD(nowClick)) {
-                return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.PASS;
             }
 
             // 玩家已经输了，不能下棋
@@ -340,7 +340,7 @@ public class BlockCChess extends BlockJoy implements IBoardGameBlock {
             level.playSound(null, pos, SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 1.0f, 0.8F + level.getRandom().nextFloat() * 0.4F);
             return InteractionResult.FAIL;
         }
-        return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
     @Override

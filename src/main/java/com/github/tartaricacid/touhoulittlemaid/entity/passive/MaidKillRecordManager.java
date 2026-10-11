@@ -34,11 +34,11 @@ public final class MaidKillRecordManager {
 
     void readAdditionalSaveData(CompoundTag compound) {
         if (compound.contains(KILL_RECORD)) {
-            CompoundTag killRecord = compound.getCompound(KILL_RECORD);
-            totalCount = killRecord.getInt(TOTAL_COUNT);
-            slimeCount = killRecord.getInt(SLIME_COUNT);
-            witherCount = killRecord.getInt(WITHER_COUNT);
-            enderDragonCount = killRecord.getInt(ENDER_DRAGON_COUNT);
+            CompoundTag killRecord = compound.getCompoundOrEmpty(KILL_RECORD);
+            totalCount = killRecord.getIntOr(TOTAL_COUNT, 0);
+            slimeCount = killRecord.getIntOr(SLIME_COUNT, 0);
+            witherCount = killRecord.getIntOr(WITHER_COUNT, 0);
+            enderDragonCount = killRecord.getIntOr(ENDER_DRAGON_COUNT, 0);
         }
     }
 

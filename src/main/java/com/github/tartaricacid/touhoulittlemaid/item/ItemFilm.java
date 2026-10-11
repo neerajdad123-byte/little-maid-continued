@@ -55,7 +55,7 @@ public class ItemFilm extends AbstractStoreMaidItem {
             return;
         }
         CompoundTag data = compoundData.copyTag();
-        Identifier entityId = Identifier.tryParse(data.getString(ID_TAG));
+        Identifier entityId = Identifier.tryParse(data.getStringOr(ID_TAG, ""));
         Identifier maidId = BuiltInRegistries.ENTITY_TYPE.getKey(InitEntities.MAID.get());
 
         if (entityId != null && entityId.equals(maidId)) {

@@ -61,7 +61,7 @@ public abstract class AbstractStoreMaidItem extends Item {
             entity.setInvulnerable(true);
         }
         Vec3 position = entity.position();
-        int minY = entity.level.getMinBuildHeight();
+        int minY = entity.level.getMinY();
         if (position.y < minY) {
             entity.setNoGravity(true);
             entity.setDeltaMovement(Vec3.ZERO);
@@ -111,7 +111,7 @@ public abstract class AbstractStoreMaidItem extends Item {
             maid.spawnExplosionParticle();
             maid.playSound(SoundEvents.PLAYER_SPLASH, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
             runnable.run();
-            return InteractionResult.sidedSuccess(worldIn.isClientSide());
+            return InteractionResult.SUCCESS;
         } else {
             if (worldIn.isClientSide()) {
                 player.sendSystemMessage(Component.translatable("message.touhou_little_maid.photo.have_no_nbt_data"));

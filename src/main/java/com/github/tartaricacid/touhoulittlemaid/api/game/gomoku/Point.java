@@ -73,9 +73,9 @@ public class Point {
     }
 
     public static Point fromTag(CompoundTag tag) {
-        int x = tag.getInt("x");
-        int y = tag.getInt("y");
-        int type = tag.getInt("type");
+        int x = tag.getIntOr("x", 0);
+        int y = tag.getIntOr("y", 0);
+        int type = tag.getIntOr("type", 0);
         return new Point(x, y, type);
     }
 

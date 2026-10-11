@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.geckolib3.geo;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.compat.embeddium.EmbeddiumCompat;
 import com.github.tartaricacid.touhoulittlemaid.compat.sodium.SodiumCompat;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.core.util.Color;
@@ -322,7 +323,7 @@ public interface IGeoRenderer<T> {
     default RenderType getRenderType(T animatable, float partialTick, PoseStack poseStack,
                                      @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight,
                                      Identifier texture) {
-        return RenderType.entityCutoutNoCull(texture);
+        return RenderTypes.entityCutout(texture);
     }
 
     default Color getRenderColor(T animatable, float partialTick, PoseStack poseStack,

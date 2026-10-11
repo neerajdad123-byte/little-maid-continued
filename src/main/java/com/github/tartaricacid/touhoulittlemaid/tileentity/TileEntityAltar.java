@@ -68,13 +68,13 @@ public class TileEntityAltar extends BlockEntity {
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
-        isRender = getPersistentData().getBoolean(IS_RENDER);
-        canPlaceItem = getPersistentData().getBoolean(CAN_PLACE_ITEM);
-        storageState = Block.stateById(getPersistentData().getInt(STORAGE_STATE_ID));
+        isRender = getPersistentData().getBooleanOr(IS_RENDER, false);
+        canPlaceItem = getPersistentData().getBooleanOr(CAN_PLACE_ITEM, false);
+        storageState = Block.stateById(getPersistentData().getIntOr(STORAGE_STATE_ID, 0));
         handler.deserializeNBT(pRegistries, getPersistentData().getCompound(STORAGE_ITEM));
-        direction = Direction.byName(getPersistentData().getString(DIRECTION));
-        blockPosList.deserialize(getPersistentData().getList(STORAGE_BLOCK_LIST, Tag.TAG_INT_ARRAY));
-        canPlaceItemPosList.deserialize(getPersistentData().getList(CAN_PLACE_ITEM_POS_LIST, Tag.TAG_INT_ARRAY));
+        direction = Direction.byName(getPersistentData().getStringOr(DIRECTION, ""));
+        blockPosList.deserialize(getPersistentData().getListOrEmpty(STORAGE_BLOCK_LIST));
+        canPlaceItemPosList.deserialize(getPersistentData().getListOrEmpty(CAN_PLACE_ITEM_POS_LIST));
     }
 
     public BlockPos getWorldPosition() {

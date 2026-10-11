@@ -32,12 +32,12 @@ public class FlatColorButton extends Button {
 
     public void renderToolTip(GuiGraphicsExtractor graphics, Screen screen, int pMouseX, int pMouseY) {
         if (this.isHovered && tooltips != null) {
-            graphics.renderComponentTooltip(screen.getMinecraft().font, tooltips, pMouseX, pMouseY);
+            graphics.setComponentTooltipForNextFrame(screen.getMinecraft().font, tooltips, pMouseX, pMouseY);
         }
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
         Minecraft minecraft = Minecraft.getInstance();
         if (isSelect) {
             graphics.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, 0xff_1E90FF, 0xff_1E90FF);
@@ -56,7 +56,7 @@ public class FlatColorButton extends Button {
 
     @Override
     public void renderString(GuiGraphicsExtractor graphics, Font font, int pColor) {
-        graphics.drawCenteredString(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, 0xF3EFE0);
+        graphics.centeredText(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, 0xFFF3EFE0);
     }
 
     public void setSelect(boolean select) {

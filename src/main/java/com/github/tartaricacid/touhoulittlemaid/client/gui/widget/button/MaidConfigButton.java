@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
@@ -33,16 +35,15 @@ public class MaidConfigButton extends Button {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
         Minecraft mc = Minecraft.getInstance();
-        RenderSystem.enableDepthTest();
         if (this.isHovered) {
-            graphics.blit(ICON, this.getX(), this.getY(), 63, 141, this.width, this.height, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX(), this.getY(), 63, 141, this.width, this.height, 256, 256);
         } else {
-            graphics.blit(ICON, this.getX(), this.getY(), 63, 128, this.width, this.height, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX(), this.getY(), 63, 128, this.width, this.height, 256, 256);
         }
-        graphics.drawString(mc.font, this.getMessage(), this.getX() + 5, this.getY() + 3, 0x444444, false);
-        drawCenteredStringWithoutShadow(graphics, mc.font, this.value, this.getX() + 142, this.getY() + 3, ChatFormatting.GREEN.getColor());
+        graphics.text(mc.font, this.getMessage(), this.getX() + 5, this.getY() + 3, 0xFF444444, false);
+        drawCenteredStringWithoutShadow(graphics, mc.font, this.value, this.getX() + 142, this.getY() + 3, PortUtil.color(ChatFormatting.GREEN));
     }
 
     public void setValue(Component value) {
@@ -79,7 +80,7 @@ public class MaidConfigButton extends Button {
 
     public void drawCenteredStringWithoutShadow(GuiGraphicsExtractor graphics, Font pFont, Component pText, int pX, int pY, int pColor) {
         FormattedCharSequence formattedcharsequence = pText.getVisualOrderText();
-        graphics.drawString(pFont, formattedcharsequence, pX - pFont.width(formattedcharsequence) / 2, pY, pColor, false);
+        graphics.text(pFont, formattedcharsequence, pX - pFont.width(formattedcharsequence) / 2, pY, pColor, false);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -63,12 +63,12 @@ public class TileEntityCChess extends TileEntityJoy implements IBoardGameEntityB
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
         super.loadAdditional(nbt, provider);
         CompoundTag data = getPersistentData();
-        chessCounter = data.getInt(CHESS_COUNTER);
-        selectChessPoint = data.getInt(SELECT_CHESS_POINT);
-        chessData.fromFen(data.getString(CHESS_DATA));
-        checkmate = data.getBoolean(CHECKMATE);
-        repeat = data.getBoolean(REPEAT);
-        moveNumberLimit = data.getBoolean(MOVE_NUMBER_LIMIT);
+        chessCounter = data.getIntOr(CHESS_COUNTER, 0);
+        selectChessPoint = data.getIntOr(SELECT_CHESS_POINT, 0);
+        chessData.fromFen(data.getStringOr(CHESS_DATA, ""));
+        checkmate = data.getBooleanOr(CHECKMATE, false);
+        repeat = data.getBooleanOr(REPEAT, false);
+        moveNumberLimit = data.getBooleanOr(MOVE_NUMBER_LIMIT, false);
     }
 
     public void reset() {

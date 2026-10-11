@@ -92,7 +92,7 @@ public class BlockScarecrow extends HorizontalDirectionalBlock {
         BlockPos clickedPos = context.getClickedPos();
         Level level = context.getLevel();
         BlockPos abovePos = clickedPos.above();
-        if (clickedPos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(abovePos).canBeReplaced(context)) {
+        if (clickedPos.getY() < level.getMaxY() + 1 - 1 && level.getBlockState(abovePos).canBeReplaced(context)) {
             Direction horizontalDirection = context.getHorizontalDirection();
             return this.defaultBlockState().setValue(FACING, horizontalDirection).setValue(HALF, DoubleBlockHalf.LOWER);
         }

@@ -59,7 +59,7 @@ public class BlockShrine extends BaseEntityBlock {
                     worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.PLAYERS, 1, 1);
                     return InteractionResult.SUCCESS;
                 }
-                return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.PASS;
             }
             if (shrine.isEmpty()) {
                 if (shrine.canInsert(playerIn.getMainHandItem())) {
@@ -71,7 +71,7 @@ public class BlockShrine extends BaseEntityBlock {
                 if (!worldIn.isClientSide()) {
                     playerIn.sendSystemMessage(Component.translatable("message.touhou_little_maid.shrine.not_film"));
                 }
-                return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.PASS;
             }
             if (playerIn.getMainHandItem().isEmpty()) {
                 // 创造模式玩家可以随意复活

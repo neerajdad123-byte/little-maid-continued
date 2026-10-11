@@ -77,21 +77,21 @@ public class BlockMaidBed extends HorizontalDirectionalBlock implements EntityBl
         ItemStack itemStack = player.getItemInHand(hand);
         // 检查是否是染料物品
         if (!(itemStack.getItem() instanceof DyeItem dyeItem)) {
-            return InteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         DyeColor dyeColor = dyeItem.getDyeColor();
         // 检查染料颜色是否在可用颜色列表中
         if (!AVAILABLE_COLOR.contains(dyeColor)) {
-            return InteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         // 获取床头位置和方块实体
         BlockPos headPos = state.getValue(PART) == BedPart.HEAD ? pos : pos.relative(state.getValue(FACING));
         BlockEntity blockEntity = level.getBlockEntity(headPos);
         if (!(blockEntity instanceof TileEntityMaidBed bed)) {
-            return InteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         if (bed.getColor() == dyeColor) {
-            return InteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         bed.setColor(dyeColor);
         if (!player.isCreative()) {

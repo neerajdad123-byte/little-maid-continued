@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.game.gomoku.Point;
 import com.github.tartaricacid.touhoulittlemaid.api.game.gomoku.Statue;
@@ -77,7 +78,7 @@ public class TileEntityGomokuRenderer implements BlockEntityRenderer<TileEntityG
         if (facing == Direction.SOUTH || facing == Direction.NORTH) {
             poseStack.mulPose(Axis.YN.rotationDegrees(180));
         }
-        VertexConsumer checkerBoardBuff = bufferIn.getBuffer(RenderType.entityCutoutNoCull(CHECKER_BOARD_TEXTURE));
+        VertexConsumer checkerBoardBuff = bufferIn.getBuffer(RenderTypes.entityCutout(CHECKER_BOARD_TEXTURE));
         CHECKER_BOARD_MODEL.renderToBuffer(poseStack, checkerBoardBuff, combinedLightIn, combinedOverlayIn);
         poseStack.popPose();
     }
@@ -93,11 +94,11 @@ public class TileEntityGomokuRenderer implements BlockEntityRenderer<TileEntityG
                 for (int j = 0; j < chessData[0].length; j++) {
                     poseStack.translate(0, 0, 0.1316);
                     if (row[j] == Point.BLACK) {
-                        VertexConsumer blackPieceBuff = bufferIn.getBuffer(RenderType.entityCutoutNoCull(BLACK_PIECE_TEXTURE));
+                        VertexConsumer blackPieceBuff = bufferIn.getBuffer(RenderTypes.entityCutout(BLACK_PIECE_TEXTURE));
                         PIECE_MODEL.renderToBuffer(poseStack, blackPieceBuff, combinedLightIn, combinedOverlayIn);
                     }
                     if (row[j] == Point.WHITE) {
-                        VertexConsumer whitePieceBuff = bufferIn.getBuffer(RenderType.entityCutoutNoCull(WHITE_PIECE_TEXTURE));
+                        VertexConsumer whitePieceBuff = bufferIn.getBuffer(RenderTypes.entityCutout(WHITE_PIECE_TEXTURE));
                         PIECE_MODEL.renderToBuffer(poseStack, whitePieceBuff, combinedLightIn, combinedOverlayIn);
                     }
                 }

@@ -38,10 +38,9 @@ public class PatchouliWarningScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(graphics, pMouseX, pMouseY, pPartialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.message.renderCentered(graphics, this.width / 2, 80);
-        super.render(graphics, pMouseX, pMouseY, pPartialTick);
+        super.extractRenderState(graphics, pMouseX, pMouseY, pPartialTick);
     }
 
     private void openUrl(String url) {

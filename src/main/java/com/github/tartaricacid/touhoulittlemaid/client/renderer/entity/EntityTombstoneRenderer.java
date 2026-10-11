@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.SimpleBedrockModel;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader;
@@ -46,7 +47,7 @@ public class EntityTombstoneRenderer extends EntityRenderer<EntityTombstone> {
         poseStack.scale(-1.0F, -1.0F, 1.0F);
         poseStack.translate(0.0, -1.501, 0.0);
         tombstoneModel.setupAnim(tombstone, 0, 0, -0.1f, 0, 0);
-        RenderType renderType = RenderType.entityCutoutNoCull(getTextureLocation(tombstone));
+        RenderType renderType = RenderTypes.entityCutout(getTextureLocation(tombstone));
         VertexConsumer buffer = bufferIn.getBuffer(renderType);
         tombstoneModel.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();

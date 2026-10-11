@@ -1,20 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.compat.patpat;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.fml.ModList;
-
+// Little Maid Continued: no-op stub. The real integration lives in src/compat_disabled and is
+// re-enabled once the mod has a build for this Minecraft version.
 public class PatPatCompat {
-    private static final String PATPAT_ID = "patpat";
-    private static boolean isLoaded = false;
-
     public static void init() {
-        isLoaded = ModList.get().isLoaded(PATPAT_ID);
-    }
-
-    public static void renderPat(LivingEntity livingEntity, PoseStack matrixStack, float tickDelta) {
-        if (isLoaded) {
-            PatPatRenderer.scaleEntityIfPatted(livingEntity, matrixStack, tickDelta);
-        }
     }
 }

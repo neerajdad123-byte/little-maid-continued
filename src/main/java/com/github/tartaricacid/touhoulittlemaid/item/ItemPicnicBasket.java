@@ -76,10 +76,10 @@ public class ItemPicnicBasket extends BlockItem implements MenuProvider {
     }
 
     @Override
-    public InteractionResult<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
         if (handIn == InteractionHand.MAIN_HAND && playerIn instanceof ServerPlayer serverPlayer) {
             serverPlayer.openMenu(this, data -> ItemStack.STREAM_CODEC.encode(data, serverPlayer.getMainHandItem()));
-            return InteractionResult.success(playerIn.getMainHandItem());
+            return InteractionResult.SUCCESS.heldItemTransformedTo(playerIn.getMainHandItem());
         }
         return super.use(worldIn, playerIn, handIn);
     }

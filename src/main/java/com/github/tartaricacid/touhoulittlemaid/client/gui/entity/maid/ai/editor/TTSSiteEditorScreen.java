@@ -219,13 +219,11 @@ public class TTSSiteEditorScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fillGradient(0, 0, this.width, this.height, 0xc0101010, 0xc0101010);
 
         // 居中标题
-        graphics.drawCenteredString(this.font, ttsEditorTitle(this.siteDisplayName),
-                this.startX + BASE_WIDTH / 2, this.startY + 4, 0xFFF3EFE0);
+        graphics.centeredText(this.font, ttsEditorTitle(this.siteDisplayName), this.startX + BASE_WIDTH / 2, this.startY + 4, 0xFFF3EFE0);
 
         // 固定字段
         for (FormField field : this.fields) {
@@ -238,14 +236,14 @@ public class TTSSiteEditorScreen extends Screen {
         }
 
         for (Renderable renderable : this.renderables) {
-            renderable.render(graphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(graphics, mouseX, mouseY, partialTick);
         }
 
         // 保存提示
         if (System.currentTimeMillis() - this.tipTimestamp < 2000) {
             int x = this.startX + BASE_WIDTH - 155;
             int y = this.startY + BASE_HEIGHT - 35;
-            graphics.drawCenteredString(this.font, this.statusMessage, x, y, 0xFFADADAD);
+            graphics.centeredText(this.font, this.statusMessage, x, y, 0xFFADADAD);
         }
     }
 
@@ -259,9 +257,9 @@ public class TTSSiteEditorScreen extends Screen {
         int width = box.getWidth() + 12;
         int height = box.getHeight() + 3;
 
-        graphics.drawString(this.font, box.getMessage(), x + 2, y - 12, LABEL_COLOR, false);
+        graphics.text(this.font, box.getMessage(), x + 2, y - 12, LABEL_COLOR, false);
         graphics.fill(x, y, x + width, y + height, 0xAA111111);
-        box.render(graphics, mouseX, mouseY, partialTick);
+        box.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
     private void renderModelArea(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
@@ -269,7 +267,7 @@ public class TTSSiteEditorScreen extends Screen {
         int top = (int) this.modelArea.y;
 
         // 主标题
-        graphics.drawString(this.font, this.layout.modelsTitle(), left + 2, top - 14, LABEL_COLOR, false);
+        graphics.text(this.font, this.layout.modelsTitle(), left + 2, top - 14, LABEL_COLOR, false);
 
         int visibleCount = this.getVisibleModelCount();
         int startIndex = this.modelScrollOffset;
@@ -279,20 +277,12 @@ public class TTSSiteEditorScreen extends Screen {
         for (int i = startIndex; i < endIndex; i++) {
             ModelRow row = this.modelRows.get(i);
             if (row.idBox != null && row.nameBox != null) {
-                graphics.fill(row.idBox.getX() - 6, row.idBox.getY() - 6,
-                        row.idBox.getX() + row.idBox.getInnerWidth() + 8,
-                        row.idBox.getY() + row.idBox.getHeight() - 3,
-                        0xAA111111
-                );
+                graphics.fill(row.idBox.getX() - 6, row.idBox.getY() - 6, row.idBox.getX() + row.idBox.getInnerWidth() + 8, row.idBox.getY() + row.idBox.getHeight() - 3, 0xAA111111);
 
-                graphics.fill(row.nameBox.getX() - 6, row.nameBox.getY() - 6,
-                        row.nameBox.getX() + row.nameBox.getInnerWidth() + 8,
-                        row.nameBox.getY() + row.nameBox.getHeight() - 3,
-                        0xAA111111
-                );
+                graphics.fill(row.nameBox.getX() - 6, row.nameBox.getY() - 6, row.nameBox.getX() + row.nameBox.getInnerWidth() + 8, row.nameBox.getY() + row.nameBox.getHeight() - 3, 0xAA111111);
 
-                row.idBox.render(graphics, mouseX, mouseY, partialTick);
-                row.nameBox.render(graphics, mouseX, mouseY, partialTick);
+                row.idBox.extractRenderState(graphics, mouseX, mouseY, partialTick);
+                row.nameBox.extractRenderState(graphics, mouseX, mouseY, partialTick);
             }
         }
         graphics.disableScissor();
@@ -310,11 +300,7 @@ public class TTSSiteEditorScreen extends Screen {
             // 根据当前滚动偏移量，按比例计算滑块在轨道中的 Y 偏移
             int thumbOffset = (trackHeight - thumbHeight) * this.modelScrollOffset / scrollRange;
             // 在模型区域的右侧绘制一个 2px 宽的绿色滑块
-            graphics.fill((int) this.modelArea.right() - 4,
-                    trackTop + thumbOffset,
-                    (int) this.modelArea.right() - 2,
-                    trackTop + thumbOffset + thumbHeight,
-                    0xFF55FF55);
+            graphics.fill((int) this.modelArea.right() - 4, trackTop + thumbOffset, (int) this.modelArea.right() - 2, trackTop + thumbOffset + thumbHeight, 0xFF55FF55);
         }
     }
 

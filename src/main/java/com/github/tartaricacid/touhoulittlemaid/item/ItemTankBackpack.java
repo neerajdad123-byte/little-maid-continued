@@ -46,7 +46,7 @@ public class ItemTankBackpack extends ItemMaidBackpack {
     public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         CompoundTag nbt = stack.get(TANK_BACKPACK_TAG);
         if (nbt != null) {
-            CompoundTag compound = nbt.getCompound("Fluid");
+            CompoundTag compound = nbt.getCompoundOrEmpty("Fluid");
             if (compound.isEmpty() || worldIn == null) {
                 return;
             }
