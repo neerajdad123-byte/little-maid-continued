@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.task;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.AbstractMaidContainerGui;
 import com.github.tartaricacid.touhoulittlemaid.inventory.container.task.TaskConfigContainer;
 import com.github.tartaricacid.touhoulittlemaid.network.message.RefreshMaidBrainPackage;
@@ -16,7 +17,7 @@ public abstract class MaidTaskConfigGui<T extends TaskConfigContainer> extends A
     public void onClose() {
         // 重置女仆 Brain，让女仆重新读取任务相关数据
         if (this.maid != null) {
-            PacketDistributor.sendToServer(new RefreshMaidBrainPackage(maid.getId()));
+            ClientPacketDistributor.sendToServer(new RefreshMaidBrainPackage(maid.getId()));
         }
         super.onClose();
     }

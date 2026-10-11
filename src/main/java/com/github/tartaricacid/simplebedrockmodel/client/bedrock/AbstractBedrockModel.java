@@ -14,14 +14,14 @@ import com.github.tartaricacid.simplebedrockmodel.client.compat.sodium.SodiumCom
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -289,7 +289,7 @@ public abstract class AbstractBedrockModel extends Model implements BedrockModel
     }
 
     @Override
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
         for (BedrockPart model : shouldRender) {
             model.render(poseStack, buffer, packedLight, packedOverlay);

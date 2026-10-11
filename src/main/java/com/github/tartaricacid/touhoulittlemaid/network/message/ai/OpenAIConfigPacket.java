@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.network.message.ai;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.ai.manager.site.AvailableSites;
 import com.github.tartaricacid.touhoulittlemaid.network.NetworkHandler;
 import com.github.tartaricacid.touhoulittlemaid.util.GameModeUtil;
@@ -25,7 +26,7 @@ public record OpenAIConfigPacket() implements CustomPacketPayload {
     );
 
     public static void sendToServer() {
-        PacketDistributor.sendToServer(new OpenAIConfigPacket());
+        ClientPacketDistributor.sendToServer(new OpenAIConfigPacket());
     }
 
     @Override

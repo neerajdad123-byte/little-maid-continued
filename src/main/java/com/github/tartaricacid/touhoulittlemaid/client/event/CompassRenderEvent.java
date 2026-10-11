@@ -8,10 +8,10 @@ import com.github.tartaricacid.touhoulittlemaid.item.ItemKappaCompass;
 import com.github.tartaricacid.touhoulittlemaid.util.RenderHelper;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -41,7 +41,7 @@ public class CompassRenderEvent {
             if (!ItemKappaCompass.hasKappaCompassData(stack)) {
                 return;
             }
-            ResourceLocation dimension = ItemKappaCompass.getDimension(stack);
+            Identifier dimension = ItemKappaCompass.getDimension(stack);
             if (dimension != null && !mc.player.level.dimension().location().equals(dimension)) {
                 return;
             }

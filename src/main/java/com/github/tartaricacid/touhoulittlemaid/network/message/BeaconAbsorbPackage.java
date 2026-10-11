@@ -35,7 +35,7 @@ public record BeaconAbsorbPackage(float x, float y, float z) implements CustomPa
     private static void spawnParticle(BeaconAbsorbPackage message) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level != null) {
-            EntityPowerPoint.spawnExplosionParticle(mc.level, message.x, message.y, message.z, mc.level.random);
+            EntityPowerPoint.spawnExplosionParticle(mc.level, message.x, message.y, message.z, mc.level.getRandom());
         }
     }
 

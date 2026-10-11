@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.input;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.network.message.DismountPackage;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -37,7 +38,7 @@ public class DismountBroomKey {
             }
             DISMOUNT_KEY.consumeClick();
             if (event.getAction() == GLFW.GLFW_RELEASE) {
-                PacketDistributor.sendToServer(new DismountPackage(DismountPackage.DISMOUNT_BROOM));
+                ClientPacketDistributor.sendToServer(new DismountPackage(DismountPackage.DISMOUNT_BROOM));
             }
         }
     }

@@ -32,3 +32,6 @@ src/test
 forge*changelog.txt
 /src/generated/resources/.cache/
 .sisyphus
+build-log.txt
+_syms.txt
+run/

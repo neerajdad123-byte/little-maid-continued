@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.event;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.AIConfig;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.network.message.ai.OpenMaidAIChatPacket;
@@ -30,7 +31,7 @@ public class PressAIChatKeyEvent {
             }
             Minecraft.getInstance().options.keyChat.consumeClick();
             // 先通过服务端鉴权，然后发送同步信息后再打开客户端界面
-            PacketDistributor.sendToServer(new OpenMaidAIChatPacket(maid));
+            ClientPacketDistributor.sendToServer(new OpenMaidAIChatPacket(maid));
         }
     }
 

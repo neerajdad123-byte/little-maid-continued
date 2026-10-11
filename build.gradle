@@ -7,13 +7,10 @@ plugins {
     id 'idea'
 
     // NeoForged 开发插件
-    id 'net.neoforged.moddev' version '2.0.95'
+    id 'net.neoforged.moddev' version '2.0.148'
 
     // shadow 插件
-    id 'com.gradleup.shadow' version '8.3.6'
-
-    // OpenRewrite 插件，用于自动化处理 Minecraft 或者 NeoForge 更新时的代码修改
-    id "org.openrewrite.rewrite" version "7.32.2"
+    id 'com.gradleup.shadow' version '9.6.1'
 }
 
 // ALL 为下载 gradle 源码，方便查看调试
@@ -22,7 +19,7 @@ tasks.named('wrapper', Wrapper).configure {
 }
 
 // 需要 Java 21 版本
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 // 模组相关信息
 version = mod_version
@@ -139,11 +136,6 @@ neoForge {
     // NeoForge 版本信息
     version = project.neo_version
 
-    // 反混淆表
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
 
     // 运行部分
     runs {
@@ -170,7 +162,7 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
             gameDirectory = project.file('run/data')
             programArguments.addAll '--mod', project.mod_id, '--all',
                     '--output', file('src/generated/resources/').getAbsolutePath(),
@@ -205,6 +197,10 @@ sourceSets.main {
     resources {
         srcDir 'src/generated/resources'
     }
+    java {
+        // Little Maid Continued: compat modules disabled until their mods are available for this MC version
+        project.disabled_compat.split(',').each { exclude "com/github/tartaricacid/touhoulittlemaid/compat/${it.trim()}/**" }
+    }
 }
 
 configurations {
@@ -234,97 +230,7 @@ dependencies {
     // 单元测试
     testImplementation 'junit:junit:4.13.2'
 
-    compileOnly "libs:patpat:1.2.1+1.21.1"
-
-    // JEI
-    implementation "maven.modrinth:jei:19.21.0.247-neoforge"
-
-    // REI
-    compileOnly "maven.modrinth:architectury-api:13.0.8+neoforge"
-    compileOnly "maven.modrinth:rei:16.0.788+neoforge"
-
-    // EMI
-    compileOnly "maven.modrinth:emi:1.1.22+1.21.1+neoforge"
-
-    // IPN
-    runtimeOnly "maven.modrinth:kotlin-for-forge:5.9.0"
-    runtimeOnly "maven.modrinth:libipn:neoforge-1.21.1-6.5.0"
-    implementation "maven.modrinth:inventory-profiles-next:neoforge-1.21.1-2.1.9"
-    implementation "curse.maven:aquaculture-60028:6357106"
-
-    // KubeJS
-    compileOnly "dev.latvian.mods:rhino:2101.2.7-build.72"
-    compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.2-build.336"
-    // runtimeOnly "com.github.rtyley:animated-gif-lib-for-java:animated-gif-lib-1.7"
-
-    // Curios
-    implementation "top.theillusivec4.curios:curios-neoforge:9.2.0+1.21.1"
-
-    compileOnly "maven.modrinth:sodium:mc1.21.1-0.6.13-neoforge"
-    compileOnly "maven.modrinth:iris:1.8.8+1.21.1-neoforge"
-    compileOnly "maven.modrinth:embeddium:1.0.15+mc1.21.1-neoforge"
-
-    implementation "maven.modrinth:jade:15.10.2+neoforge"
-    compileOnly "maven.modrinth:the-one-probe:1.21_neo-12.0.6"
-    implementation "maven.modrinth:cloth-config:15.0.140+neoforge"
-    implementation "maven.modrinth:patchouli:1.21-88-neoforge"
-
-    implementation "maven.modrinth:iron-chests:1.21-neoforge-16.0.7"
-    implementation "maven.modrinth:carry-on:2.2.2-neoforge"
-    implementation "maven.modrinth:inventory-tweaks-refoxed:1.21.1-1.2.0"
-
-    implementation "maven.modrinth:sophisticated-core:1.21.1-1.3.50.1004"
-    implementation "maven.modrinth:sophisticated-backpacks:1.21.1-3.24.15.1250"
-
-    implementation "maven.modrinth:travelersbackpack:1.21.1-10.1.35"
-
-    implementation "maven.modrinth:kaleidoscope-cookery:1.2.0-neoforge+mc1.21.1"
-
-    implementation("com.github.MUKSC:TACZ-1.21.1:neoforge-1.1.6-hotfix-r5") {
-        exclude group: 'mezz.jei'
-        exclude group: 'maven.modrinth'
-    }
-
-    // 卓越前线
-    runtimeOnly "software.bernie.geckolib:geckolib-neoforge-1.21.1:4.7.5"
-    implementation "libs:superbwarfare-1.21.1:0.8.7.1"
-
-    // 拔刀剑 Resharped
-    implementation "maven.modrinth:slashblade-resharped:2.0.2-1.21.1"
-
-    // 地图相关模组兼容
-    // runtimeOnly "maven.modrinth:xaeros-minimap:25.2.10_NeoForge_1.21"
-    // runtimeOnly "maven.modrinth:xaeros-world-map:1.40.2_NeoForge_1.21"
-    // runtimeOnly "maven.modrinth:journeymap:1.21.1-6.0.0-beta.52+neoforge"
-
-    // 沉浸式奏乐
-    implementation "maven.modrinth:immersive-melodies:0.6.2+1.21.1-neoforge"
-
-    // 农夫乐事
-    implementation "maven.modrinth:farmers-delight:1.21.1-1.2.9-neoforge"
-    // 更多蛋糕
-    implementation "maven.modrinth:common-network:1.0.21-1.21.1-neoforge"
-    implementation "maven.modrinth:forge-config-api-port:v21.1.6-1.21.1-NeoForge"
-    implementation "maven.modrinth:just-more-cakes:1.19.2-neoforge,1.21.1"
-
-    // 思索
-    compileOnly "net.createmod.ponder:Ponder-NeoForge-1.21.1:1.0.56"
-
-    // 机械动力航空学
-    implementation "maven.modrinth:create-aeronautics:1.2.1+mc1.21.1-neoforge"
-    implementation "maven.modrinth:create:6.0.10+mc1.21.1-neoforge"
-    implementation "maven.modrinth:sable:1.2.2+mc1.21.1-neoforge"
-    implementation "dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:1.6.0"
-
-    // 目前无法在开发环境使用，会崩
-    compileOnly "maven.modrinth:simple-hats:1.21.1-Neo-0.4.0"
-    compileOnly "maven.modrinth:owo-lib:0.12.15.5-beta.1+1.21"
-    compileOnly "maven.modrinth:accessories:1.1.0-beta.48+1.21.1"
-
-    // runtimeOnly "curse.maven:probejs-585406:5820894"
-    // runtimeOnly "curse.maven:placebo-283644:6446766"
-    // runtimeOnly "curse.maven:hostile-neural-networks-552574:6430289"
-    // runtimeOnly "maven.modrinth:camerapture:1.10.1+mc1.21.1-neoforge"
+    // Little Maid Continued: third-party compat is re-enabled per mod once it has a 26.2 build
 }
 
 shadowJar {
@@ -355,6 +261,10 @@ shadowJar {
 
 assemble {
     dependsOn shadowJar
+}
+
+shadowJar {
+    archiveClassifier = ''
 }
 
 tasks.compileJava {
@@ -397,7 +307,7 @@ jar {
 
 // 必须，编码需要显式指定为 UTF
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += ['-Xlint:-removal']
+    options.compilerArgs += ['-Xlint:-removal', '-Xmaxerrs', '100000']
     options.encoding = 'UTF-8'
 }
 
@@ -413,8 +323,4 @@ idea {
 java {
     // 编译源码文件，方便发布 maven
     withSourcesJar()
-}
-
-rewrite {
-    activeRecipe("com.github.tartaricacid.Upgrade")
 }

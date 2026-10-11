@@ -13,15 +13,15 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.DyeColor;
@@ -34,7 +34,7 @@ import java.util.Objects;
 import static com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader.MAID_BANNER;
 
 public class LayerMaidBanner extends RenderLayer<Mob, BedrockModel<Mob>> {
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/maid_banner.png");
+    private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/maid_banner.png");
     private final EntityMaidRenderer renderer;
     private final SimpleBedrockModel<EntityMaid> bannerModel;
 
@@ -87,9 +87,9 @@ public class LayerMaidBanner extends RenderLayer<Mob, BedrockModel<Mob>> {
 
     private void renderPatternLayer(PoseStack poseStack, MultiBufferSource buffer, int packedLight, BedrockPart banner, Material material, DyeColor color) {
         int packedColor = color.getTextureDiffuseColor();
-        float red = FastColor.ARGB32.red(packedColor) / 255f;
-        float green = FastColor.ARGB32.green(packedColor) / 255f;
-        float blue = FastColor.ARGB32.blue(packedColor) / 255f;
+        float red = ARGB.ARGB32.red(packedColor) / 255f;
+        float green = ARGB.ARGB32.green(packedColor) / 255f;
+        float blue = ARGB.ARGB32.blue(packedColor) / 255f;
         banner.render(poseStack, material.buffer(buffer, RenderType::entityNoOutline), packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, 1.0F);
     }
 }

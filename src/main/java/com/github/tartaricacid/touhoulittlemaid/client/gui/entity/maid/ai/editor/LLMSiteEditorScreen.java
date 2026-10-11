@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.editor;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.llm.LLMSite;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.llm.openai.LLMOpenAISite;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.settings.AIChatSettingsHubScreen;
@@ -9,7 +10,7 @@ import com.github.tartaricacid.touhoulittlemaid.network.message.ai.SaveLLMSitePa
 import com.github.tartaricacid.touhoulittlemaid.util.Rectangle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
@@ -157,7 +158,7 @@ public class LLMSiteEditorScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics, mouseX, mouseY, partialTick);
         graphics.fillGradient(0, 0, this.width, this.height, 0xc0101010, 0xc0101010);
 
@@ -183,7 +184,7 @@ public class LLMSiteEditorScreen extends Screen {
         }
     }
 
-    private void renderInputField(GuiGraphics graphics, EditBox box, int mouseX, int mouseY, float partialTick) {
+    private void renderInputField(GuiGraphicsExtractor graphics, EditBox box, int mouseX, int mouseY, float partialTick) {
         int x = box.getX() - 6;
         int y = box.getY() - 6;
         int width = box.getInnerWidth() + 12;
@@ -194,7 +195,7 @@ public class LLMSiteEditorScreen extends Screen {
         box.render(graphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderModelArea(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    private void renderModelArea(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         int left = (int) this.modelArea.x;
         int top = (int) this.modelArea.y;
 
@@ -285,7 +286,7 @@ public class LLMSiteEditorScreen extends Screen {
             return;
         }
         SaveLLMSitePacket message = this.createMode ? SaveLLMSitePacket.create(site) : SaveLLMSitePacket.update(site);
-        PacketDistributor.sendToServer(message);
+        ClientPacketDistributor.sendToServer(message);
     }
 
     private LLMSite buildSite() {

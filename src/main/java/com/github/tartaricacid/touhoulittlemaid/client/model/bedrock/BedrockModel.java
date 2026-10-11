@@ -24,7 +24,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import javax.script.Invocable;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +49,7 @@ public class BedrockModel<T extends LivingEntity> extends AbstractBedrockEntityM
     }
 
     @Override
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         if (animations != null) {
             Invocable invocable = (Invocable) CustomJsAnimationManger.NASHORN;

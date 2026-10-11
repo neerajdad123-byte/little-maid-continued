@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.backpack;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.BaubleButton;
 import com.github.tartaricacid.touhoulittlemaid.compat.curios.client.CuriosButton;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -11,14 +12,14 @@ public interface IBackpackContainerScreen {
     default BaubleButton getBaubleButton(EntityMaid maid, int leftPos, int topPos) {
         return new BaubleButton(leftPos, topPos, false, btn -> {
             OpenMaidGuiPackage message = new OpenMaidGuiPackage(maid.getId(), TabIndex.BAUBLE);
-            PacketDistributor.sendToServer(message);
+            ClientPacketDistributor.sendToServer(message);
         });
     }
 
     default CuriosButton getCuriosButton(EntityMaid maid, int leftPos, int topPos) {
         return new CuriosButton(leftPos, topPos, false, btn -> {
             OpenMaidGuiPackage message = new OpenMaidGuiPackage(maid.getId(), TabIndex.CURIOS);
-            PacketDistributor.sendToServer(message);
+            ClientPacketDistributor.sendToServer(message);
         });
     }
 }

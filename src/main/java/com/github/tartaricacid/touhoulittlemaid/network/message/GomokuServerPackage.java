@@ -54,7 +54,7 @@ public record GomokuServerPackage(BlockPos pos, Point point) implements CustomPa
                             maid.getGameRecordManager().markStatue(true);
                         }
                     }
-                    level.playSound(null, message.pos, InitSounds.GOMOKU.get(), SoundSource.BLOCKS, 1.0f, 0.8F + level.random.nextFloat() * 0.4F);
+                    level.playSound(null, message.pos, InitSounds.GOMOKU.get(), SoundSource.BLOCKS, 1.0f, 0.8F + level.getRandom().nextFloat() * 0.4F);
                     if (statue == Statue.IN_PROGRESS) {
                         gomoku.setPlayerTurn(true);
                     }

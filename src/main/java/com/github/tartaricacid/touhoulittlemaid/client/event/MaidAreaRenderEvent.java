@@ -10,11 +10,11 @@ import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -51,7 +51,7 @@ public class MaidAreaRenderEvent {
                 if (!(entity instanceof EntityMaid maid)) {
                     return;
                 }
-                ResourceLocation dimension = pos.getDimension();
+                Identifier dimension = pos.getDimension();
                 if (mc.player.level.dimension().location().equals(dimension)) {
                     renderPos(pos.getWorkPos(), pos.getIdlePos(), pos.getSleepPos(), camera, poseStack, mc, maid, mc.player);
                 }

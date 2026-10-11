@@ -16,10 +16,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -75,9 +75,9 @@ public class BlockGarageKit extends Block implements EntityBlock {
                 int posY = pos.getY();
                 int posZ = pos.getZ();
                 AABB aabb = state.getShape(world, pos).bounds();
-                double x = posX + world.random.nextDouble() * (aabb.maxX - aabb.minX - 0.2) + 0.1 + aabb.minX;
-                double y = posY + world.random.nextDouble() * (aabb.maxY - aabb.minY - 0.2) + 0.1 + aabb.minY;
-                double z = posZ + world.random.nextDouble() * (aabb.maxZ - aabb.minZ - 0.2) + 0.1 + aabb.minZ;
+                double x = posX + world.getRandom().nextDouble() * (aabb.maxX - aabb.minX - 0.2) + 0.1 + aabb.minX;
+                double y = posY + world.getRandom().nextDouble() * (aabb.maxY - aabb.minY - 0.2) + 0.1 + aabb.minY;
+                double z = posZ + world.getRandom().nextDouble() * (aabb.maxZ - aabb.minZ - 0.2) + 0.1 + aabb.minZ;
                 if (side == Direction.DOWN) {
                     y = posY + aabb.minY - 0.1;
                 }
@@ -157,19 +157,19 @@ public class BlockGarageKit extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level worldIn, BlockPos pos, Player playerIn, InteractionHand hand, BlockHitResult hit) {
         ItemStack stack = playerIn.getItemInHand(hand);
         if (!(worldIn instanceof ServerLevel) || !(stack.getItem() instanceof SpawnEggItem)) {
-            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         BlockEntity tile = worldIn.getBlockEntity(pos);
         if (!(tile instanceof TileEntityGarageKit garageKit)) {
-            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         EntityType<?> type = ((SpawnEggItem) stack.getItem()).getType(stack);
-        ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+        Identifier key = BuiltInRegistries.ENTITY_TYPE.getKey(type);
         if (key == null) {
-            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
 
         String id = key.toString();
@@ -184,7 +184,7 @@ public class BlockGarageKit extends Block implements EntityBlock {
         }
 
         garageKit.setData(garageKit.getFacing(), data);
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     private ItemStack getGarageKitFromWorld(BlockGetter world, BlockPos pos) {

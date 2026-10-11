@@ -94,7 +94,7 @@ public abstract class AbstractStoreMaidItem extends Item {
             UUID ownerUid = maidCompound.getUUID(MAID_OWNER);
             if (!player.getUUID().equals(ownerUid)) {
                 MutableComponent tip = Component.translatable("tooltips.touhou_little_maid.smart_slab.not_your_maid").withStyle(ChatFormatting.DARK_RED);
-                if (!worldIn.isClientSide) {
+                if (!worldIn.isClientSide()) {
                     player.sendSystemMessage(tip);
                 }
                 return InteractionResult.FAIL;
@@ -109,11 +109,11 @@ public abstract class AbstractStoreMaidItem extends Item {
                 worldIn.addFreshEntity(maid);
             }
             maid.spawnExplosionParticle();
-            maid.playSound(SoundEvents.PLAYER_SPLASH, 1.0F, worldIn.random.nextFloat() * 0.1F + 0.9F);
+            maid.playSound(SoundEvents.PLAYER_SPLASH, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
             runnable.run();
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            return InteractionResult.sidedSuccess(worldIn.isClientSide());
         } else {
-            if (worldIn.isClientSide) {
+            if (worldIn.isClientSide()) {
                 player.sendSystemMessage(Component.translatable("message.touhou_little_maid.photo.have_no_nbt_data"));
             }
         }

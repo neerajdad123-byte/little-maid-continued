@@ -11,7 +11,7 @@ import mods.flammpfeil.slashblade.client.renderer.model.obj.WavefrontObject;
 import mods.flammpfeil.slashblade.client.renderer.util.BladeRenderState;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -21,15 +21,15 @@ import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class SlashBladeRender {
-    private static final ResourceLocation RESOURCE_DEFAULT_MODEL = ResourceLocation.fromNamespaceAndPath("slashblade", "model/blade.obj");
-    private static final ResourceLocation RESOURCE_DEFAULT_TEXTURE = ResourceLocation.fromNamespaceAndPath("slashblade", "model/blade.png");
+    private static final Identifier RESOURCE_DEFAULT_MODEL = Identifier.fromNamespaceAndPath("slashblade", "model/blade.obj");
+    private static final Identifier RESOURCE_DEFAULT_TEXTURE = Identifier.fromNamespaceAndPath("slashblade", "model/blade.png");
 
     public static void renderSlashBlade(PoseStack matrixStack, MultiBufferSource bufferIn, int lightIn, ItemStack stack) {
         if (stack.isEmpty()) {
             return;
         }
         BladeStateAccess.of(stack).ifPresent(bladeState -> {
-            ResourceLocation texture = bladeState.getTexture().orElse(RESOURCE_DEFAULT_TEXTURE);
+            Identifier texture = bladeState.getTexture().orElse(RESOURCE_DEFAULT_TEXTURE);
             WavefrontObject obj = BladeModelManager.getInstance().getModel(bladeState.getModel().orElse(null));
             String part;
             if (bladeState.isBroken()) {
@@ -75,7 +75,7 @@ public class SlashBladeRender {
                 return;
             }
             BladeStateAccess.of(stack).ifPresent(bladeState -> {
-                ResourceLocation texture = bladeState.getTexture().orElse(RESOURCE_DEFAULT_TEXTURE);
+                Identifier texture = bladeState.getTexture().orElse(RESOURCE_DEFAULT_TEXTURE);
                 WavefrontObject obj = BladeModelManager.getInstance().getModel(bladeState.getModel().orElse(RESOURCE_DEFAULT_MODEL));
                 String part;
                 if (bladeState.isBroken()) {
@@ -117,7 +117,7 @@ public class SlashBladeRender {
                 return;
             }
             BladeStateAccess.of(stack).ifPresent(bladeState -> {
-                ResourceLocation texture = bladeState.getTexture().orElse(RESOURCE_DEFAULT_TEXTURE);
+                Identifier texture = bladeState.getTexture().orElse(RESOURCE_DEFAULT_TEXTURE);
                 WavefrontObject obj = BladeModelManager.getInstance().getModel(bladeState.getModel().orElse(RESOURCE_DEFAULT_MODEL));
                 String part;
                 if (bladeState.isBroken()) {

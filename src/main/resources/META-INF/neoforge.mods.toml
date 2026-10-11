@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "${loader_version_range}"
 license = "${mod_license}"
-issueTrackerURL = "https://github.com/TartaricAcid/TouhouLittleMaid/issues"
+issueTrackerURL = "https://github.com/neerajdad123-byte/little-maid-continued/issues"
 
 [[mods]]
     modId = "${mod_id}"
@@ -10,7 +10,7 @@ issueTrackerURL = "https://github.com/TartaricAcid/TouhouLittleMaid/issues"
     # updateJSONURL="https://change.me.example.invalid/updates.json"
     displayURL = "https://discord.gg/re4xQtb"
     logoFile = "logo.png"
-    credits = "Verclene, ZUN"
+    credits = "Original mod Touhou Little Maid by TartaricAcid and contributors. Inspired by Verclene's LittleMaid, characters by ZUN."
     authors = "${mod_authors}"
     description = '''${mod_description}'''
 
@@ -34,12 +34,5 @@ issueTrackerURL = "https://github.com/TartaricAcid/TouhouLittleMaid/issues"
     modId = "minecraft"
     type = "required"
     versionRange = "${minecraft_version_range}"
-    ordering = "NONE"
-    side = "BOTH"
-
-[[dependencies."${mod_id}"]]
-    modId = "kubejs"
-    type="optional"
-    versionRange = "[2101.7.2-build.309,)"
     ordering = "NONE"
     side = "BOTH"

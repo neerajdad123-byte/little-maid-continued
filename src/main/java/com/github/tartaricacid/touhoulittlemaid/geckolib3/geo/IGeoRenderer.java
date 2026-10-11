@@ -12,10 +12,10 @@ import com.github.tartaricacid.touhoulittlemaid.geckolib3.util.RenderUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.resources.Identifier;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -44,7 +44,7 @@ public interface IGeoRenderer<T> {
     default void setCurrentRTB(MultiBufferSource bufferSource) {
     }
 
-    ResourceLocation getTextureLocation(T animatable);
+    Identifier getTextureLocation(T animatable);
 
     default void render(AnimatedGeoModel model, T animatable, float partialTick, RenderType type, PoseStack poseStack,
                         @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight,
@@ -68,7 +68,7 @@ public interface IGeoRenderer<T> {
 
     default void renderRecursively(AnimatedGeoBone bone, PoseStack poseStack, VertexConsumer buffer, int packedLight,
                                    int packedOverlay, float red, float green, float blue, float alpha) {
-        int cubePackedLight = bone.geoBone().glow() ? LightTexture.pack(15, 15) : packedLight;
+        int cubePackedLight = bone.geoBone().glow() ? LightCoordsUtil.pack(15, 15) : packedLight;
         if ((bone.getScaleX() == 0 ? 0 : 1) + (bone.getScaleY() == 0 ? 0 : 1) + (bone.getScaleZ() == 0 ? 0 : 1) < 2) {
             return;
         }
@@ -321,7 +321,7 @@ public interface IGeoRenderer<T> {
 
     default RenderType getRenderType(T animatable, float partialTick, PoseStack poseStack,
                                      @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, int packedLight,
-                                     ResourceLocation texture) {
+                                     Identifier texture) {
         return RenderType.entityCutoutNoCull(texture);
     }
 

@@ -15,7 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -23,14 +23,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
 public class TileEntityGomokuRenderer implements BlockEntityRenderer<TileEntityGomoku> {
-    private static final ResourceLocation CHECKER_BOARD_TEXTURE = ResourceLocation.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/gomoku.png");
-    private static final ResourceLocation BLACK_PIECE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/gomoku_black_piece.png");
-    private static final ResourceLocation WHITE_PIECE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/gomoku_white_piece.png");
+    private static final Identifier CHECKER_BOARD_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/gomoku.png");
+    private static final Identifier BLACK_PIECE_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/gomoku_black_piece.png");
+    private static final Identifier WHITE_PIECE_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/gomoku_white_piece.png");
     private static final int TIPS_RENDER_DISTANCE = 16;
     private static final int PIECE_RENDER_DISTANCE = 24;
     private final SimpleBedrockModel<Entity> CHECKER_BOARD_MODEL;

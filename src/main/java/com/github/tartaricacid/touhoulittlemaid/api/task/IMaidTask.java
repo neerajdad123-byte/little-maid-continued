@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
@@ -31,9 +31,9 @@ public interface IMaidTask {
     /**
      * 模式 ID，用于后续模式的判断，也用于本地化的 key
      *
-     * @return 用 ResourceLocation 类描述的模式 ID
+     * @return 用 Identifier 类描述的模式 ID
      */
-    ResourceLocation getUid();
+    Identifier getUid();
 
     /**
      * 该模式的图标

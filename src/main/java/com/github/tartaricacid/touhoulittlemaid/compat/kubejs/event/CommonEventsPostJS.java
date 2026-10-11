@@ -7,14 +7,14 @@ import dev.latvian.mods.kubejs.script.ScriptType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class CommonEventsPostJS {
     public static ResourceKey<Item> getItemKey(Item item) {
-        ResourceLocation key = BuiltInRegistries.ITEM.getKey(item);
+        Identifier key = BuiltInRegistries.ITEM.getKey(item);
         return ResourceKey.create(Registries.ITEM, key);
     }
 
@@ -43,7 +43,7 @@ public class CommonEventsPostJS {
     public void maidAttack(MaidAttackEvent event) {
         if (MaidEventsJS.MAID_ATTACK.hasListeners()) {
             ScriptType scriptType = event.getMaid().level.isClientSide ? ScriptType.CLIENT : ScriptType.SERVER;
-            ResourceLocation id = event.getSource().typeHolder().unwrapKey().map(ResourceKey::location).orElse(null);
+            Identifier id = event.getSource().typeHolder().unwrapKey().map(ResourceKey::location).orElse(null);
             EventResult result = MaidEventsJS.MAID_ATTACK.post(scriptType, id, new MaidAttackEventJS(event));
             if (result.interruptFalse()) {
                 event.setCanceled(true);
@@ -55,7 +55,7 @@ public class CommonEventsPostJS {
     public void maidDamage(MaidDamageEvent event) {
         if (MaidEventsJS.MAID_DAMAGE.hasListeners()) {
             ScriptType scriptType = event.getMaid().level.isClientSide ? ScriptType.CLIENT : ScriptType.SERVER;
-            ResourceLocation id = event.getSource().typeHolder().unwrapKey().map(ResourceKey::location).orElse(null);
+            Identifier id = event.getSource().typeHolder().unwrapKey().map(ResourceKey::location).orElse(null);
             EventResult result = MaidEventsJS.MAID_DAMAGE.post(scriptType, id, new MaidDamageEventJS(event));
             if (result.interruptFalse()) {
                 event.setCanceled(true);
@@ -67,7 +67,7 @@ public class CommonEventsPostJS {
     public void maidDeath(MaidDeathEvent event) {
         if (MaidEventsJS.MAID_DEATH.hasListeners()) {
             ScriptType scriptType = event.getMaid().level.isClientSide ? ScriptType.CLIENT : ScriptType.SERVER;
-            ResourceLocation id = event.getSource().typeHolder().unwrapKey().map(ResourceKey::location).orElse(null);
+            Identifier id = event.getSource().typeHolder().unwrapKey().map(ResourceKey::location).orElse(null);
             EventResult result = MaidEventsJS.MAID_DEATH.post(scriptType, id, new MaidDeathEventJS(event));
             if (result.interruptFalse()) {
                 event.setCanceled(true);
@@ -96,7 +96,7 @@ public class CommonEventsPostJS {
     public void maidHurt(MaidHurtEvent event) {
         if (MaidEventsJS.MAID_HURT.hasListeners()) {
             ScriptType scriptType = event.getMaid().level.isClientSide ? ScriptType.CLIENT : ScriptType.SERVER;
-            ResourceLocation id = event.getSource().typeHolder().unwrapKey().map(ResourceKey::location).orElse(null);
+            Identifier id = event.getSource().typeHolder().unwrapKey().map(ResourceKey::location).orElse(null);
             EventResult result = MaidEventsJS.MAID_HURT.post(scriptType, id, new MaidHurtEventJS(event));
             if (result.interruptFalse()) {
                 event.setCanceled(true);
@@ -182,7 +182,7 @@ public class CommonEventsPostJS {
     public void maidTaskEnable(MaidTaskEnableEvent event) {
         if (MaidEventsJS.MAID_TASK_ENABLE.hasListeners()) {
             ScriptType scriptType = event.getEntityMaid().level.isClientSide ? ScriptType.CLIENT : ScriptType.SERVER;
-            ResourceLocation uid = event.getTargetTask().getUid();
+            Identifier uid = event.getTargetTask().getUid();
             EventResult result = MaidEventsJS.MAID_TASK_ENABLE.post(scriptType, uid, new MaidTaskEnableEventJS(event));
             if (result.interruptFalse()) {
                 event.setCanceled(true);

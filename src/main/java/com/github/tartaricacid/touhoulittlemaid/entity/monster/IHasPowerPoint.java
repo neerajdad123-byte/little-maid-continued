@@ -2,7 +2,7 @@ package com.github.tartaricacid.touhoulittlemaid.entity.monster;
 
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityPowerPoint;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 
 public interface IHasPowerPoint {
     /**
@@ -23,7 +23,7 @@ public interface IHasPowerPoint {
             return;
         }
         int dropTime = 20;
-        if (entity.deathTime == dropTime && !entity.level.isClientSide) {
+        if (entity.deathTime == dropTime && !entity.level.isClientSide()) {
             int totalPowerPoint = getPowerPoint();
             while (totalPowerPoint > 0) {
                 int powerSplit = EntityPowerPoint.getPowerValue(totalPowerPoint);

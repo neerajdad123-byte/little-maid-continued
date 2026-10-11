@@ -1,10 +1,11 @@
 package com.github.tartaricacid.touhoulittlemaid.network.message;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.api.game.chess.Position;
 import com.github.tartaricacid.touhoulittlemaid.api.game.chess.Search;
 import com.github.tartaricacid.touhoulittlemaid.util.WChessUtil;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -72,6 +73,6 @@ public record WChessToClientPackage(BlockPos pos, String fenData) implements Cus
 
         final int moveFinal = move;
         final boolean playerLostFinal = playerLost;
-        Minecraft.getInstance().submitAsync(() -> PacketDistributor.sendToServer(new WChessToServerPackage(message.pos, moveFinal, maidLost, playerLostFinal)));
+        Minecraft.getInstance().submitAsync(() -> ClientPacketDistributor.sendToServer(new WChessToServerPackage(message.pos, moveFinal, maidLost, playerLostFinal)));
     }
 }

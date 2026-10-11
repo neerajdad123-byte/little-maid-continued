@@ -9,7 +9,7 @@ import com.github.tartaricacid.touhoulittlemaid.util.SoundUtil;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import dev.latvian.mods.kubejs.typings.Info;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,7 +30,7 @@ public class MeleeTaskJS implements IAttackTask {
     }
 
     @Override
-    public ResourceLocation getUid() {
+    public Identifier getUid() {
         return this.builder.id;
     }
 
@@ -186,7 +186,7 @@ public class MeleeTaskJS implements IAttackTask {
         private float walkSpeed = 0.6f;
         private int meleeCooldownTick = 20;
 
-        public Builder(ResourceLocation id, ItemStack icon) {
+        public Builder(Identifier id, ItemStack icon) {
             super(id, icon);
         }
 

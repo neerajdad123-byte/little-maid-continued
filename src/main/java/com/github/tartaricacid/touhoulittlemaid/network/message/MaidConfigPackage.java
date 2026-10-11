@@ -13,7 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
@@ -86,7 +86,7 @@ public record MaidConfigPackage(int id, boolean home, boolean pick, boolean ride
         if (message.home) {
             SchedulePos schedulePos = maid.getSchedulePos();
             if (schedulePos.isConfigured()) {
-                ResourceLocation dimension = schedulePos.getDimension();
+                Identifier dimension = schedulePos.getDimension();
                 if (!dimension.equals(maid.level.dimension().location())) {
                     CheckSchedulePosPacket tips = new CheckSchedulePosPacket("message.touhou_little_maid.check_schedule_pos.dimension");
                     PacketDistributor.sendToPlayer(sender, tips);

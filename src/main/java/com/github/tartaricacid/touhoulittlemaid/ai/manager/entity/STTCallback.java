@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.ai.manager.entity;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.ErrorCode;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.ResponseCallback;
@@ -39,7 +40,7 @@ public class STTCallback implements ResponseCallback<String> {
     public void onSuccess(String chatText) {
         if (StringUtils.isNotBlank(chatText)) {
             ChatClientInfo clientInfo = ChatClientInfo.fromMaid(this.maid);
-            PacketDistributor.sendToServer(new SendUserChatPackage(maid.getId(), chatText, clientInfo));
+            ClientPacketDistributor.sendToServer(new SendUserChatPackage(maid.getId(), chatText, clientInfo));
             String name = player.getScoreboardName();
             String format = String.format("<%s> %s", name, chatText);
             player.sendSystemMessage(Component.literal(format).withStyle(ChatFormatting.GRAY));

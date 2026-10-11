@@ -61,9 +61,9 @@ public class BlockStatue extends Block implements EntityBlock {
                 int posY = pos.getY();
                 int posZ = pos.getZ();
                 AABB aabb = state.getShape(world, pos).bounds();
-                double x = posX + world.random.nextDouble() * (aabb.maxX - aabb.minX - 0.2) + 0.1 + aabb.minX;
-                double y = posY + world.random.nextDouble() * (aabb.maxY - aabb.minY - 0.2) + 0.1 + aabb.minY;
-                double z = posZ + world.random.nextDouble() * (aabb.maxZ - aabb.minZ - 0.2) + 0.1 + aabb.minZ;
+                double x = posX + world.getRandom().nextDouble() * (aabb.maxX - aabb.minX - 0.2) + 0.1 + aabb.minX;
+                double y = posY + world.getRandom().nextDouble() * (aabb.maxY - aabb.minY - 0.2) + 0.1 + aabb.minY;
+                double z = posZ + world.getRandom().nextDouble() * (aabb.maxZ - aabb.minZ - 0.2) + 0.1 + aabb.minZ;
                 if (side == Direction.DOWN) {
                     y = posY + aabb.minY - 0.1;
                 }
@@ -95,7 +95,7 @@ public class BlockStatue extends Block implements EntityBlock {
 
     @Override
     public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
-        if (!worldIn.isClientSide) {
+        if (!worldIn.isClientSide()) {
             this.getStatue(worldIn, pos).ifPresent(statue -> {
                 this.restoreClayBlock(worldIn, pos, statue);
                 if (!player.isCreative()) {
@@ -108,7 +108,7 @@ public class BlockStatue extends Block implements EntityBlock {
 
     @Override
     public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             this.getStatue(world, pos).ifPresent(statue -> this.restoreClayBlock(world, pos, statue));
         }
         super.onBlockExploded(state, world, pos, explosion);

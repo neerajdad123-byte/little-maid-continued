@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.block;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.cache.CacheIconManager;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.DirectButton;
@@ -12,7 +13,7 @@ import com.github.tartaricacid.touhoulittlemaid.network.message.SaveSwitcherData
 import com.github.tartaricacid.touhoulittlemaid.tileentity.TileEntityModelSwitcher;
 import com.github.tartaricacid.touhoulittlemaid.util.ParseI18n;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
@@ -22,15 +23,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.UUID;
 
 public class ModelSwitcherGui extends Screen {
-    private static final ResourceLocation BG = ResourceLocation.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/model_switcher.png");
-    private static final ResourceLocation DEFAULT_MODEL_ID = ResourceLocation.parse("touhou_little_maid:hakurei_reimu");
+    private static final Identifier BG = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/model_switcher.png");
+    private static final Identifier DEFAULT_MODEL_ID = Identifier.parse("touhou_little_maid:hakurei_reimu");
     private final List<TileEntityModelSwitcher.ModeInfo> infoList;
     private final BlockPos pos;
     private final int maxRow = 6;
@@ -84,7 +85,7 @@ public class ModelSwitcherGui extends Screen {
                 b -> info.setDirection(((DirectButton) b).getDirection())));
 
         this.addRenderableWidget(Button.builder(Component.translatable("selectWorld.edit.save"), b -> {
-            PacketDistributor.sendToServer(new SaveSwitcherDataPackage(pos, this.infoList));
+            ClientPacketDistributor.sendToServer(new SaveSwitcherDataPackage(pos, this.infoList));
         }).pos(leftPos + 12, topPos + 135).size(121, 20).build());
 
         this.description = new EditBox(getMinecraft().font, leftPos + 12, topPos + 65, 119, 20,
@@ -157,7 +158,7 @@ public class ModelSwitcherGui extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (this.maid == null) {
             return;
         }
@@ -189,7 +190,7 @@ public class ModelSwitcherGui extends Screen {
         this.renderListButtonName(graphics);
     }
 
-    private void renderListButtonName(GuiGraphics graphics) {
+    private void renderListButtonName(GuiGraphicsExtractor graphics) {
         int startOffsetY = topPos + 29;
         for (int i = page * maxRow; i < Math.min(infoList.size(), (page + 1) * maxRow); i++) {
             String modelId = infoList.get(i).getModelId().toString();
@@ -233,7 +234,7 @@ public class ModelSwitcherGui extends Screen {
 
     @Override
     public void onClose() {
-        PacketDistributor.sendToServer(new SaveSwitcherDataPackage(pos, this.infoList));
+        ClientPacketDistributor.sendToServer(new SaveSwitcherDataPackage(pos, this.infoList));
         super.onClose();
     }
 }

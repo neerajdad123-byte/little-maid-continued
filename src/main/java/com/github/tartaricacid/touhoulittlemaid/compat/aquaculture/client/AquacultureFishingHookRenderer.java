@@ -7,12 +7,12 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.teammetallurgy.aquaculture.Aquaculture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.neoforged.api.distmarker.Dist;
@@ -22,10 +22,10 @@ import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class AquacultureFishingHookRenderer extends MaidFishingHookRenderer<AquacultureFishingHook> {
-    private static final ResourceLocation BOBBER = ResourceLocation.fromNamespaceAndPath(Aquaculture.MOD_ID, "textures/entity/rod/bobber/bobber.png");
-    private static final ResourceLocation BOBBER_OVERLAY = ResourceLocation.fromNamespaceAndPath(Aquaculture.MOD_ID, "textures/entity/rod/bobber/bobber_overlay.png");
-    private static final ResourceLocation BOBBER_VANILLA = ResourceLocation.fromNamespaceAndPath(Aquaculture.MOD_ID, "textures/entity/rod/bobber/bobber_vanilla.png");
-    private static final ResourceLocation HOOK = ResourceLocation.fromNamespaceAndPath(Aquaculture.MOD_ID, "textures/entity/rod/hook/hook.png");
+    private static final Identifier BOBBER = Identifier.fromNamespaceAndPath(Aquaculture.MOD_ID, "textures/entity/rod/bobber/bobber.png");
+    private static final Identifier BOBBER_OVERLAY = Identifier.fromNamespaceAndPath(Aquaculture.MOD_ID, "textures/entity/rod/bobber/bobber_overlay.png");
+    private static final Identifier BOBBER_VANILLA = Identifier.fromNamespaceAndPath(Aquaculture.MOD_ID, "textures/entity/rod/bobber/bobber_vanilla.png");
+    private static final Identifier HOOK = Identifier.fromNamespaceAndPath(Aquaculture.MOD_ID, "textures/entity/rod/hook/hook.png");
     private static final RenderType BOBBER_RENDER = RenderType.entityCutout(BOBBER);
     private static final RenderType BOBBER_OVERLAY_RENDER = RenderType.entityCutout(BOBBER_OVERLAY);
     private static final RenderType BOBBER_VANILLA_RENDER = RenderType.entityCutout(BOBBER_VANILLA);
@@ -48,7 +48,7 @@ public class AquacultureFishingHookRenderer extends MaidFishingHookRenderer<Aqua
         float bobberR = 1.0F;
         float bobberG = 1.0F;
         float bobberB = 1.0F;
-        int colorInt = FastColor.ARGB32.color(193, 38, 38);
+        int colorInt = ARGB.ARGB32.color(193, 38, 38);
         if (!bobberStack.isEmpty()) {
             if (bobberStack.is(ItemTags.DYEABLE)) {
                 DyedItemColor dyedItemColor = bobberStack.get(DataComponents.DYED_COLOR);
@@ -106,7 +106,7 @@ public class AquacultureFishingHookRenderer extends MaidFishingHookRenderer<Aqua
 
     @Override
     @Nonnull
-    public ResourceLocation getTextureLocation(@Nonnull AquacultureFishingHook fishHook) {
+    public Identifier getTextureLocation(@Nonnull AquacultureFishingHook fishHook) {
         return BOBBER_VANILLA;
     }
 }

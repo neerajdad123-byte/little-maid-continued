@@ -13,8 +13,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.VariantHolder;
 import net.minecraft.world.entity.animal.FlyingAnimal;
-import net.minecraft.world.entity.animal.Parrot;
-import net.minecraft.world.entity.animal.ShoulderRidingEntity;
+import net.minecraft.world.entity.animal.parrot.Parrot;
+import net.minecraft.world.entity.animal.parrot.ShoulderRidingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import static net.minecraft.world.entity.animal.Parrot.getPitch;
+import static net.minecraft.world.entity.animal.parrot.Parrot.getPitch;
 
 @Mixin(Parrot.class)
 public abstract class ParrotMixin {
@@ -47,11 +47,11 @@ public abstract class ParrotMixin {
         if (mob instanceof EntityMaid maid) {
             SoundEvent soundevent = SoundUtil.environmentSound(maid, InitSounds.MAID_IDLE.get(), 0.5f);
             // 服务端发送在鹦鹉坐标播放女仆语音的包
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 NetworkHandler.sendToNearby(parrot, new PlayMaidSoundAtPosPackage(
                         soundevent.getLocation(), maid.getSoundPackId(),
                         parrot.getX(), parrot.getY(), parrot.getZ(),
-                        0.7F, getPitch(level.random)
+                        0.7F, getPitch(level.getRandom())
                 ), 16);
             }
             cir.setReturnValue(true);

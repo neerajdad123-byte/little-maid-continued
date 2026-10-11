@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.editor;
 
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.tts.TTSSite;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.FormField;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.layout.FieldDescriptor;
@@ -11,7 +12,7 @@ import com.github.tartaricacid.touhoulittlemaid.network.message.ai.SaveTTSSitePa
 import com.github.tartaricacid.touhoulittlemaid.util.Rectangle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -218,7 +219,7 @@ public class TTSSiteEditorScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics, mouseX, mouseY, partialTick);
         graphics.fillGradient(0, 0, this.width, this.height, 0xc0101010, 0xc0101010);
 
@@ -248,7 +249,7 @@ public class TTSSiteEditorScreen extends Screen {
         }
     }
 
-    private void renderInputField(GuiGraphics graphics, EditBox box, int mouseX, int mouseY, float partialTick) {
+    private void renderInputField(GuiGraphicsExtractor graphics, EditBox box, int mouseX, int mouseY, float partialTick) {
         if (box == null) {
             return;
         }
@@ -263,7 +264,7 @@ public class TTSSiteEditorScreen extends Screen {
         box.render(graphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderModelArea(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    private void renderModelArea(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         int left = (int) this.modelArea.x;
         int top = (int) this.modelArea.y;
 
@@ -362,7 +363,7 @@ public class TTSSiteEditorScreen extends Screen {
         if (site == null) {
             return;
         }
-        PacketDistributor.sendToServer(SaveTTSSitePacket.update(site));
+        ClientPacketDistributor.sendToServer(SaveTTSSitePacket.update(site));
     }
 
     private Map<String, String> buildModels() {

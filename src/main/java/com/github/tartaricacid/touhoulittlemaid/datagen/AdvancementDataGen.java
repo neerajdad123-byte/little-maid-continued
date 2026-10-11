@@ -11,8 +11,8 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
+import net.minecraft.resources.Identifier;
+import net.minecraft.data.advancements.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class AdvancementDataGen extends AdvancementProvider {
             Advancement.Builder.advancement()
                     .addCriterion("tick", GiveSmartSlabConfigTrigger.Instance.instance())
                     .rewards(AdvancementRewards.Builder.loot(LootTableGenerator.GIVE_SMART_SLAB))
-                    .save(saver, ResourceLocation.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "give_smart_slab"), helper);
+                    .save(saver, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "give_smart_slab"), helper);
         }
     }
 

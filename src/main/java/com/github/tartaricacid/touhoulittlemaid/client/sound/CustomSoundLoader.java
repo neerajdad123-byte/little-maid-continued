@@ -11,7 +11,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.client.sounds.JOrbisAudioStream;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
@@ -94,8 +94,8 @@ public class CustomSoundLoader {
         LOGGER.debug(MARKER, "Loaded {} sound pack.", id);
     }
 
-    private static Map<ResourceLocation, List<SoundData>> loadSoundEvent(Path rootPath) {
-        Map<ResourceLocation, List<SoundData>> buffers = Maps.newLinkedHashMap();
+    private static Map<Identifier, List<SoundData>> loadSoundEvent(Path rootPath) {
+        Map<Identifier, List<SoundData>> buffers = Maps.newLinkedHashMap();
 
         buffers.put(InitSounds.MAID_IDLE.get().getLocation(), loadSounds(rootPath.resolve("mode"), "idle"));
         buffers.put(InitSounds.MAID_ATTACK.get().getLocation(), loadSounds(rootPath.resolve("mode"), "attack"));
@@ -165,7 +165,7 @@ public class CustomSoundLoader {
         return sounds;
     }
 
-    private static void reuseSounds(Map<ResourceLocation, List<SoundData>> buffers, SoundEvent from, SoundEvent to) {
+    private static void reuseSounds(Map<Identifier, List<SoundData>> buffers, SoundEvent from, SoundEvent to) {
         List<SoundData> fromBuffers = buffers.get(from.getLocation());
         buffers.get(to.getLocation()).addAll(fromBuffers);
     }
@@ -204,8 +204,8 @@ public class CustomSoundLoader {
     }
 
     @NotNull
-    private static Map<ResourceLocation, List<SoundData>> loadSoundEvent(ZipFile zipFile, String id) {
-        Map<ResourceLocation, List<SoundData>> buffers = Maps.newLinkedHashMap();
+    private static Map<Identifier, List<SoundData>> loadSoundEvent(ZipFile zipFile, String id) {
+        Map<Identifier, List<SoundData>> buffers = Maps.newLinkedHashMap();
         Pattern pattern = Pattern.compile(String.format("assets/%s/sounds/maid/(.*?)/(.*?\\.ogg)", id));
         zipFile.stream().forEach(zipEntry -> {
             if (!zipEntry.isDirectory()) {
@@ -271,7 +271,7 @@ public class CustomSoundLoader {
         return buffers;
     }
 
-    private static void loadSounds(ZipFile zipFile, Map<ResourceLocation, List<SoundData>> buffers, ZipEntry zipEntry, String subDir, String fileName, SoundEvent soundEvent, String checkSubDir, String checkFileName) {
+    private static void loadSounds(ZipFile zipFile, Map<Identifier, List<SoundData>> buffers, ZipEntry zipEntry, String subDir, String fileName, SoundEvent soundEvent, String checkSubDir, String checkFileName) {
         List<SoundData> sounds = buffers.computeIfAbsent(soundEvent.getLocation(), res -> Lists.newArrayList());
         if (checkSubDir.equals(subDir) && checkFileName(checkFileName, fileName)) {
             OggReader.readSoundDataFromZip(zipFile, zipEntry, fileName, sounds, MARKER);

@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -46,9 +46,9 @@ public class EntityThrowPowerPoint extends ThrowableItemProjectile {
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             this.level.levelEvent(LevelEvent.PARTICLES_SPELL_POTION_SPLASH, this.blockPosition(), PotionContents.getColor(Potions.HEALING));
-            int count = 30 + this.level.random.nextInt(30) + this.level.random.nextInt(30);
+            int count = 30 + this.level.getRandom().nextInt(30) + this.level.getRandom().nextInt(30);
             while (count > 0) {
                 int value = EntityPowerPoint.getPowerValue(count);
                 count -= value;
