@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.init.registry;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MiscConfig;
 import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
 import net.minecraft.resources.Identifier;
@@ -30,7 +31,7 @@ public final class MobSpawnInfoRegistry {
             Identifier dimension = level.dimension().identifier();
             if (event.getMobCategory() == MobCategory.MONSTER && dimensionIsOkay(dimension)) {
                 List<MobSpawnSettings.SpawnerData> spawnerData = event.getSpawnerDataList();
-                boolean canZombieSpawn = spawnerData.stream().anyMatch(data -> data.type.equals(EntityType.ZOMBIE));
+                boolean canZombieSpawn = spawnerData.stream().anyMatch(data -> data.type.equals(EntityTypes.ZOMBIE));
                 if (SPAWNER_DATA == null || SPAWNER_DATA.getWeight().asInt() != spawnProbability) {
                     SPAWNER_DATA = new MobSpawnSettings.SpawnerData(InitEntities.FAIRY.get(), spawnProbability, 2, 4);
                 }

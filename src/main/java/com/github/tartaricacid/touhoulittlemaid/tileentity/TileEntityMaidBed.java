@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class TileEntityMaidBed extends BlockEntity {
-    public static final BlockEntityType<TileEntityMaidBed> TYPE = BlockEntityType.Builder.of(TileEntityMaidBed::new, InitBlocks.MAID_BED.get()).build(null);
+    public static final BlockEntityType<TileEntityMaidBed> TYPE = new BlockEntityType<>(TileEntityMaidBed::new, InitBlocks.MAID_BED.get());
     private static final String COLOR_TAG = "BedColor";
     private DyeColor color = DyeColor.PINK;
 

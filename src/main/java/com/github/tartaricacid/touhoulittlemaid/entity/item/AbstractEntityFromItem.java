@@ -78,7 +78,7 @@ public abstract class AbstractEntityFromItem extends LivingEntity {
 
     private void killEntity() {
         this.discard();
-        if (this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+        if (this.level().getGameRules().getBoolean(GameRules.ENTITY_DROPS)) {
             ItemStack itemstack = getKilledStack();
             if (this.hasCustomName()) {
                 itemstack.set(DataComponents.CUSTOM_NAME, this.getCustomName());

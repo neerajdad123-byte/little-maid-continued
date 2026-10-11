@@ -104,7 +104,7 @@ public class EntityDanmaku extends ThrowableProjectile {
             hit.hurt(source, this.getDamage());
             if (this.impedingLevel > 0 && hit instanceof LivingEntity livingEntity) {
                 int duration = (20 + this.impedingLevel * 10) * 20;
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, duration, this.impedingLevel));
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, duration, this.impedingLevel));
             }
             this.discard();
         }

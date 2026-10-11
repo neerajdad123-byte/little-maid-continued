@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.ai.brain;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.ai.IExtraMaidBrain;
 import com.github.tartaricacid.touhoulittlemaid.api.task.IMaidTask;
 import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.ride.MaidRideBegTask;
@@ -207,22 +208,22 @@ public final class MaidBrain {
     }
 
     private static MaidRunOne getLookAndRandomWalk(Predicate<EntityMaid> enableCondition) {
-        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToPlayer = Pair.of(SetEntityLookTarget.create(EntityType.PLAYER, 5), 1);
+        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToPlayer = Pair.of(SetEntityLookTarget.create(EntityTypes.PLAYER, 5), 1);
         Pair<BehaviorControl<? super EntityMaid>, Integer> lookToMaid = Pair.of(SetEntityLookTarget.create(EntityMaid.TYPE, 5), 1);
-        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToWolf = Pair.of(SetEntityLookTarget.create(EntityType.WOLF, 5), 1);
-        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToCat = Pair.of(SetEntityLookTarget.create(EntityType.CAT, 5), 1);
-        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToParrot = Pair.of(SetEntityLookTarget.create(EntityType.PARROT, 5), 1);
+        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToWolf = Pair.of(SetEntityLookTarget.create(EntityTypes.WOLF, 5), 1);
+        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToCat = Pair.of(SetEntityLookTarget.create(EntityTypes.CAT, 5), 1);
+        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToParrot = Pair.of(SetEntityLookTarget.create(EntityTypes.PARROT, 5), 1);
         Pair<BehaviorControl<? super EntityMaid>, Integer> walkRandomly = Pair.of(RandomStroll.stroll(0.3f, 5, 3), 1);
         Pair<BehaviorControl<? super EntityMaid>, Integer> noLook = Pair.of(new DoNothing(30, 60), 2);
         return new MaidRunOne(ImmutableList.of(lookToPlayer, lookToMaid, lookToWolf, lookToCat, lookToParrot, walkRandomly, noLook), enableCondition);
     }
 
     private static MaidRunOne getLook(Predicate<EntityMaid> enableCondition) {
-        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToPlayer = Pair.of(SetEntityLookTarget.create(EntityType.PLAYER, 5), 1);
+        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToPlayer = Pair.of(SetEntityLookTarget.create(EntityTypes.PLAYER, 5), 1);
         Pair<BehaviorControl<? super EntityMaid>, Integer> lookToMaid = Pair.of(SetEntityLookTarget.create(EntityMaid.TYPE, 5), 1);
-        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToWolf = Pair.of(SetEntityLookTarget.create(EntityType.WOLF, 5), 1);
-        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToCat = Pair.of(SetEntityLookTarget.create(EntityType.CAT, 5), 1);
-        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToParrot = Pair.of(SetEntityLookTarget.create(EntityType.PARROT, 5), 1);
+        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToWolf = Pair.of(SetEntityLookTarget.create(EntityTypes.WOLF, 5), 1);
+        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToCat = Pair.of(SetEntityLookTarget.create(EntityTypes.CAT, 5), 1);
+        Pair<BehaviorControl<? super EntityMaid>, Integer> lookToParrot = Pair.of(SetEntityLookTarget.create(EntityTypes.PARROT, 5), 1);
         Pair<BehaviorControl<? super EntityMaid>, Integer> noLook = Pair.of(new DoNothing(30, 60), 2);
         return new MaidRunOne(ImmutableList.of(lookToPlayer, lookToMaid, lookToWolf, lookToCat, lookToParrot, noLook), enableCondition);
     }

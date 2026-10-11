@@ -112,7 +112,7 @@ public class ItemSmartSlab extends AbstractStoreMaidItem {
             }
             maid.tame(player);
             if (worldIn instanceof ServerLevel) {
-                maid.finalizeSpawn((ServerLevel) worldIn, worldIn.getCurrentDifficultyAt(context.getClickedPos()), EntitySpawnReason.SPAWN_EGG, null);
+                maid.finalizeSpawn((ServerLevel) worldIn, worldIn.getCurrentDifficultyAt(context.getClickedPos()), EntitySpawnReason.SPAWN_ITEM_USE, null);
                 maid.moveTo(context.getClickedPos().above(), 0, 0);
                 worldIn.addFreshEntity(maid);
             }

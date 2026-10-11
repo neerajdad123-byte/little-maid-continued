@@ -72,12 +72,12 @@ public class MaidNodeEvaluator extends WalkNodeEvaluator {
         if (pathType == PathType.OPEN && y >= context.level().getMinY() + 1) {
             return switch (getMaidBlockPathTypeRaw(context, x, y - 1, z)) {
                 case OPEN, WATER, LAVA, WALKABLE -> PathType.OPEN;
-                case DAMAGE_FIRE -> PathType.DAMAGE_FIRE;
-                case DAMAGE_OTHER -> PathType.DAMAGE_OTHER;
+                case DAMAGE_FIRE -> PathType.FIRE;
+                case DAMAGE_OTHER -> PathType.DAMAGING;
                 case STICKY_HONEY -> PathType.STICKY_HONEY;
-                case POWDER_SNOW -> PathType.DANGER_POWDER_SNOW;
+                case POWDER_SNOW -> PathType.ON_TOP_OF_POWDER_SNOW;
                 case DAMAGE_CAUTIOUS -> PathType.DAMAGE_CAUTIOUS;
-                case TRAPDOOR -> PathType.DANGER_TRAPDOOR;
+                case TRAPDOOR -> PathType.ON_TOP_OF_TRAPDOOR;
                 default -> checkNeighbourBlocks(context, x, y, z, PathType.WALKABLE);
             };
         } else {
@@ -95,7 +95,7 @@ public class MaidNodeEvaluator extends WalkNodeEvaluator {
         BlockState blockState = context.getBlockState(pos);
         // 先检查方块是否在黑名单中
         if (blockState.is(TagBlock.MAID_AVOID_BLOCK)) {
-            return PathType.DAMAGE_OTHER;
+            return PathType.DAMAGING;
         }
 
         PathType pathType;

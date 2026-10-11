@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityKeyboard extends TileEntityJoy {
-    public static final BlockEntityType<TileEntityKeyboard> TYPE = BlockEntityType.Builder.of(TileEntityKeyboard::new, InitBlocks.KEYBOARD.get()).build(null);
+    public static final BlockEntityType<TileEntityKeyboard> TYPE = new BlockEntityType<>(TileEntityKeyboard::new, InitBlocks.KEYBOARD.get());
 
     public TileEntityKeyboard(BlockPos pos, BlockState blockState) {
         super(TYPE, pos, blockState);

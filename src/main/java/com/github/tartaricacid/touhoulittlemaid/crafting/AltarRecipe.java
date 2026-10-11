@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.crafting;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityBox;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent;
@@ -52,13 +53,13 @@ public class AltarRecipe extends ShapelessRecipe {
     }
 
     public boolean isItemCraft() {
-        return entityType.equals(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ITEM));
+        return entityType.equals(BuiltInRegistries.ENTITY_TYPE.getKey(EntityTypes.ITEM));
     }
 
     public void spawnOutputEntity(ServerLevel world, BlockPos pos, @Nullable List<ItemStack> list) {
         EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entityType);
 
-        if (type == EntityType.ITEM) {
+        if (type == EntityTypes.ITEM) {
             this.spawnItem(world, pos);
             return;
         }
@@ -88,7 +89,7 @@ public class AltarRecipe extends ShapelessRecipe {
             CompoundTag maidCompound = compoundData.copyTag();
             maid.readAdditionalSaveData(maidCompound);
         } else {
-            maid.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_EGG, null);
+            maid.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_ITEM_USE, null);
         }
         maid.setPos(pos.getX(), pos.getY(), pos.getZ());
         world.addFreshEntity(maid);
@@ -100,7 +101,7 @@ public class AltarRecipe extends ShapelessRecipe {
 
         EntityMaid maid = new EntityMaid(world);
         maid.setPos(pos.getX(), pos.getY(), pos.getZ());
-        maid.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_EGG, null);
+        maid.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_ITEM_USE, null);
         maid.startRiding(box, true);
 
         world.tryAddFreshEntityWithPassengers(box);

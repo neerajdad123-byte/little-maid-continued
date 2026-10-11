@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.datagen.advancement;
 
+import net.minecraft.world.item.DyeColor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.advancements.altar.AltarCraftTrigger;
 import com.github.tartaricacid.touhoulittlemaid.advancements.maid.MaidEventTrigger;
@@ -70,7 +71,7 @@ public class BaseAdvancement {
     }
 
     private static void generateAltar(Consumer<AdvancementHolder> saver, ExistingFileHelper existingFileHelper, AdvancementHolder root) {
-        AdvancementHolder altar = make(Items.RED_WOOL, "build_altar").parent(root)
+        AdvancementHolder altar = make(Items.WOOL.pick(DyeColor.RED), "build_altar").parent(root)
                 .addCriterion("maid_event", MaidEventTrigger.create(TriggerType.BUILD_ALTAR))
                 .rewards(AdvancementRewards.Builder.loot(LootTableGenerator.ADVANCEMENT_POWER_POINT))
                 .save(saver, id("base/build_altar"), existingFileHelper);

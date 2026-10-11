@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.datagen;
 
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.item.DyeColor;
 import com.github.tartaricacid.touhoulittlemaid.datagen.builder.AltarRecipeBuilder;
 import com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent;
 import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
@@ -175,23 +177,23 @@ public class RecipeGenerator extends RecipeProvider {
 
         AltarRecipeBuilder.shapeless(RecipeCategory.MISC, InitItems.MAID_BACKPACK_BIG)
                 .power(0.3F)
-                .requires(4, Items.GRAY_WOOL)
+                .requires(4, Items.WOOL.pick(DyeColor.GRAY))
                 .requires(Tags.Items.GEMS_DIAMOND)
-                .requires(Items.GRAY_WOOL)
+                .requires(Items.WOOL.pick(DyeColor.GRAY))
                 .save(recipeOutput);
 
         AltarRecipeBuilder.shapeless(RecipeCategory.MISC, InitItems.MAID_BACKPACK_MIDDLE)
                 .power(0.2F)
-                .requires(4, Items.PINK_WOOL)
+                .requires(4, Items.WOOL.pick(DyeColor.PINK))
                 .requires(Tags.Items.INGOTS_GOLD)
-                .requires(Items.PINK_WOOL)
+                .requires(Items.WOOL.pick(DyeColor.PINK))
                 .save(recipeOutput);
 
         AltarRecipeBuilder.shapeless(RecipeCategory.MISC, InitItems.MAID_BACKPACK_SMALL)
                 .power(0.1F)
-                .requires(4, Items.RED_WOOL)
+                .requires(4, Items.WOOL.pick(DyeColor.RED))
                 .requires(Tags.Items.INGOTS_IRON)
-                .requires(Items.RED_WOOL)
+                .requires(Items.WOOL.pick(DyeColor.RED))
                 .save(recipeOutput);
 
         AltarRecipeBuilder.shapeless(RecipeCategory.MISC, InitItems.MAID_BEACON)
@@ -206,7 +208,7 @@ public class RecipeGenerator extends RecipeProvider {
 
         AltarRecipeBuilder.shapeless(RecipeCategory.MISC, InitItems.MAID_BED)
                 .power(0.2F)
-                .requires(Items.PINK_WOOL)
+                .requires(Items.WOOL.pick(DyeColor.PINK))
                 .requires(ItemTags.PLANKS)
                 .save(recipeOutput);
 
@@ -329,7 +331,7 @@ public class RecipeGenerator extends RecipeProvider {
                 .power(0.2F)
                 .requires(3, Tags.Items.GUNPOWDERS)
                 .requires(3, Items.BLAZE_POWDER)
-                .entity(EntityType.getKey(EntityType.LIGHTNING_BOLT))
+                .entity(EntityType.getKey(EntityTypes.LIGHTNING_BOLT))
                 .langKey("jei.touhou_little_maid.altar_craft.spawn_lightning_bolt.result")
                 .save(recipeOutput, "spawn_lightning_bolt");
 

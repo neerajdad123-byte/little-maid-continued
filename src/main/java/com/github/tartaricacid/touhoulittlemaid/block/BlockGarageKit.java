@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.CustomPackLoader;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -179,7 +180,7 @@ public class BlockGarageKit extends Block implements EntityBlock {
 
         Entity entity = type.create(worldIn);
         if (entity instanceof Mob mobEntity) {
-            mobEntity.finalizeSpawn((ServerLevel) worldIn, worldIn.getCurrentDifficultyAt(pos), MobSpawnType.SPAWN_EGG, null);
+            mobEntity.finalizeSpawn((ServerLevel) worldIn, worldIn.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_EGG, null);
             CustomData.of(data).loadInto(mobEntity);
             mobEntity.addAdditionalSaveData(data);
         }
@@ -215,7 +216,7 @@ public class BlockGarageKit extends Block implements EntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Override

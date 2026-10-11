@@ -102,7 +102,7 @@ public final class MaidDebugCommand {
                 if (StringUtils.isNotBlank(modelId)) {
                     entityMaid.setModelId(modelId);
                 } else {
-                    entityMaid.finalizeSpawn(level, level.getCurrentDifficultyAt(serverPlayer.blockPosition()), EntitySpawnReason.SPAWN_EGG, null);
+                    entityMaid.finalizeSpawn(level, level.getCurrentDifficultyAt(serverPlayer.blockPosition()), EntitySpawnReason.SPAWN_ITEM_USE, null);
                 }
                 entityMaid.setInSittingPose(true);
                 level.addFreshEntity(entityMaid);

@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class TileEntityMaidBeacon extends BlockEntity {
-    public static final BlockEntityType<TileEntityMaidBeacon> TYPE = BlockEntityType.Builder.of(TileEntityMaidBeacon::new, InitBlocks.MAID_BEACON.get()).build(null);
+    public static final BlockEntityType<TileEntityMaidBeacon> TYPE = new BlockEntityType<>(TileEntityMaidBeacon::new, InitBlocks.MAID_BEACON.get());
     public static final String POTION_INDEX_TAG = "PotionIndex";
     public static final String STORAGE_POWER_TAG = "StoragePower";
     public static final String OVERFLOW_DELETE_TAG = "OverflowDelete";
@@ -164,10 +164,10 @@ public class TileEntityMaidBeacon extends BlockEntity {
 
     public enum BeaconEffect {
         // Effects
-        SPEED(MobEffects.MOVEMENT_SPEED),
+        SPEED(MobEffects.SPEED),
         FIRE_RESISTANCE(MobEffects.FIRE_RESISTANCE),
-        STRENGTH(MobEffects.DAMAGE_BOOST),
-        RESISTANCE(MobEffects.DAMAGE_RESISTANCE),
+        STRENGTH(MobEffects.STRENGTH),
+        RESISTANCE(MobEffects.RESISTANCE),
         REGENERATION(MobEffects.REGENERATION);
 
         private final Holder<MobEffect> effect;

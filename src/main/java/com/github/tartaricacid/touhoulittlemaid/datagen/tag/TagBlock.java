@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.datagen.tag;
 
+import net.minecraft.world.item.DyeColor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import net.minecraft.core.HolderLookup;
@@ -86,7 +87,7 @@ public class TagBlock extends BlockTagsProvider {
                 .addTag(BlockTags.CLIMBABLE);
 
         tag(ALTAR_TORII)
-                .add(Blocks.RED_WOOL, Blocks.RED_CONCRETE)
+                .add(Blocks.WOOL.pick(DyeColor.RED), Blocks.CONCRETE.pick(DyeColor.RED))
                 .addOptional(Identifier.parse("biomesoplenty:redwood_planks"));
         tag(ALTAR_PILLAR).addTag(BlockTags.LOGS);
 

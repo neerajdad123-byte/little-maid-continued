@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class TileEntityStatue extends BlockEntity {
-    public static final BlockEntityType<TileEntityStatue> TYPE = BlockEntityType.Builder.of(TileEntityStatue::new, InitBlocks.STATUE.get()).build(null);
+    public static final BlockEntityType<TileEntityStatue> TYPE = new BlockEntityType<>(TileEntityStatue::new, InitBlocks.STATUE.get());
     private static final String STATUE_SIZE_TAG = "StatueSize";
     private static final String CORE_BLOCK_TAG = "CoreBlock";
     private static final String CORE_BLOCK_POS_TAG = "CoreBlockPos";

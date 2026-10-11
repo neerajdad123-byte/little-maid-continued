@@ -43,7 +43,7 @@ public class ItemBroom extends Item {
                         if (stack.get(DataComponents.CUSTOM_NAME) != null) {
                             e.setCustomName(stack.get(DataComponents.CUSTOM_NAME));
                         }
-                    }, context.getClickedPos(), EntitySpawnReason.SPAWN_EGG, true, true);
+                    }, context.getClickedPos(), EntitySpawnReason.SPAWN_ITEM_USE, true, true);
                     if (broom == null) {
                         return InteractionResult.FAIL;
                     }

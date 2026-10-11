@@ -25,7 +25,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import javax.annotation.Nullable;
 
 public class TileEntityAltar extends BlockEntity {
-    public static final BlockEntityType<TileEntityAltar> TYPE = BlockEntityType.Builder.of(TileEntityAltar::new, InitBlocks.ALTAR.get()).build(null);
+    public static final BlockEntityType<TileEntityAltar> TYPE = new BlockEntityType<>(TileEntityAltar::new, InitBlocks.ALTAR.get());
     private static final String STORAGE_ITEM = "StorageItem";
     private static final String IS_RENDER = "IsRender";
     private static final String CAN_PLACE_ITEM = "CanPlaceItem";

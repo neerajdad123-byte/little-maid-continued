@@ -101,7 +101,7 @@ public class ItemChair extends Item {
             if (stack.get(DataComponents.CUSTOM_NAME) != null) {
                 e.setCustomName(stack.get(DataComponents.CUSTOM_NAME));
             }
-        }, pos, EntitySpawnReason.SPAWN_EGG, true, true);
+        }, pos, EntitySpawnReason.SPAWN_ITEM_USE, true, true);
         if (chair != null) {
             addExtraData(player, stack, chair, rotation);
         }

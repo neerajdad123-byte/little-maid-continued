@@ -31,7 +31,7 @@ public class ItemFairySpawnEgg extends DeferredSpawnEggItem {
         if (fairy == null) {
             return Optional.empty();
         }
-        fairy.finalizeSpawn(level, level.getCurrentDifficultyAt(fairy.blockPosition()), EntitySpawnReason.SPAWN_EGG, null);
+        fairy.finalizeSpawn(level, level.getCurrentDifficultyAt(fairy.blockPosition()), EntitySpawnReason.SPAWN_ITEM_USE, null);
         fairy.setBaby(true);
         if (!fairy.isBaby()) {
             return Optional.empty();

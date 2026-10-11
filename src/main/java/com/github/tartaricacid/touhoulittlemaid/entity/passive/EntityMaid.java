@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.passive;
 
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -1109,7 +1111,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
 
     private void sendMaidPos() {
         if (this.dead && !this.level.isClientSide()
-            && this.level.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES)
+            && this.level.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)
             && this.getOwner() instanceof ServerPlayer serverPlayer) {
             // 支持旅行地图格式
             // [name:"name", x:-136, y:36, z:48, dim:minecraft:the_nether]
@@ -1224,7 +1226,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
 
     @Override
     public boolean canAttackType(EntityType<?> typeIn) {
-        return typeIn != EntityType.ARMOR_STAND;
+        return typeIn != EntityTypes.ARMOR_STAND;
     }
 
     @Override
@@ -1592,7 +1594,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
     }
 
     private void destroyVanishingCursedItems(CombinedInvWrapper invWrapper) {
-        if (this.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+        if (this.level.getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
             return;
         }
         for (int i = 0; i < invWrapper.getSlots(); ++i) {
@@ -1701,7 +1703,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
         // 为结构生成的女仆添加特殊标签
-        if (reason == MobSpawnType.STRUCTURE) {
+        if (reason == EntitySpawnReason.STRUCTURE) {
             this.structureSpawn = true;
         }
         int modelSize = ServerCustomPackLoader.SERVER_MAID_MODELS.getModelSize();

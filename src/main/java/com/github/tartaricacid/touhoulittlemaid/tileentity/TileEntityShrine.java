@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class TileEntityShrine extends BlockEntity {
-    public static final BlockEntityType<TileEntityShrine> TYPE = BlockEntityType.Builder.of(TileEntityShrine::new, InitBlocks.SHRINE.get()).build(null);
+    public static final BlockEntityType<TileEntityShrine> TYPE = new BlockEntityType<>(TileEntityShrine::new, InitBlocks.SHRINE.get());
     private static final String STORAGE_ITEM = "StorageItem";
     private final ItemStackHandler handler = new ItemStackHandler() {
         @Override

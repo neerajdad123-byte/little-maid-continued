@@ -19,7 +19,7 @@ public interface IHasPowerPoint {
      */
     default void dropPowerPoint(LivingEntity entity) {
         // 需要考虑 doMobLoot 规则
-        if (!entity.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+        if (!entity.level.getGameRules().getBoolean(GameRules.MOB_DROPS)) {
             return;
         }
         int dropTime = 20;

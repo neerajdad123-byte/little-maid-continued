@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.sensor;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.server.level.ServerLevel;
@@ -14,7 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class MaidHostilesSensor extends Sensor<LivingEntity> {
-    private static final ImmutableMap<EntityType<?>, Float> ACCEPTABLE_DISTANCE_FROM_HOSTILES = ImmutableMap.<EntityType<?>, Float>builder().put(EntityType.CREEPER, 8.0F).build();
+    private static final ImmutableMap<EntityType<?>, Float> ACCEPTABLE_DISTANCE_FROM_HOSTILES = ImmutableMap.<EntityType<?>, Float>builder().put(EntityTypes.CREEPER, 8.0F).build();
 
     @Override
     public Set<MemoryModuleType<?>> requires() {

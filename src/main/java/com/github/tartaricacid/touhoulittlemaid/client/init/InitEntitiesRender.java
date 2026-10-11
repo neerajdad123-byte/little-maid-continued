@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.init;
 
+import net.minecraft.world.entity.EntityTypes;
 import com.github.tartaricacid.touhoulittlemaid.client.model.DebugFloorModel;
 import com.github.tartaricacid.touhoulittlemaid.client.model.NewEntityFairyModel;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.*;
@@ -37,9 +38,9 @@ public final class InitEntitiesRender {
         EntityRenderers.register(EntityBroom.TYPE, EntityBroomRender::new);
         EntityRenderers.register(MaidFishingHook.TYPE, MaidFishingHookRenderer::new);
 
-        EntityRenderers.register(EntityType.SLIME, EntityYukkuriSlimeRender::new);
-        EntityRenderers.register(EntityType.MAGMA_CUBE, EntityMarisaYukkuriSlimeRender::new);
-        EntityRenderers.register(EntityType.EXPERIENCE_ORB, ReplaceExperienceOrbRenderer::new);
+        EntityRenderers.register(EntityTypes.SLIME, EntityYukkuriSlimeRender::new);
+        EntityRenderers.register(EntityTypes.MAGMA_CUBE, EntityMarisaYukkuriSlimeRender::new);
+        EntityRenderers.register(EntityTypes.EXPERIENCE_ORB, ReplaceExperienceOrbRenderer::new);
 
         BlockEntityRenderers.register(TileEntityAltar.TYPE, TileEntityAltarRenderer::new);
         BlockEntityRenderers.register(TileEntityStatue.TYPE, TileEntityStatueRenderer::new);

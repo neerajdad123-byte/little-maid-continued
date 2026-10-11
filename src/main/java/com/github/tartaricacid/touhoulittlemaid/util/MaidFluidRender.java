@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
@@ -72,14 +73,14 @@ public final class MaidFluidRender {
         Identifier fluidStill = renderProperties.getStillTexture(fluidStack);
         return Optional.of(fluidStill)
                 .map(f -> Minecraft.getInstance()
-                        .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                        .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
                         .apply(f)
                 )
                 .filter(s -> s.atlasLocation() != MissingTextureAtlasSprite.getLocation());
     }
 
     private static void drawTiledSprite(GuiGraphicsExtractor guiGraphics, final int tiledWidth, final int tiledHeight, int color, long scaledAmount, TextureAtlasSprite sprite) {
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
         Matrix4f matrix = guiGraphics.pose().last().pose();
         setGLColorFromInt(color);
 

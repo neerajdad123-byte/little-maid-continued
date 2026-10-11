@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class TileEntityPicnicMat extends BlockEntity {
-    public static final BlockEntityType<TileEntityPicnicMat> TYPE = BlockEntityType.Builder.of(TileEntityPicnicMat::new, InitBlocks.PICNIC_MAT.get()).build(null);
+    public static final BlockEntityType<TileEntityPicnicMat> TYPE = new BlockEntityType<>(TileEntityPicnicMat::new, InitBlocks.PICNIC_MAT.get());
     private static final String CENTER_POS_NAME = "CenterPos";
     private static final String STORAGE_ITEM = "StorageItem";
     private static final String SIT_IDS = "SitIds";

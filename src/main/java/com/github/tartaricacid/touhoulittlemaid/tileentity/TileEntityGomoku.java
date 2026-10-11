@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 
 public class TileEntityGomoku extends TileEntityJoy implements IBoardGameEntityBlock {
-    public static final BlockEntityType<TileEntityGomoku> TYPE = BlockEntityType.Builder.of(TileEntityGomoku::new, InitBlocks.GOMOKU.get()).build(null);
+    public static final BlockEntityType<TileEntityGomoku> TYPE = new BlockEntityType<>(TileEntityGomoku::new, InitBlocks.GOMOKU.get());
     private static final String CHESS_DATA = "ChessData";
     private static final String STATUE = "Statue";
     private static final String PLAYER_TURN = "PlayerTurn";

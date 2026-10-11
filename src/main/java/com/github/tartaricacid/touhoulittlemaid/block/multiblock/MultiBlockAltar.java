@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.block.multiblock;
 
+import net.minecraft.world.item.DyeColor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.block.IMultiBlock;
 import com.github.tartaricacid.touhoulittlemaid.datagen.tag.TagBlock;
@@ -45,7 +46,7 @@ public class MultiBlockAltar implements IMultiBlock {
                 }
             }
             // 羊毛部分 -> 鸟居
-            else if (infoState.is(Blocks.RED_WOOL)) {
+            else if (infoState.is(Blocks.WOOL.pick(DyeColor.RED))) {
                 if (!worldState.is(TagBlock.ALTAR_TORII)) {
                     return false;
                 }

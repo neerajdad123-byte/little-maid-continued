@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityWChess extends TileEntityJoy implements IBoardGameEntityBlock {
-    public static final BlockEntityType<TileEntityWChess> TYPE = BlockEntityType.Builder.of(TileEntityWChess::new, InitBlocks.WCHESS.get()).build(null);
+    public static final BlockEntityType<TileEntityWChess> TYPE = new BlockEntityType<>(TileEntityWChess::new, InitBlocks.WCHESS.get());
 
     private static final String CHESS_DATA = "ChessData";
     private static final String CHESS_COUNTER = "ChessCounter";

@@ -417,7 +417,7 @@ public class BlockGomoku extends BlockJoy implements IBoardGameBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE;
     }
 
     @Override

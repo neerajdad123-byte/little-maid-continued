@@ -35,7 +35,7 @@ public class EntityDeathEvent {
         Player newEntity = event.getEntity();
         Player oldEntity = event.getOriginal();
         boolean wasDeath = event.isWasDeath();
-        boolean isKeep = newEntity.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
+        boolean isKeep = newEntity.level.getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
 
         PowerAttachment power = oldEntity.getData(POWER_NUM);
         MaidNumAttachment maidNum = oldEntity.getData(MAID_NUM);
