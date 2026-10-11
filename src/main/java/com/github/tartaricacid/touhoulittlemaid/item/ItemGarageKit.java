@@ -12,7 +12,6 @@ import com.github.tartaricacid.touhoulittlemaid.util.ParseI18n;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -26,7 +25,6 @@ import net.minecraft.world.item.component.CustomData;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -35,17 +33,6 @@ import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.EN
 import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.MODEL_ID_TAG_NAME;
 
 public class ItemGarageKit extends BlockItem {
-    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.getDist() == Dist.CLIENT ? new IClientItemExtensions() {
-        private static final Supplier<TileEntityItemStackGarageKitRenderer> MEMOIZE = Suppliers.memoize(() -> {
-            Minecraft minecraft = Minecraft.getInstance();
-            return new TileEntityItemStackGarageKitRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
-        });
-
-        @Override
-        public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-            return MEMOIZE.get();
-        }
-    } : null;
     private static final String DEFAULT_ENTITY_ID = "touhou_little_maid:maid";
     private static final String DEFAULT_MODEL_ID = "touhou_little_maid:hakurei_reimu";
     private static final CustomData DEFAULT_DATA = getDefaultData();

@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.model.EntityPlaceholderModel;
@@ -10,14 +12,11 @@ import com.mojang.math.Axis;
 import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyItemStackRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -28,15 +27,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
-public class TileEntityEntityPlaceholderRenderer extends BlockEntityWithoutLevelRenderer {
+public class TileEntityEntityPlaceholderRenderer extends LegacyItemStackRenderer {
     private static final EntityPlaceholderModel BASE_MODEL = new EntityPlaceholderModel();
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/item/entity_placeholder.png");
 
-    private final Function<Identifier, ModelResourceLocation> recipeToModel = Util.memoize(recipeId -> {
+    // Little Maid Continued: MC 26.x renders these through item definitions (assets/<ns>/items/<name>.json)
+    private final Function<Identifier, Identifier> recipeToModel = Util.memoize(recipeId -> {
         Path path = Paths.get(recipeId.getPath());
-        String namespace = recipeId.getNamespace();
-        Identifier loc = Identifier.fromNamespaceAndPath(namespace, "item/%s".formatted(path.getFileName()));
-        return ModelResourceLocation.standalone(loc);
+        return Identifier.fromNamespaceAndPath(recipeId.getNamespace(), path.getFileName().toString());
     });
 
     private final Function<Identifier, Identifier> recipeToTexture = Util.memoize(recipeId -> {
@@ -46,20 +44,21 @@ public class TileEntityEntityPlaceholderRenderer extends BlockEntityWithoutLevel
     });
 
 
-    public TileEntityEntityPlaceholderRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
-        super(dispatcher, modelSet);
+    public TileEntityEntityPlaceholderRenderer() {
     }
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLight, int combinedOverlay) {
         Identifier recipeId = ItemEntityPlaceholder.getRecipeId(stack);
-        BakedModel bakedModel = getBakedModel(recipeId);
+        Identifier itemModel = getItemModel(recipeId);
         poseStack.pushPose();
-        if (bakedModel != null) {
+        if (itemModel != null) {
             // 先尝试获取物品材质进行渲染
-            RenderType renderType = Sheets.translucentItemSheet();
-            VertexConsumer buffer = bufferIn.getBuffer(renderType);
-            Minecraft.getInstance().getItemRenderer().renderModelLists(bakedModel, stack, combinedLight, combinedOverlay, poseStack, buffer);
+            ItemStack display = stack.copyWithCount(1);
+            display.set(DataComponents.ITEM_MODEL, itemModel);
+            // item models are centred on the origin, the old baked quads were in 0..1 block space
+            poseStack.translate(0.5, 0.5, 0.5);
+            LegacyDraw.item(display, ItemDisplayContext.NONE, combinedLight, combinedOverlay, poseStack, bufferIn, null, 0);
         } else {
             // 否则渲染贴图
             Identifier texture = getTexture(recipeId);
@@ -72,17 +71,13 @@ public class TileEntityEntityPlaceholderRenderer extends BlockEntityWithoutLevel
     }
 
     @Nullable
-    private BakedModel getBakedModel(@Nullable Identifier recipeId) {
+    private Identifier getItemModel(@Nullable Identifier recipeId) {
         if (recipeId == null) {
             return null;
         }
-        ModelManager manager = Minecraft.getInstance().getModelManager();
-        ModelResourceLocation modelId = recipeToModel.apply(recipeId);
-        BakedModel model = manager.getModel(modelId);
-        if (model == manager.getMissingModel()) {
-            return null;
-        }
-        return model;
+        Identifier modelId = recipeToModel.apply(recipeId);
+        Identifier definition = modelId.withPath(path -> "items/" + path + ".json");
+        return Minecraft.getInstance().getResourceManager().getResource(definition).isPresent() ? modelId : null;
     }
 
     private Identifier getTexture(@Nullable Identifier recipeId) {

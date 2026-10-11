@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.client.render.MaidRenderState;
@@ -10,14 +13,13 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemGarageKit;
 import com.github.tartaricacid.touhoulittlemaid.util.EntityCacheUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyItemStackRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -38,12 +40,11 @@ import java.util.concurrent.ExecutionException;
 import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.ENTITY_ID_TAG_NAME;
 import static com.github.tartaricacid.touhoulittlemaid.util.EntityCacheUtil.clearMaidDataResidue;
 
-public class TileEntityItemStackGarageKitRenderer extends BlockEntityWithoutLevelRenderer {
+public class TileEntityItemStackGarageKitRenderer extends LegacyItemStackRenderer {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/statue_base.png");
     private static SimpleBedrockModel<Entity> BASE_MODEL;
 
-    public TileEntityItemStackGarageKitRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
-        super(dispatcher, modelSet);
+    public TileEntityItemStackGarageKitRenderer() {
         BASE_MODEL = BedrockModelLoader.getModel(BedrockModelLoader.STATUE_BASE);
     }
 
@@ -66,7 +67,7 @@ public class TileEntityItemStackGarageKitRenderer extends BlockEntityWithoutLeve
             return;
         }
 
-        EntityType.byString(data.read(Codec.STRING.fieldOf(ENTITY_ID_TAG_NAME)).getOrThrow()).ifPresent(type -> {
+        PortUtil.entityTypeByString(data.copyTag().getStringOr(ENTITY_ID_TAG_NAME, "")).ifPresent(type -> {
                     try {
                         renderEntity(stack, poseStack, bufferIn, combinedLightIn, data.copyTag(), world, type);
                     } catch (ExecutionException e) {
@@ -82,13 +83,13 @@ public class TileEntityItemStackGarageKitRenderer extends BlockEntityWithoutLeve
             entity = EntityCacheUtil.GARAGE_KIT_CACHE.get(stack, () -> new EntityMaid(world));
         } else {
             entity = EntityCacheUtil.ENTITY_CACHE.get(type, () -> {
-                Entity e = type.create(world);
+                Entity e = type.create(world, EntitySpawnReason.LOAD);
                 return Objects.requireNonNullElseGet(e, () -> new EntityMaid(world));
             });
         }
 
         float renderItemScale = 1;
-        entity.load(data);
+        PortUtil.loadEntity(entity, data);
         if (entity instanceof EntityMaid maid) {
             clearMaidDataResidue(maid, true);
             if (data.contains(EntityMaid.MODEL_ID_TAG)) {
@@ -103,14 +104,8 @@ public class TileEntityItemStackGarageKitRenderer extends BlockEntityWithoutLeve
         poseStack.scale(renderItemScale, renderItemScale, renderItemScale);
         poseStack.translate(1, 0.21328125, 1);
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
-        EntityRenderDispatcher render = Minecraft.getInstance().getEntityRenderDispatcher();
-        boolean isShowHitBox = render.shouldRenderHitBoxes();
-        render.setRenderHitBoxes(false);
-        RenderSystem.runAsFancy(() -> {
-            render.render(entity, 0, 0, 0, 0, 0,
+        LegacyDraw.entity(entity, 0, 0, 0, 0, 0,
                     poseStack, bufferIn, combinedLightIn);
-        });
-        render.setRenderHitBoxes(isShowHitBox);
         poseStack.popPose();
     }
 }

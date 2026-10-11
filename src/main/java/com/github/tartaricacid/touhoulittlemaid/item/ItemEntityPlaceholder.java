@@ -9,7 +9,6 @@ import com.github.tartaricacid.touhoulittlemaid.init.InitRecipes;
 import com.google.common.base.Suppliers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.Nullable;
 import java.nio.file.Path;
@@ -34,17 +32,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ItemEntityPlaceholder extends Item {
-    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.getDist() == Dist.CLIENT ? new IClientItemExtensions() {
-        private static final Supplier<TileEntityEntityPlaceholderRenderer> MEMOIZE = Suppliers.memoize(() -> {
-            Minecraft minecraft = Minecraft.getInstance();
-            return new TileEntityEntityPlaceholderRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
-        });
-
-        @Override
-        public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-            return MEMOIZE.get();
-        }
-    } : null;
 
     public ItemEntityPlaceholder() {
         super(new Item.Properties().stacksTo(1));

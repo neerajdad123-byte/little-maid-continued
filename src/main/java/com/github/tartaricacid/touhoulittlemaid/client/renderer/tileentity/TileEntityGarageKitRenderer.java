@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.client.render.MaidRenderState;
@@ -55,7 +58,7 @@ public class TileEntityGarageKitRenderer implements LegacyBlockEntityRenderer<Ti
             return;
         }
 
-        EntityType.byString(data.getString("id")).ifPresent(type -> {
+        PortUtil.entityTypeByString(data.getStringOr("id", "")).ifPresent(type -> {
                     try {
                         renderEntity(te, poseStack, bufferIn, combinedLightIn, data, world, type);
                     } catch (ExecutionException e) {
@@ -72,12 +75,12 @@ public class TileEntityGarageKitRenderer implements LegacyBlockEntityRenderer<Ti
             entity = EntityCacheUtil.STATUE_CACHE.get(posId, () -> new EntityMaid(world));
         } else {
             entity = EntityCacheUtil.ENTITY_CACHE.get(type, () -> {
-                Entity e = type.create(world);
+                Entity e = type.create(world, EntitySpawnReason.LOAD);
                 return Objects.requireNonNullElseGet(e, () -> new EntityMaid(world));
             });
         }
 
-        entity.load(data);
+        PortUtil.loadEntity(entity, data);
         if (entity instanceof EntityMaid maid) {
             clearMaidDataResidue(maid, true);
             maid.renderState = MaidRenderState.GARAGE_KIT;
@@ -106,12 +109,8 @@ public class TileEntityGarageKitRenderer implements LegacyBlockEntityRenderer<Ti
                 poseStack.mulPose(Axis.YP.rotationDegrees(180));
                 break;
         }
-        EntityRenderDispatcher render = Minecraft.getInstance().getEntityRenderDispatcher();
-        boolean isShowHitBox = render.shouldRenderHitBoxes();
-        render.setRenderHitBoxes(false);
-        render.render(entity, 0, 0, 0, 0, 0,
+        LegacyDraw.entity(entity, 0, 0, 0, 0, 0,
                 poseStack, bufferIn, combinedLightIn);
-        render.setRenderHitBoxes(isShowHitBox);
         poseStack.popPose();
     }
 }

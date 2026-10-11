@@ -1,89 +1,65 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.texture;
 
-import net.minecraft.client.Minecraft;
-import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.client.decoder.GifDecoder;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.platform.TextureUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.renderer.texture.Tickable;
+import net.minecraft.client.renderer.texture.TickableTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 
-public class GifTexture extends SizeTexture implements Tickable {
-    private final Identifier texturePath;
-    private NativeImage[] frames;
-    private int[] frameDelays;
+public class GifTexture extends SizeTexture implements TickableTexture {
+    private NativeImage[] frames = new NativeImage[0];
+    private int[] frameDelays = new int[0];
     private int currentFrame = 0;
     private int currentFrameDelay = 0;
-    private int width = 16;
-    private int height = 16;
 
     public GifTexture(Identifier texturePath) {
-        this.texturePath = texturePath;
+        super(texturePath);
     }
 
     @Override
-    public void load(ResourceManager manager) {
-        if (!RenderSystem.isOnRenderThread()) {
-            Minecraft.getInstance().execute(() -> doLoad(manager));
-        } else {
-            this.doLoad(manager);
-        }
-    }
-
     @SuppressWarnings("all")
-    private void doLoad(ResourceManager manager) {
-        try (InputStream stream = manager.open(this.texturePath)) {
+    protected NativeImage readImage(ResourceManager manager) throws IOException {
+        try (InputStream stream = manager.open(this.resourceId())) {
             GifDecoder decoder = new GifDecoder();
             decoder.read(stream);
 
             int totalFrames = decoder.getFrameCount();
             Dimension frameSize = decoder.getFrameSize();
-            this.frames = new NativeImage[totalFrames];
-            this.frameDelays = new int[totalFrames];
-            this.width = frameSize.width;
-            this.height = frameSize.height;
+            NativeImage[] decoded = new NativeImage[totalFrames];
+            int[] delays = new int[totalFrames];
 
             // 让图片学习原版序列帧竖向排列
             for (int i = 0; i < totalFrames; i++) {
-                NativeImage nativeImage = new NativeImage(this.width, this.height, true);
+                NativeImage nativeImage = new NativeImage(frameSize.width, frameSize.height, true);
                 BufferedImage image = decoder.getFrame(i);
                 for (int y = 0; y < image.getHeight(); y++) {
                     for (int x = 0; x < image.getWidth(); x++) {
-                        int argb = image.getRGB(x, y);
-                        int a = (argb >> 24) & 0xFF;
-                        int r = (argb >> 16) & 0xFF;
-                        int g = (argb >> 8) & 0xFF;
-                        int b = argb & 0xFF;
-
-                        nativeImage.setPixelRGBA(x, y, (a << 24) | (b << 16) | (g << 8) | r);
+                        nativeImage.setPixel(x, y, image.getRGB(x, y));
                     }
                 }
-                this.frames[i] = nativeImage;
-                this.frameDelays[i] = Math.max(decoder.getDelay(i) / 50, 1);
+                decoded[i] = nativeImage;
+                delays[i] = Math.max(decoder.getDelay(i) / 50, 1);
             }
-            // 上传第一帧
-            TextureUtil.prepareImage(this.getId(), 0, width, height);
-            this.frames[0].upload(0, 0, 0, 0, 0,
-                    width, height, false, false, false, false);
-        } catch (Exception e) {
-            TouhouLittleMaid.LOGGER.error("Failed to load gif texture: {}", this.texturePath, e);
+            for (NativeImage old : this.frames) {
+                old.close();
+            }
+            this.frames = decoded;
+            this.frameDelays = delays;
+            this.currentFrame = 0;
+            this.currentFrameDelay = 0;
+            if (decoded.length == 0) {
+                throw new IOException("GIF has no frames: " + this.resourceId());
+            }
+            // The first frame is uploaded (and closed) by the texture manager, so hand it a copy
+            NativeImage first = new NativeImage(frameSize.width, frameSize.height, true);
+            first.copyFrom(decoded[0]);
+            return first;
         }
-    }
-
-    @Override
-    public int getWidth() {
-        return this.width;
-    }
-
-    @Override
-    public int getHeight() {
-        return this.height;
     }
 
     @Override
@@ -93,16 +69,23 @@ public class GifTexture extends SizeTexture implements Tickable {
 
     @Override
     public void tick() {
-        if (frames == null || frames.length == 0) {
+        if (frames.length <= 1) {
             return;
         }
         currentFrameDelay++;
         if (currentFrameDelay >= frameDelays[currentFrame]) {
             currentFrameDelay = 0;
             currentFrame = (currentFrame + 1) % frames.length;
-            TextureUtil.prepareImage(this.getId(), 0, width, height);
-            frames[currentFrame].upload(0, 0, 0, 0, 0,
-                    width, height, false, false);
+            this.uploadFrame(frames[currentFrame]);
         }
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        for (NativeImage frame : this.frames) {
+            frame.close();
+        }
+        this.frames = new NativeImage[0];
     }
 }

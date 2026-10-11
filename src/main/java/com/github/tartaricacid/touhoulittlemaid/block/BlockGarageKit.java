@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.CustomPackLoader;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
@@ -206,7 +207,7 @@ public class BlockGarageKit extends Block implements EntityBlock {
         if (nbt != null && nbt.contains("EntityTag")) {
             CompoundTag compound = nbt.getCompoundOrEmpty("EntityTag");
             if (compound.contains("id")) {
-                return EntityType.byString(compound.getString("id")).orElse(null);
+                return PortUtil.entityTypeByString(compound.getStringOr("id", "")).orElse(null);
             }
         }
         return null;

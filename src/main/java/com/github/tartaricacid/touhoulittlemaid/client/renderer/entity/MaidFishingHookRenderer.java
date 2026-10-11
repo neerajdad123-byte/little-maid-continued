@@ -1,7 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import com.github.tartaricacid.touhoulittlemaid.compat.oculus.OculusCompat;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.entity.projectile.MaidFishingHook;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -82,13 +82,12 @@ public class MaidFishingHookRenderer<T extends MaidFishingHook> extends LegacyEn
 
         float[] colors = getLineColor(fishingHook);
 
-        VertexConsumer lineConsumer = buffer.getBuffer(RenderTypes.lineStrip());
+        // Little Maid Continued: line strips are gone in MC 26.x; draw segment pairs like vanilla's fishing line
+        VertexConsumer lineConsumer = buffer.getBuffer(RenderTypes.lines());
         PoseStack.Pose lasted = poseStack.last();
-        for (int i = 0; i <= 16; ++i) {
+        for (int i = 0; i < 16; ++i) {
             stringVertex(x, y, z, lineConsumer, lasted, fraction(i), fraction(i + 1), colors[0], colors[1], colors[2]);
-        }
-        if (OculusCompat.isOculusInstalled()) {
-            lineConsumer.addVertex(0.0f, 0.0f, 0.0f).setColor(0, 0, 0, 255).setNormal(0.0F, 0.0F, 0.0F);
+            stringVertex(x, y, z, lineConsumer, lasted, fraction(i + 1), fraction(i), colors[0], colors[1], colors[2]);
         }
     }
 
@@ -139,7 +138,8 @@ public class MaidFishingHookRenderer<T extends MaidFishingHook> extends LegacyEn
 
         consumer.addVertex(pose, x, y, z)
                 .setColor(r, g, b, 1.0F)
-                .setNormal(pose, nx, ny, nz);
+                .setNormal(pose, nx, ny, nz)
+                .setLineWidth(Minecraft.getInstance().gameRenderer.gameRenderState().windowRenderState.appropriateLineWidth);
     }
 
     @Override

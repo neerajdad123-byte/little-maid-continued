@@ -52,14 +52,14 @@ public class EntityTombstoneRenderer extends LegacyEntityRenderer<EntityTombston
         VertexConsumer buffer = bufferIn.getBuffer(renderType);
         tombstoneModel.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
-        if (this.shouldShowName(tombstone)) {
+        if (this.shouldShowName(tombstone, 0)) {
             this.renderNameTag(tombstone, Component.translatable("entity.touhou_little_maid.tombstone.display").withStyle(ChatFormatting.GOLD, ChatFormatting.UNDERLINE), 1.6f, poseStack, bufferIn, packedLight);
             this.renderNameTag(tombstone, tombstone.getMaidName(), 1.85f, poseStack, bufferIn, packedLight);
         }
     }
 
     @Override
-    protected boolean shouldShowName(EntityTombstone tombstone) {
+    protected boolean shouldShowName(EntityTombstone tombstone, double distanceToCameraSq) {
         return !tombstone.getMaidName().equals(Component.empty());
     }
 

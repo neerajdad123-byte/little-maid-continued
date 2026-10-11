@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.layer;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.BedrockModel;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.EntityMaidRenderer;
@@ -29,12 +30,10 @@ import java.util.Map;
 
 public class LayerMaidBipedHead extends LegacyRenderLayer<Mob, BedrockModel<Mob>> {
     private final EntityMaidRenderer maidRenderer;
-    private final Map<SkullBlock.Type, SkullModelBase> skullModels;
 
     public LayerMaidBipedHead(EntityMaidRenderer maidRenderer, EntityModelSet modelSet) {
         super(maidRenderer);
         this.maidRenderer = maidRenderer;
-        this.skullModels = SkullBlockRenderer.createSkullRenderers(modelSet);
     }
 
     @Override
@@ -55,9 +54,7 @@ public class LayerMaidBipedHead extends LegacyRenderLayer<Mob, BedrockModel<Mob>
                 ResolvableProfile resolvableProfile = head.get(DataComponents.PROFILE);
                 poseStack.translate(-0.5D, 0.0D, -0.5D);
                 SkullBlock.Type type = skullBlock.getType();
-                SkullModelBase modelBase = this.skullModels.get(type);
-                RenderType rendertype = SkullBlockRenderer.getRenderType(type, resolvableProfile);
-                SkullBlockRenderer.renderSkull(null, 180.0F, 0.0F, poseStack, bufferIn, packedLightIn, modelBase, rendertype);
+                LegacyDraw.skull(type, resolvableProfile, 180.0F, poseStack, bufferIn, packedLightIn);
             }
             poseStack.popPose();
         }
@@ -76,7 +73,7 @@ public class LayerMaidBipedHead extends LegacyRenderLayer<Mob, BedrockModel<Mob>
             this.getParentModel().getHead().translateAndRotate(poseStack);
             poseStack.scale(0.8F, -0.8F, -0.8F);
             poseStack.translate(-0.5, 0.625, -0.5);
-            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockState, poseStack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, ModelData.EMPTY, null);
+            LegacyDraw.block(blockState, poseStack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         } else {
             SimpleHatsCompat.renderHat(poseStack, bufferIn, packedLightIn, mob, stack, this.getParentModel());

@@ -22,7 +22,7 @@ public final class RenderHelper {
     public static void renderFloatingText(PoseStack poseStack, String text, double x, double y, double z, int color, float scale, boolean center, float yOffset, boolean seeThrough) {
         Minecraft minecraft = Minecraft.getInstance();
         MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
-        Camera camera = minecraft.gameRenderer.getMainCamera();
+        Camera camera = minecraft.gameRenderer.mainCamera();
         if (camera.isInitialized()) {
             Font font = minecraft.font;
             double viewX = camera.getPosition().x;

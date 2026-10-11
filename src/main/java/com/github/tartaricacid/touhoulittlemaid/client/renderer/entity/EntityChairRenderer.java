@@ -107,7 +107,7 @@ public class EntityChairRenderer extends LegacyLivingEntityRenderer<EntityChair,
     }
 
     @Override
-    protected boolean shouldShowName(EntityChair entity) {
+    protected boolean shouldShowName(EntityChair entity, double distanceToCameraSq) {
         return entity.shouldShowName();
     }
 }

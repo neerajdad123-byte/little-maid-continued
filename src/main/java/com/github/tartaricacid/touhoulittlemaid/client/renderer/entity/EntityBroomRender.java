@@ -18,8 +18,8 @@ public class EntityBroomRender extends LegacyLivingEntityRenderer<EntityBroom, B
     }
 
     @Override
-    protected boolean shouldShowName(EntityBroom entity) {
-        return super.shouldShowName(entity) && (entity.shouldShowName() || entity.hasCustomName() && entity == this.entityRenderDispatcher.crosshairPickEntity);
+    protected boolean shouldShowName(EntityBroom entity, double distanceToCameraSq) {
+        return super.shouldShowName(entity, distanceToCameraSq) && (entity.shouldShowName() || entity.hasCustomName() && entity == this.entityRenderDispatcher.crosshairPickEntity);
     }
 
     @Override

@@ -1,77 +1,72 @@
 package com.github.tartaricacid.touhoulittlemaid.client.init;
 
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
-import com.github.tartaricacid.touhoulittlemaid.client.renderer.item.ReplaceableBakedModel;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.VanillaConfig;
-import com.google.common.collect.Lists;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
-import org.apache.commons.lang3.tuple.Triple;
+import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
+import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 
+/**
+ * Little Maid Continued: config-driven item texture swaps (totem of undying -> life point,
+ * bottle o' enchanting -> point item).
+ * <p>
+ * MC 1.21.1 swapped baked models at runtime. MC 26.x selects models in item definitions, so the
+ * definitions in {@code assets/minecraft/items/} use a {@code minecraft:condition} model with the
+ * {@code touhou_little_maid:config} property registered here.
+ */
 @EventBusSubscriber(value = Dist.CLIENT)
 public final class InitSpecialItemRender {
-    private static final List<Triple<ModelResourceLocation, ModelResourceLocation, Supplier<Boolean>>> REPLACEABLE_MODEL_LIST = Lists.newArrayList();
-
-    private static final Identifier LIFE_POINT = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "life_point");
-    private static final Identifier POINT_ITEM = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "point_item");
-
-    // 祭坛合成占位符的物品模型
-    private static final ModelResourceLocation SPAWN_BOX = standalone("item/spawn_box");
-    private static final ModelResourceLocation REBORN_MAID = standalone("item/reborn_maid");
-    private static final ModelResourceLocation SPAWN_LIGHTNING_BOLT = standalone("item/spawn_lightning_bolt");
-
-    @SubscribeEvent
-    public static void register(RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registries.ITEM)) {
-            addReplaceableModel(Items.TOTEM_OF_UNDYING, LIFE_POINT, () -> VanillaConfig.REPLACE_TOTEM_TEXTURE.get());
-            addReplaceableModel(Items.EXPERIENCE_BOTTLE, POINT_ITEM, () -> VanillaConfig.REPLACE_XP_BOTTLE_TEXTURE.get());
-        }
+    private InitSpecialItemRender() {
     }
 
     @SubscribeEvent
-    public static void onBakedModel(ModelEvent.BakingCompleted event) {
-        Map<ModelResourceLocation, BakedModel> registry = event.getModelBakery().getBakedTopLevelModels();
-        for (Triple<ModelResourceLocation, ModelResourceLocation, Supplier<Boolean>> triple : REPLACEABLE_MODEL_LIST) {
-            ReplaceableBakedModel model = new ReplaceableBakedModel(registry.get(triple.getLeft()), registry.get(triple.getMiddle()), triple.getRight());
-            registry.put(triple.getLeft(), model);
+    public static void onRegisterConditional(RegisterConditionalItemModelPropertyEvent event) {
+        event.register(Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "config"), ConfigSwitch.MAP_CODEC);
+    }
+
+    public enum Option implements StringRepresentable {
+        REPLACE_TOTEM("replace_totem", () -> VanillaConfig.REPLACE_TOTEM_TEXTURE.get()),
+        REPLACE_XP_BOTTLE("replace_xp_bottle", () -> VanillaConfig.REPLACE_XP_BOTTLE_TEXTURE.get());
+
+        public static final Codec<Option> CODEC = StringRepresentable.fromEnum(Option::values);
+        private final String name;
+        private final BooleanSupplier value;
+
+        Option(String name, BooleanSupplier value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
         }
     }
 
-    @SubscribeEvent
-    public static void registerModels(ModelEvent.RegisterAdditional event) {
-        REPLACEABLE_MODEL_LIST.forEach((triple) -> event.register(triple.getMiddle()));
+    public record ConfigSwitch(Option option) implements ConditionalItemModelProperty {
+        public static final MapCodec<ConfigSwitch> MAP_CODEC = Option.CODEC.fieldOf("option").xmap(ConfigSwitch::new, ConfigSwitch::option);
 
-        // 特殊需要额外注册的模型
-        event.register(SPAWN_BOX);
-        event.register(REBORN_MAID);
-        event.register(SPAWN_LIGHTNING_BOLT);
-    }
-
-    public static void addReplaceableModel(Item item, Identifier replacedModel, Supplier<Boolean> isReplace) {
-        Identifier res = BuiltInRegistries.ITEM.getKey(item);
-        if (res != null) {
-            ModelResourceLocation rawModelResourceLocation = ModelResourceLocation.inventory(res);
-            ModelResourceLocation replacedModelResourceLocation = ModelResourceLocation.standalone(Identifier.fromNamespaceAndPath(replacedModel.getNamespace(), "item/" + replacedModel.getPath()));
-            REPLACEABLE_MODEL_LIST.add(Triple.of(rawModelResourceLocation, replacedModelResourceLocation, isReplace));
+        @Override
+        public boolean get(ItemStack itemStack, @Nullable ClientLevel level, @Nullable LivingEntity owner, int seed, ItemDisplayContext displayContext) {
+            return this.option.value.getAsBoolean();
         }
-    }
 
-    private static ModelResourceLocation standalone(String path) {
-        Identifier loc = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, path);
-        return ModelResourceLocation.standalone(loc);
+        @Override
+        public MapCodec<ConfigSwitch> type() {
+            return MAP_CODEC;
+        }
     }
 }

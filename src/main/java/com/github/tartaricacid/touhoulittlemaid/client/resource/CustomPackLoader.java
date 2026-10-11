@@ -709,7 +709,7 @@ public class CustomPackLoader {
         if (!TMP_REGISTER_TEXTURE.contains(texturePath)) {
             FilePackTexture filePackTexture = new FilePackTexture(rootPath, texturePath);
             if (filePackTexture.isExist()) {
-                Minecraft.getInstance().getTextureManager().register(texturePath, filePackTexture);
+                Minecraft.getInstance().getTextureManager().registerAndLoad(texturePath, filePackTexture);
                 TMP_REGISTER_TEXTURE.add(texturePath);
             }
         }
@@ -719,7 +719,7 @@ public class CustomPackLoader {
         if (!TMP_REGISTER_TEXTURE.contains(texturePath)) {
             ZipPackTexture zipPackTexture = new ZipPackTexture(zipFilePath, texturePath);
             if (zipPackTexture.isExist()) {
-                Minecraft.getInstance().getTextureManager().register(texturePath, zipPackTexture);
+                Minecraft.getInstance().getTextureManager().registerAndLoad(texturePath, zipPackTexture);
                 TMP_REGISTER_TEXTURE.add(texturePath);
             }
         }

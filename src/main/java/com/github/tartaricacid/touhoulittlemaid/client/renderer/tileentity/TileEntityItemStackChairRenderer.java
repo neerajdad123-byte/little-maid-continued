@@ -1,16 +1,18 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.world.entity.EntitySpawnReason;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.EntityChairRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.CustomPackLoader;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityChair;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemChair;
 import com.github.tartaricacid.touhoulittlemaid.util.EntityCacheUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyItemStackRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -22,9 +24,8 @@ import net.minecraft.world.level.Level;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-public class TileEntityItemStackChairRenderer extends BlockEntityWithoutLevelRenderer {
-    public TileEntityItemStackChairRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
-        super(dispatcher, modelSet);
+public class TileEntityItemStackChairRenderer extends LegacyItemStackRenderer {
+    public TileEntityItemStackChairRenderer() {
     }
 
     @Override
@@ -38,7 +39,7 @@ public class TileEntityItemStackChairRenderer extends BlockEntityWithoutLevelRen
         float renderItemScale = CustomPackLoader.CHAIR_MODELS.getModelRenderItemScale(data.modelId());
         try {
             entityChair = (EntityChair) EntityCacheUtil.ENTITY_CACHE.get(EntityChair.TYPE, () -> {
-                Entity e = EntityChair.TYPE.create(world);
+                Entity e = EntityChair.TYPE.create(world, EntitySpawnReason.LOAD);
                 return Objects.requireNonNullElseGet(e, () -> new EntityChair(world));
             });
         } catch (ExecutionException | ClassCastException e) {
@@ -48,15 +49,11 @@ public class TileEntityItemStackChairRenderer extends BlockEntityWithoutLevelRen
         entityChair.setModelId(data.modelId());
         poseStack.pushPose();
         poseStack.scale(renderItemScale, renderItemScale, renderItemScale);
-        EntityRenderDispatcher render = Minecraft.getInstance().getEntityRenderDispatcher();
-        boolean isShowHitBox = render.shouldRenderHitBoxes();
-        render.setRenderHitBoxes(false);
         EntityChairRenderer.renderHitBox = false;
-        RenderSystem.runAsFancy(() -> render.render(entityChair,
+        LegacyDraw.entity(entityChair,
                 1 / renderItemScale - 0.125, 0.25, 0.75, 0, 0,
-                poseStack, buffer, combinedLight));
+                poseStack, buffer, combinedLight);
         EntityChairRenderer.renderHitBox = true;
-        render.setRenderHitBoxes(isShowHitBox);
         poseStack.popPose();
     }
 }

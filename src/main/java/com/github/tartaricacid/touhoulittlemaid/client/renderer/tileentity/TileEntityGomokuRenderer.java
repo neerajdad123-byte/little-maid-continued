@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.client.Minecraft;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -57,7 +58,7 @@ public class TileEntityGomokuRenderer implements LegacyBlockEntityRenderer<TileE
 
     private void renderLatestChessTips(TileEntityGomoku gomoku, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn) {
         if (!gomoku.getLatestChessPoint().equals(Point.NULL) && inRenderDistance(gomoku, PIECE_RENDER_DISTANCE)) {
-            Camera camera = this.dispatcher.camera;
+            Camera camera = Minecraft.getInstance().gameRenderer.mainCamera();
             Point point = gomoku.getLatestChessPoint();
             poseStack.pushPose();
             poseStack.translate(-0.42, 0.25, -0.42);
@@ -112,7 +113,7 @@ public class TileEntityGomokuRenderer implements LegacyBlockEntityRenderer<TileE
     private void renderTipsText(TileEntityGomoku gomoku, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn) {
         Statue statue = gomoku.getStatue();
         if (statue != Statue.IN_PROGRESS && inRenderDistance(gomoku, TIPS_RENDER_DISTANCE)) {
-            Camera camera = this.dispatcher.camera;
+            Camera camera = Minecraft.getInstance().gameRenderer.mainCamera();
             MutableComponent loseTips;
             MutableComponent resetTips = Component.translatable("message.touhou_little_maid.gomoku.reset").withStyle(ChatFormatting.UNDERLINE).withStyle(ChatFormatting.AQUA);
             MutableComponent roundText = Component.translatable("message.touhou_little_maid.gomoku.round", gomoku.getChessCounter()).withStyle(ChatFormatting.WHITE);
@@ -146,7 +147,7 @@ public class TileEntityGomokuRenderer implements LegacyBlockEntityRenderer<TileE
 
     private boolean inRenderDistance(TileEntityGomoku gomoku, int distance) {
         BlockPos pos = gomoku.getBlockPos();
-        return this.dispatcher.camera.getPosition().distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < distance * distance;
+        return Minecraft.getInstance().gameRenderer.mainCamera().position().distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < distance * distance;
     }
 
     @Override

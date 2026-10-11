@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.geckolayer;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IMaid;
 import com.github.tartaricacid.touhoulittlemaid.compat.simplehats.SimpleHatsCompat;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.GeoLayerRenderer;
@@ -29,13 +30,11 @@ import net.neoforged.neoforge.model.data.ModelData;
 import java.util.Map;
 
 public class GeckoLayerMaidBipedHead<T extends Mob, R extends IGeoEntityRenderer<T>> extends GeoLayerRenderer<T, R> {
-    private final Map<SkullBlock.Type, SkullModelBase> skullModels;
     private final EntityModelSet modelSet;
 
     public GeckoLayerMaidBipedHead(R entityRendererIn, EntityModelSet modelSet) {
         super(entityRendererIn);
         this.modelSet = modelSet;
-        this.skullModels = SkullBlockRenderer.createSkullRenderers(modelSet);
     }
 
     @Override
@@ -64,9 +63,7 @@ public class GeckoLayerMaidBipedHead<T extends Mob, R extends IGeoEntityRenderer
                     ResolvableProfile resolvableProfile = head.get(DataComponents.PROFILE);
                     poseStack.translate(-0.5D, 0.0D, -0.5D);
                     SkullBlock.Type type = skullBlock.getType();
-                    SkullModelBase modelBase = this.skullModels.get(type);
-                    RenderType rendertype = SkullBlockRenderer.getRenderType(type, resolvableProfile);
-                    SkullBlockRenderer.renderSkull(null, 180.0F, 0.0F, poseStack, bufferIn, packedLightIn, modelBase, rendertype);
+                    LegacyDraw.skull(type, resolvableProfile, 180.0F, poseStack, bufferIn, packedLightIn);
                 }
                 poseStack.popPose();
             }
@@ -86,7 +83,7 @@ public class GeckoLayerMaidBipedHead<T extends Mob, R extends IGeoEntityRenderer
                 RenderUtils.prepMatrixForLocator(poseStack, model.headBones());
                 poseStack.scale(-0.8F, 0.8F, -0.8F);
                 poseStack.translate(-0.5, 0.625, -0.5);
-                Minecraft.getInstance().getBlockRenderer().renderSingleBlock(blockState, poseStack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, ModelData.EMPTY, null);
+                LegacyDraw.block(blockState, poseStack, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY);
                 poseStack.popPose();
             } else {
                 SimpleHatsCompat.renderGeckoHat(poseStack, bufferIn, packedLightIn, entity, stack, model.headBones());

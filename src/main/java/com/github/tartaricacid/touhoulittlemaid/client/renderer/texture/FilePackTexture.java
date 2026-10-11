@@ -1,67 +1,31 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.texture;
 
-import net.minecraft.client.Minecraft;
-import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.platform.TextureUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FilePackTexture extends SizeTexture {
-    private final Identifier texturePath;
-    private final Path rootPath;
-    private int width = 16;
-    private int height = 16;
+    private final Path textureFile;
 
     public FilePackTexture(Path rootPath, Identifier texturePath) {
-        this.rootPath = rootPath;
-        this.texturePath = texturePath;
+        super(texturePath);
+        this.textureFile = rootPath.resolve("assets").resolve(texturePath.getNamespace()).resolve(texturePath.getPath());
     }
 
     @Override
     public boolean isExist() {
-        File textureFile = rootPath.resolve("assets").resolve(texturePath.getNamespace()).resolve(texturePath.getPath()).toFile();
-        return textureFile.isFile();
+        return Files.isRegularFile(this.textureFile);
     }
 
     @Override
-    public void load(ResourceManager manager) {
-        if (!RenderSystem.isOnRenderThread()) {
-            Minecraft.getInstance().execute(this::doLoad);
-        } else {
-            this.doLoad();
+    protected NativeImage readImage(ResourceManager manager) throws IOException {
+        try (InputStream stream = Files.newInputStream(this.textureFile)) {
+            return NativeImage.read(stream);
         }
-    }
-
-    private void doLoad() {
-        File textureFile = rootPath.resolve("assets").resolve(texturePath.getNamespace()).resolve(texturePath.getPath()).toFile();
-        if (textureFile.isFile()) {
-            try (InputStream stream = Files.newInputStream(textureFile.toPath())) {
-                NativeImage imageIn = NativeImage.read(stream);
-                width = imageIn.getWidth();
-                height = imageIn.getHeight();
-                TextureUtil.prepareImage(this.getId(), 0, width, height);
-                imageIn.upload(0, 0, 0, 0, 0, width, height, false, false, false, true);
-            } catch (IOException e) {
-                TouhouLittleMaid.LOGGER.error("Failed to load file texture {}", texturePath, e);
-            }
-        }
-    }
-
-    @Override
-    public int getWidth() {
-        return width;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
     }
 }

@@ -17,5 +17,5 @@ for i, l in enumerate(lines):
             sym = lines[j].strip().replace("symbol:", "").strip()
             break
     src = open(m.group(1), encoding="utf-8").read().split("\n")[int(m.group(2)) - 1].strip()
-    f = re.split(r"[\/]", m.group(1))[-1]
+    f = m.group(1).split("touhoulittlemaid")[-1].split("tartaricacid")[-1].lstrip("\/")
     print("%s:%s | %s %s\n    %s" % (f, m.group(2), m.group(3)[:90], ("[" + sym + "]") if sym else "", src[:170]))

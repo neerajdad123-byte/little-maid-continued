@@ -6,7 +6,6 @@ import com.github.tartaricacid.touhoulittlemaid.inventory.container.other.Picnic
 import com.github.tartaricacid.touhoulittlemaid.inventory.tooltip.ItemContainerTooltip;
 import com.google.common.base.Suppliers;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -25,7 +24,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,17 +31,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ItemPicnicBasket extends BlockItem implements MenuProvider {
-    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.getDist() == Dist.CLIENT ? new IClientItemExtensions() {
-        private static final Supplier<PicnicBasketRender> MEMOIZE = Suppliers.memoize(() -> {
-            Minecraft minecraft = Minecraft.getInstance();
-            return new PicnicBasketRender(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
-        });
-
-        @Override
-        public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-            return MEMOIZE.get();
-        }
-    } : null;
     private static final int PICNIC_BASKET_SIZE = 9;
 
     public ItemPicnicBasket(Block block) {

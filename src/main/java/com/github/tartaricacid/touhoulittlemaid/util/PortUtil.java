@@ -2,6 +2,10 @@ package com.github.tartaricacid.touhoulittlemaid.util;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
+import java.util.Optional;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
@@ -14,6 +18,10 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -67,6 +75,30 @@ public final class PortUtil {
         if (!tag.isEmpty()) {
             output.store(ROOT, tag);
         }
+    }
+
+    /**
+     * Replacement for the removed {@code EntityType#byString(String)}.
+     */
+    public static Optional<EntityType<?>> entityTypeByString(String id) {
+        Identifier key = Identifier.tryParse(id);
+        return key == null ? Optional.empty() : BuiltInRegistries.ENTITY_TYPE.getOptional(key);
+    }
+
+    /**
+     * Replacement for MC 1.21.1 {@code Entity#load(CompoundTag)}.
+     */
+    public static void loadEntity(Entity entity, CompoundTag tag) {
+        entity.load(TagValueInput.create(ProblemReporter.DISCARDING, entity.registryAccess(), tag));
+    }
+
+    /**
+     * Replacement for MC 1.21.1 {@code Entity#saveWithoutId(CompoundTag)}.
+     */
+    public static CompoundTag saveEntity(Entity entity) {
+        TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess());
+        entity.saveWithoutId(output);
+        return output.buildResult();
     }
 
     /**

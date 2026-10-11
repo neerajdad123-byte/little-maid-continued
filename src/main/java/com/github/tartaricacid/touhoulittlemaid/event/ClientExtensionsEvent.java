@@ -21,9 +21,5 @@ public class ClientExtensionsEvent {
         event.registerBlock(BlockAltar.CLIENT_BLOCK_EXTENSIONS, InitBlocks.ALTAR.get());
         event.registerBlock(BlockGarageKit.CLIENT_BLOCK_EXTENSIONS, InitBlocks.GARAGE_KIT.get());
         event.registerBlock(BlockStatue.CLIENT_BLOCK_EXTENSIONS, InitBlocks.STATUE.get());
-        event.registerItem(ItemChair.ITEM_EXTENSIONS, InitItems.CHAIR.get());
-        event.registerItem(ItemEntityPlaceholder.ITEM_EXTENSIONS, InitItems.ENTITY_PLACEHOLDER.get());
-        event.registerItem(ItemGarageKit.ITEM_EXTENSIONS, InitItems.GARAGE_KIT.get());
-        event.registerItem(ItemPicnicBasket.ITEM_EXTENSIONS, InitItems.PICNIC_BASKET.get());
     }
 }

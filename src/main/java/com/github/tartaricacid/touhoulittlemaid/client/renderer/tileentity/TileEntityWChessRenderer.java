@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import net.minecraft.client.Minecraft;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -64,7 +65,7 @@ public class TileEntityWChessRenderer implements LegacyBlockEntityRenderer<TileE
             return;
         }
 
-        Camera camera = this.dispatcher.camera;
+        Camera camera = Minecraft.getInstance().gameRenderer.mainCamera();
         MutableComponent loseTips = null;
         MutableComponent resetTips = Component.translatable("message.touhou_little_maid.wchess.reset").withStyle(ChatFormatting.UNDERLINE).withStyle(ChatFormatting.AQUA);
         MutableComponent roundText = Component.translatable("message.touhou_little_maid.gomoku.round", chess.getChessCounter()).withStyle(ChatFormatting.WHITE);
@@ -161,7 +162,7 @@ public class TileEntityWChessRenderer implements LegacyBlockEntityRenderer<TileE
 
     private boolean inRenderDistance(TileEntityWChess chess, int distance) {
         BlockPos pos = chess.getBlockPos();
-        return this.dispatcher.camera.getPosition().distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < distance * distance;
+        return Minecraft.getInstance().gameRenderer.mainCamera().position().distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < distance * distance;
     }
 
     @Override

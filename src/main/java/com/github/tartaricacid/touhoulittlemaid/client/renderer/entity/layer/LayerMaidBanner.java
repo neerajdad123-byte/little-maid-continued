@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.layer;
 
+import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockPart;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -18,8 +20,6 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyRenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -76,21 +76,23 @@ public class LayerMaidBanner extends LegacyRenderLayer<Mob, BedrockModel<Mob>> {
 
     private void renderPatterns(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
                                 BedrockPart banner, BannerPatternLayers patterns, DyeColor dyeColor) {
-        banner.render(poseStack, ModelBakery.BANNER_BASE.buffer(bufferSource, RenderTypes::entitySolid, false),
+        banner.render(poseStack, Minecraft.getInstance().getAtlasManager().get(Sheets.BANNER_BASE)
+                        .wrap(bufferSource.getBuffer(Sheets.BANNER_BASE.renderType(RenderTypes::entitySolid))),
                 packedLight, OverlayTexture.NO_OVERLAY);
-        renderPatternLayer(poseStack, bufferSource, packedLight, banner, Sheets.BANNER_BASE, dyeColor);
+        renderPatternLayer(poseStack, bufferSource, packedLight, banner, Sheets.BANNER_PATTERN_BASE, dyeColor);
         for (int i = 0; i < 16 && i < patterns.layers().size(); ++i) {
             BannerPatternLayers.Layer layer = patterns.layers().get(i);
-            Material material = Sheets.getBannerMaterial(layer.pattern());
+            SpriteId material = Sheets.getBannerSprite(layer.pattern());
             renderPatternLayer(poseStack, bufferSource, packedLight, banner, material, layer.color());
         }
     }
 
-    private void renderPatternLayer(PoseStack poseStack, MultiBufferSource buffer, int packedLight, BedrockPart banner, Material material, DyeColor color) {
+    private void renderPatternLayer(PoseStack poseStack, MultiBufferSource buffer, int packedLight, BedrockPart banner, SpriteId material, DyeColor color) {
         int packedColor = color.getTextureDiffuseColor();
         float red = ARGB.red(packedColor) / 255f;
         float green = ARGB.green(packedColor) / 255f;
         float blue = ARGB.blue(packedColor) / 255f;
-        banner.render(poseStack, material.buffer(buffer, RenderTypes::entityNoOutline), packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, 1.0F);
+        banner.render(poseStack, Minecraft.getInstance().getAtlasManager().get(material).wrap(buffer.getBuffer(material.renderType(RenderTypes::bannerPattern))),
+                packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, 1.0F);
     }
 }

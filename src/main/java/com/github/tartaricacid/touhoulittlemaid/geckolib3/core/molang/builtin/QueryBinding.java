@@ -43,7 +43,7 @@ public class QueryBinding extends ContextBinding {
 
         entityVar("yaw_speed", ctx -> getYawSpeed(ctx.entity()));
         entityVar("cardinal_facing_2d", ctx -> ctx.entity().getDirection().get3DDataValue());
-        entityVar("distance_from_camera", ctx -> ctx.mc().gameRenderer.getMainCamera().getPosition().distanceTo(ctx.entity().position()));
+        entityVar("distance_from_camera", ctx -> ctx.mc().gameRenderer.mainCamera().getPosition().distanceTo(ctx.entity().position()));
         entityVar("eye_target_x_rotation", ctx -> ctx.entity().getViewXRot(ctx.animationEvent().getPartialTick()));
         entityVar("eye_target_y_rotation", ctx -> ctx.entity().getViewYRot(ctx.animationEvent().getPartialTick()));
         entityVar("ground_speed", ctx -> getGroundSpeed(ctx.entity()));

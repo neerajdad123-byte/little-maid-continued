@@ -9,7 +9,6 @@ import com.google.common.base.Suppliers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -34,7 +33,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -45,17 +43,6 @@ import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.*;
 
 public class ItemChair extends Item {
     private static final String DEFAULT_MODEL_ID = "touhou_little_maid:cushion";
-    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.getDist() == Dist.CLIENT ? new IClientItemExtensions() {
-        private static final Supplier<TileEntityItemStackChairRenderer> MEMOIZE = Suppliers.memoize(() -> {
-            Minecraft minecraft = Minecraft.getInstance();
-            return new TileEntityItemStackChairRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
-        });
-
-        @Override
-        public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-            return MEMOIZE.get();
-        }
-    } : null;
 
     public ItemChair() {
         super((new Properties()).stacksTo(1));

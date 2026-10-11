@@ -1,14 +1,13 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.chatbubble;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Divisor;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.GameRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.network.chat.Component;
@@ -167,15 +166,13 @@ public class EntityGraphics {
     }
 
     public void innerBlit(Identifier atlas, int x1, int x2, int y1, int y2, int z, float minU, float maxU, float minV, float maxV) {
-        RenderSystem.setShaderTexture(0, atlas);
-        RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
+        // Little Maid Continued: MC 26.x has no immediate-mode drawing; write into the submit buffer instead
         Matrix4f matrix4f = this.pose.last().pose();
-        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP);
-        bufferBuilder.addVertex(matrix4f, x1, y1, z).setColor(0xFFFFFFFF).setUv(minU, minV).setLight(this.packedLight);
-        bufferBuilder.addVertex(matrix4f, x1, y2, z).setColor(0xFFFFFFFF).setUv(minU, maxV).setLight(this.packedLight);
-        bufferBuilder.addVertex(matrix4f, x2, y2, z).setColor(0xFFFFFFFF).setUv(maxU, maxV).setLight(this.packedLight);
-        bufferBuilder.addVertex(matrix4f, x2, y1, z).setColor(0xFFFFFFFF).setUv(maxU, minV).setLight(this.packedLight);
-        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
+        VertexConsumer consumer = this.bufferSource.getBuffer(RenderTypes.text(atlas));
+        consumer.addVertex(matrix4f, x1, y1, z).setColor(0xFFFFFFFF).setUv(minU, minV).setLight(this.packedLight);
+        consumer.addVertex(matrix4f, x1, y2, z).setColor(0xFFFFFFFF).setUv(minU, maxV).setLight(this.packedLight);
+        consumer.addVertex(matrix4f, x2, y2, z).setColor(0xFFFFFFFF).setUv(maxU, maxV).setLight(this.packedLight);
+        consumer.addVertex(matrix4f, x2, y1, z).setColor(0xFFFFFFFF).setUv(maxU, minV).setLight(this.packedLight);
     }
 
     public EntityMaid getMaid() {

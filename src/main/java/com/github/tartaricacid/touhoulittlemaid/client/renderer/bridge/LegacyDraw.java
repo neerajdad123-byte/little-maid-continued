@@ -10,7 +10,9 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -114,6 +116,19 @@ public final class LegacyDraw {
         }
         S state = renderer.createRenderState(entity, partialTicks);
         renderer.submit(state, poseStack, source.collector(), source.camera());
+    }
+
+    /**
+     * Was {@code EntityRenderDispatcher#render(entity, x, y, z, yaw, partialTicks, poseStack, buffer, light)}.
+     */
+    public static void entity(Entity entity, double x, double y, double z, float yaw, float partialTicks, PoseStack poseStack,
+                              MultiBufferSource buffer, int packedLight) {
+        EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        EntityRenderState state = dispatcher.extractEntity(entity, partialTicks);
+        state.lightCoords = packedLight;
+        state.shadowPieces.clear();
+        CameraRenderState camera = buffer instanceof SubmitBufferSource source && source.camera() != null ? source.camera() : new CameraRenderState();
+        dispatcher.submit(state, camera, x, y, z, poseStack, collector(buffer));
     }
 
     /**

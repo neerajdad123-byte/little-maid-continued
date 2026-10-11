@@ -43,9 +43,9 @@ public class EmojiChatBubbleRenderer implements IChatBubbleRenderer {
             return;
         }
         if (!RenderSystem.isOnRenderThread()) {
-            Minecraft.getInstance().execute(() -> manager.register(this.emoji, new GifTexture(this.emoji)));
+            Minecraft.getInstance().execute(() -> manager.registerAndLoad(this.emoji, new GifTexture(this.emoji)));
         } else {
-            manager.register(this.emoji, new GifTexture(this.emoji));
+            manager.registerAndLoad(this.emoji, new GifTexture(this.emoji));
         }
     }
 
