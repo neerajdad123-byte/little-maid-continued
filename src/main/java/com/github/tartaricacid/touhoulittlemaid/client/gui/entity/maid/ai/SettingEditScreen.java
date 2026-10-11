@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.ai.manager.entity.MaidAIChatManager;
@@ -148,17 +149,20 @@ public class SettingEditScreen extends Screen {
     }
 
     @Override
-    public void resize(Minecraft mc, int pWidth, int pHeight) {
+    public void resize(int pWidth, int pHeight) {
         String ownerNameValue = this.ownerName.getValue();
         String customSettingValue = this.customSetting.getValue();
-        super.resize(mc, pWidth, pHeight);
+        super.resize(pWidth, pHeight);
         this.ownerName.setValue(ownerNameValue);
         this.customSetting.setValue(customSettingValue);
     }
 
     @Override
-    public boolean mouseReleased(double x, double y, int button) {
-        return super.mouseReleased(x, y, button) || this.customSetting.mouseReleased(x, y, button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        double x = event.x();
+        double y = event.y();
+        int button = event.button();
+        return super.mouseReleased(event) || this.customSetting.mouseReleased(event);
     }
 
     @Override

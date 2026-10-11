@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MiscConfig;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityPowerPoint;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -76,16 +79,24 @@ public class TileEntityMaidBeacon extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        getPersistentData().putInt(POTION_INDEX_TAG, potionIndex);
-        getPersistentData().putFloat(STORAGE_POWER_TAG, storagePower);
-        getPersistentData().putBoolean(OVERFLOW_DELETE_TAG, overflowDelete);
-        super.saveAdditional(pTag, pRegistries);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider pRegistries = PortUtil.registries();
+        CompoundTag pTag = new CompoundTag();
+        try {
+            getPersistentData().putInt(POTION_INDEX_TAG, potionIndex);
+            getPersistentData().putFloat(STORAGE_POWER_TAG, storagePower);
+            getPersistentData().putBoolean(OVERFLOW_DELETE_TAG, overflowDelete);
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, pTag);
+        }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider pRegistries = valueInput.lookup();
+        CompoundTag pTag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         potionIndex = getPersistentData().getIntOr(POTION_INDEX_TAG, 0);
         storagePower = getPersistentData().getFloatOr(STORAGE_POWER_TAG, 0F);
         overflowDelete = getPersistentData().getBooleanOr(OVERFLOW_DELETE_TAG, false);

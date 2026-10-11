@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.core.UUIDUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IBroomControl;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.control.BroomControlManager;
@@ -67,17 +70,23 @@ public class EntityBroom extends AbstractEntityFromItem implements OwnableEntity
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag compound = PortUtil.readRoot(valueInput);
+        super.readAdditionalSaveData(valueInput);
         if (compound.contains(OWNER_UUID_TAG_NAME)) {
             setOwnerUUID(NbtUtils.loadUUID(Objects.requireNonNull(compound.get(OWNER_UUID_TAG_NAME))));
         }
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        this.entityData.get(OWNER_ID).ifPresent(uuid -> compound.store(OWNER_UUID_TAG_NAME, UUIDUtil.CODEC, uuid));
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag compound = new CompoundTag();
+        try {
+            super.addAdditionalSaveData(valueOutput);
+            this.entityData.get(OWNER_ID).ifPresent(uuid -> compound.store(OWNER_UUID_TAG_NAME, UUIDUtil.CODEC, uuid));
+        } finally {
+            PortUtil.writeRoot(valueOutput, compound);
+        }
     }
 
     @Override

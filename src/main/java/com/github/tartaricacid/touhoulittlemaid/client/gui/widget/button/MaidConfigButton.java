@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.input.InputWithModifiers;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -35,7 +36,7 @@ public class MaidConfigButton extends Button {
     }
 
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
         Minecraft mc = Minecraft.getInstance();
         if (this.isHovered) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX(), this.getY(), 63, 141, this.width, this.height, 256, 256);
@@ -70,7 +71,7 @@ public class MaidConfigButton extends Button {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (leftClicked) {
             leftPress.onPress(this);
         } else {

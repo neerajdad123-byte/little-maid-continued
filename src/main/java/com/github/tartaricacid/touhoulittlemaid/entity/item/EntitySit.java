@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.task.IMaidTask;
 import com.github.tartaricacid.touhoulittlemaid.entity.favorability.FavorabilityManager;
@@ -48,7 +50,8 @@ public class EntitySit extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
+    protected void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag tag = PortUtil.readRoot(valueInput);
         if (tag.contains("SitJoyType")) {
             this.setJoyType(tag.getStringOr("SitJoyType", ""));
         }
@@ -59,11 +62,16 @@ public class EntitySit extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
-        if (StringUtils.isNotBlank(this.getJoyType())) {
-            tag.putString("SitJoyType", this.getJoyType());
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag tag = new CompoundTag();
+        try {
+            if (StringUtils.isNotBlank(this.getJoyType())) {
+                tag.putString("SitJoyType", this.getJoyType());
+            }
+            tag.put("AssociatedBlockPos", PortUtil.writeBlockPos(this.associatedBlockPos));
+        } finally {
+            PortUtil.writeRoot(valueOutput, tag);
         }
-        tag.put("AssociatedBlockPos", PortUtil.writeBlockPos(this.associatedBlockPos));
     }
 
     @Override

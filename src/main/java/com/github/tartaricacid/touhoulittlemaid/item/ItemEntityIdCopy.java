@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -14,7 +17,12 @@ public class ItemEntityIdCopy extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> components, TooltipFlag pIsAdvanced) {
-        components.add(Component.translatable("tooltips.touhou_little_maid.entity_id_copy.desc").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack pStack, TooltipContext pContext, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag pIsAdvanced) {
+        List<Component> components = new ArrayList<>();
+        try {
+            components.add(Component.translatable("tooltips.touhou_little_maid.entity_id_copy.desc").withStyle(ChatFormatting.GRAY));
+        } finally {
+            components.forEach(tooltipAdder);
+        }
     }
 }

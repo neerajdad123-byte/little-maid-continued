@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai;
 
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.ai.manager.entity.ChatClientInfo;
 import com.github.tartaricacid.touhoulittlemaid.ai.manager.entity.MaidAIChatManager;
@@ -357,9 +360,9 @@ public class AIChatScreen extends Screen {
     }
 
     @Override
-    public void resize(Minecraft mc, int pWidth, int pHeight) {
+    public void resize(int pWidth, int pHeight) {
         String chatText = this.input.getValue();
-        super.resize(mc, pWidth, pHeight);
+        super.resize(pWidth, pHeight);
         this.input.setValue(chatText);
     }
 
@@ -495,7 +498,10 @@ public class AIChatScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         if (this.openPopup != null) {
             // 执行正常下拉框按钮点击
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && this.tryClickPopup(mouseX, mouseY)) {
@@ -504,7 +510,7 @@ public class AIChatScreen extends Screen {
 
             // 如果悬浮于下拉框按钮上，正常触发开启与关闭
             if (this.isPopupTriggerHovered(mouseX, mouseY)) {
-                return super.mouseClicked(mouseX, mouseY, button);
+                return super.mouseClicked(event, doubleClick);
             }
 
             // 否者关闭下拉框按钮
@@ -513,11 +519,11 @@ public class AIChatScreen extends Screen {
         }
 
         // 输入框点击
-        if (this.input.mouseClicked(mouseX, mouseY, button)) {
+        if (this.input.mouseClicked(event, doubleClick)) {
             this.setFocused(this.input);
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     private boolean isPopupTriggerHovered(double mouseX, double mouseY) {
@@ -531,12 +537,14 @@ public class AIChatScreen extends Screen {
     }
 
     @Override
-    public boolean charTyped(char pCodePoint, int pModifiers) {
+    public boolean charTyped(CharacterEvent event) {
+        char pCodePoint = (char) event.codepoint();
+        int pModifiers = 0;
         // GUI 刚打开的 5 tick 内，不允许输入，否则会把按键录入
         if (this.tickCounter < 5) {
             return false;
         }
-        return super.charTyped(pCodePoint, pModifiers);
+        return super.charTyped(event);
     }
 
     @Override
@@ -549,7 +557,10 @@ public class AIChatScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
+        int keyCode = event.key();
+        int scanCode = event.scancode();
+        int modifiers = event.modifiers();
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
             this.sendDoneMessage();
             return true;
@@ -560,7 +571,7 @@ public class AIChatScreen extends Screen {
         if (keyCode == GLFW.GLFW_KEY_DOWN) {
             return this.recallHistory(1);
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override

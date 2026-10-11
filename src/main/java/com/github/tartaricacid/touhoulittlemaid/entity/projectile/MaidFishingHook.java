@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.projectile;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.advancements.maid.TriggerType;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidFishedEvent;
@@ -520,11 +523,17 @@ public class MaidFishingHook extends Projectile {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag compound = new CompoundTag();
+        try {
+        } finally {
+            PortUtil.writeRoot(valueOutput, compound);
+        }
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
+    protected void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag compound = PortUtil.readRoot(valueInput);
     }
 
     @Override

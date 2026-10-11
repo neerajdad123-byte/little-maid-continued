@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.client.Minecraft;
 
 import com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent;
@@ -76,27 +79,32 @@ public class ItemBoardState extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        String[] state = getState(stack);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+        List<Component> tooltip = new ArrayList<>();
+        try {
+            String[] state = getState(stack);
 
-        if (state == null) {
-            tooltip.add(Component.translatable("tooltips.touhou_little_maid.board_state.empty").withStyle(ChatFormatting.GRAY));
-            return;
-        }
+            if (state == null) {
+                tooltip.add(Component.translatable("tooltips.touhou_little_maid.board_state.empty").withStyle(ChatFormatting.GRAY));
+                return;
+            }
 
-        String descKey = state[1];
-        if (StringUtils.isNotBlank(descKey)) {
-            tooltip.add(Component.translatable(descKey).withStyle(ChatFormatting.GRAY));
-        }
+            String descKey = state[1];
+            if (StringUtils.isNotBlank(descKey)) {
+                tooltip.add(Component.translatable(descKey).withStyle(ChatFormatting.GRAY));
+            }
 
-        String author = state[2];
-        if (StringUtils.isNotBlank(author)) {
-            tooltip.add(Component.translatable("tooltips.touhou_little_maid.board_state.author", author).withStyle(ChatFormatting.GRAY));
-        }
+            String author = state[2];
+            if (StringUtils.isNotBlank(author)) {
+                tooltip.add(Component.translatable("tooltips.touhou_little_maid.board_state.author", author).withStyle(ChatFormatting.GRAY));
+            }
 
-        if (!Minecraft.getInstance().hasShiftDown()) {
-            tooltip.add(Component.translatable("board_state.touhou_little_maid.show_picture")
-                    .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+            if (!Minecraft.getInstance().hasShiftDown()) {
+                tooltip.add(Component.translatable("board_state.touhou_little_maid.show_picture")
+                        .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+            }
+        } finally {
+            tooltip.forEach(tooltipAdder);
         }
     }
 

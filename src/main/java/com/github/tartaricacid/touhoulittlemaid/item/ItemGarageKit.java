@@ -35,7 +35,7 @@ import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.EN
 import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.MODEL_ID_TAG_NAME;
 
 public class ItemGarageKit extends BlockItem {
-    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.dist == Dist.CLIENT ? new IClientItemExtensions() {
+    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.getDist() == Dist.CLIENT ? new IClientItemExtensions() {
         private static final Supplier<TileEntityItemStackGarageKitRenderer> MEMOIZE = Suppliers.memoize(() -> {
             Minecraft minecraft = Minecraft.getInstance();
             return new TileEntityItemStackGarageKitRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
@@ -71,7 +71,7 @@ public class ItemGarageKit extends BlockItem {
     @OnlyIn(Dist.CLIENT)
     public Component getName(ItemStack stack) {
         // 仅在客户端添加这个名称
-        if (FMLEnvironment.dist == Dist.CLIENT && Minecraft.getInstance().level != null) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT && Minecraft.getInstance().level != null) {
             // 手办名字前缀
             MutableComponent prefix = Component.translatable("block.touhou_little_maid.garage_kit.prefix");
             CustomData data = getMaidData(stack);

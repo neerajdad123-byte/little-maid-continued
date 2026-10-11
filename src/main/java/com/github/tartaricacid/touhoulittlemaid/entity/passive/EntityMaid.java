@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.passive;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.util.profiling.Profiler;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockPart;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -1347,54 +1350,60 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putString(MODEL_ID_TAG_NAME, getModelId());
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag compound = new CompoundTag();
+        try {
+            super.addAdditionalSaveData(valueOutput);
+            compound.putString(MODEL_ID_TAG_NAME, getModelId());
 
-        compound.putBoolean(IS_YSM_MODEL_TAG, isYsmModel());
-        compound.putString(YSM_MODEL_ID_TAG, getYsmModelId());
-        compound.putString(YSM_MODEL_TEXTURE_TAG, getYsmModelTexture());
-        compound.putString(YSM_MODEL_NAME_TAG, Component.Serializer.toJson(getYsmModelName(), this.registryAccess()));
-        compound.putString(YSM_ROULETTE_ANIM_TAG, rouletteAnim);
-        compound.putInt(YSM_ROAMING_UPDATE_FLAG_TAG, roamingVarsUpdateFlag);
+            compound.putBoolean(IS_YSM_MODEL_TAG, isYsmModel());
+            compound.putString(YSM_MODEL_ID_TAG, getYsmModelId());
+            compound.putString(YSM_MODEL_TEXTURE_TAG, getYsmModelTexture());
+            compound.putString(YSM_MODEL_NAME_TAG, Component.Serializer.toJson(getYsmModelName(), this.registryAccess()));
+            compound.putString(YSM_ROULETTE_ANIM_TAG, rouletteAnim);
+            compound.putInt(YSM_ROAMING_UPDATE_FLAG_TAG, roamingVarsUpdateFlag);
 
-        CompoundTag roamingVarsTag = new CompoundTag();
-        roamingVars.forEach(roamingVarsTag::putFloat);
-        compound.put(YSM_ROAMING_VARS_TAG, roamingVarsTag);
+            CompoundTag roamingVarsTag = new CompoundTag();
+            roamingVars.forEach(roamingVarsTag::putFloat);
+            compound.put(YSM_ROAMING_VARS_TAG, roamingVarsTag);
 
-        compound.putString(SOUND_PACK_ID_TAG, getSoundPackId());
-        compound.putString(TASK_TAG, getTask().getUid().toString());
-        compound.put(MAID_INVENTORY_TAG, maidInv.serializeNBT(this.registryAccess()));
-        compound.put(MAID_BAUBLE_INVENTORY_TAG, maidBauble.serializeNBT(this.registryAccess()));
-        compound.put(MAID_HIDE_INVENTORY_TAG, hideInv.serializeNBT(this.registryAccess()));
-        compound.put(MAID_TASK_INVENTORY_TAG, taskInv.serializeNBT(this.registryAccess()));
-        compound.putBoolean(STRUCK_BY_LIGHTNING_TAG, isStruckByLightning());
-        compound.putBoolean(INVULNERABLE_TAG, getIsInvulnerable());
-        compound.putInt(HUNGER_TAG, getHunger());
-        compound.putInt(FAVORABILITY_TAG, getFavorability());
-        compound.putInt(EXPERIENCE_TAG, getExperience());
-        compound.putString(SCHEDULE_MODE_TAG, getSchedule().name());
-        compound.putString(MAID_BACKPACK_TYPE, getMaidBackpackType().getId().toString());
-        compound.putBoolean(STRUCTURE_SPAWN_TAG, this.structureSpawn);
-        this.configManager.addAdditionalSaveData(compound);
-        this.gameRecordManager.addAdditionalSaveData(compound);
-        this.favorabilityManager.addAdditionalSaveData(compound);
-        this.schedulePos.save(compound);
-        if (this.backpackData != null) {
-            CompoundTag tag = new CompoundTag();
-            this.backpackData.save(tag, this);
-            compound.put(BACKPACK_DATA_TAG, tag);
-        } else {
-            compound.put(BACKPACK_DATA_TAG, new CompoundTag());
+            compound.putString(SOUND_PACK_ID_TAG, getSoundPackId());
+            compound.putString(TASK_TAG, getTask().getUid().toString());
+            compound.put(MAID_INVENTORY_TAG, maidInv.serializeNBT(this.registryAccess()));
+            compound.put(MAID_BAUBLE_INVENTORY_TAG, maidBauble.serializeNBT(this.registryAccess()));
+            compound.put(MAID_HIDE_INVENTORY_TAG, hideInv.serializeNBT(this.registryAccess()));
+            compound.put(MAID_TASK_INVENTORY_TAG, taskInv.serializeNBT(this.registryAccess()));
+            compound.putBoolean(STRUCK_BY_LIGHTNING_TAG, isStruckByLightning());
+            compound.putBoolean(INVULNERABLE_TAG, getIsInvulnerable());
+            compound.putInt(HUNGER_TAG, getHunger());
+            compound.putInt(FAVORABILITY_TAG, getFavorability());
+            compound.putInt(EXPERIENCE_TAG, getExperience());
+            compound.putString(SCHEDULE_MODE_TAG, getSchedule().name());
+            compound.putString(MAID_BACKPACK_TYPE, getMaidBackpackType().getId().toString());
+            compound.putBoolean(STRUCTURE_SPAWN_TAG, this.structureSpawn);
+            this.configManager.addAdditionalSaveData(compound);
+            this.gameRecordManager.addAdditionalSaveData(compound);
+            this.favorabilityManager.addAdditionalSaveData(compound);
+            this.schedulePos.save(compound);
+            if (this.backpackData != null) {
+                CompoundTag tag = new CompoundTag();
+                this.backpackData.save(tag, this);
+                compound.put(BACKPACK_DATA_TAG, tag);
+            } else {
+                compound.put(BACKPACK_DATA_TAG, new CompoundTag());
+            }
+            this.taskDataMaps.writeSaveData(compound);
+            this.killRecordManager.addAdditionalSaveData(compound);
+            this.aiChatManager.writeToTag(compound);
+        } finally {
+            PortUtil.writeRoot(valueOutput, compound);
         }
-        this.taskDataMaps.writeSaveData(compound);
-        this.killRecordManager.addAdditionalSaveData(compound);
-        this.aiChatManager.writeToTag(compound);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag compound = PortUtil.readRoot(valueInput);
+        super.readAdditionalSaveData(valueInput);
         this.taskDataMaps.readSaveData(compound);
         this.setSyncTaskData(this.taskDataMaps.getUpdateTag());
         if (compound.contains(MODEL_ID_TAG_NAME)) {

@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
 import net.minecraft.core.BlockPos;
@@ -45,14 +48,22 @@ public class TileEntityShrine extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
-        super.saveAdditional(pTag, pRegistries);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider pRegistries = PortUtil.registries();
+        CompoundTag pTag = new CompoundTag();
+        try {
+            getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, pTag);
+        }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider pRegistries = valueInput.lookup();
+        CompoundTag pTag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         handler.deserializeNBT(pRegistries, getPersistentData().getCompound(STORAGE_ITEM));
     }
 

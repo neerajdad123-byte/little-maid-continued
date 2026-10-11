@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ItemPicnicBasket extends BlockItem implements MenuProvider {
-    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.dist == Dist.CLIENT ? new IClientItemExtensions() {
+    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.getDist() == Dist.CLIENT ? new IClientItemExtensions() {
         private static final Supplier<PicnicBasketRender> MEMOIZE = Suppliers.memoize(() -> {
             Minecraft minecraft = Minecraft.getInstance();
             return new PicnicBasketRender(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());

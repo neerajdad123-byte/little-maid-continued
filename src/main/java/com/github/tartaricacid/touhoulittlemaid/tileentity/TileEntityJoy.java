@@ -1,5 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -24,15 +28,23 @@ public abstract class TileEntityJoy extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        getPersistentData().putUUID(SIT_ID, this.sitId);
-        super.saveAdditional(pTag, pRegistries);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider pRegistries = PortUtil.registries();
+        CompoundTag pTag = new CompoundTag();
+        try {
+            getPersistentData().store(SIT_ID, UUIDUtil.CODEC, this.sitId);
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, pTag);
+        }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-        this.sitId = getPersistentData().getUUID(SIT_ID);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider pRegistries = valueInput.lookup();
+        CompoundTag pTag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
+        this.sitId = getPersistentData().read(SIT_ID, UUIDUtil.CODEC).orElseThrow();
     }
 
     @Override

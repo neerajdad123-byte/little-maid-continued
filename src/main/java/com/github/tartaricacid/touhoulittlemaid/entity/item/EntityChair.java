@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.core.UUIDUtil;
 import com.github.tartaricacid.touhoulittlemaid.client.entity.GeckoChairEntity;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.BedrockModel;
@@ -158,8 +161,9 @@ public class EntityChair extends AbstractEntityFromItem {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag compound = PortUtil.readRoot(valueInput);
+        super.readAdditionalSaveData(valueInput);
         if (compound.contains(MODEL_ID_TAG_NAME)) {
             setModelId(compound.getStringOr(MODEL_ID_TAG_NAME, ""));
         }
@@ -175,12 +179,17 @@ public class EntityChair extends AbstractEntityFromItem {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putString(MODEL_ID_TAG_NAME, getModelId());
-        compound.putFloat(MOUNTED_HEIGHT_TAG_NAME, getMountedHeight());
-        compound.putBoolean(TAMEABLE_CAN_RIDE_TAG_NAME, isTameableCanRide());
-        this.getOwnerUUID().ifPresent(uuid -> compound.store(OWNER_UUID_TAG_NAME, UUIDUtil.CODEC, uuid));
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag compound = new CompoundTag();
+        try {
+            super.addAdditionalSaveData(valueOutput);
+            compound.putString(MODEL_ID_TAG_NAME, getModelId());
+            compound.putFloat(MOUNTED_HEIGHT_TAG_NAME, getMountedHeight());
+            compound.putBoolean(TAMEABLE_CAN_RIDE_TAG_NAME, isTameableCanRide());
+            this.getOwnerUUID().ifPresent(uuid -> compound.store(OWNER_UUID_TAG_NAME, UUIDUtil.CODEC, uuid));
+        } finally {
+            PortUtil.writeRoot(valueOutput, compound);
+        }
     }
 
     @Nullable

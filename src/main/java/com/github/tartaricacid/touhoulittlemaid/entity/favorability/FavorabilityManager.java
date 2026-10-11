@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.favorability;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.advancements.maid.TriggerType;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidFavorabilityLevelChangeEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -320,13 +323,19 @@ public class FavorabilityManager {
         this.add(LEVEL_3_POINT);
     }
 
-    public void addAdditionalSaveData(CompoundTag compound) {
-        CompoundTag data = new CompoundTag();
-        this.counter.forEach((name, time) -> data.putInt(name, time.getTickCount()));
-        compound.put(TAG_NAME, data);
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag compound = new CompoundTag();
+        try {
+            CompoundTag data = new CompoundTag();
+            this.counter.forEach((name, time) -> data.putInt(name, time.getTickCount()));
+            compound.put(TAG_NAME, data);
+        } finally {
+            PortUtil.writeRoot(valueOutput, compound);
+        }
     }
 
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag compound = PortUtil.readRoot(valueInput);
         if (compound.contains(TAG_NAME)) {
             CompoundTag data = compound.getCompoundOrEmpty(TAG_NAME);
             for (String name : data.keySet()) {

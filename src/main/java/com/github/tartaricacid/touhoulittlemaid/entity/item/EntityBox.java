@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.init.InitSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -89,7 +92,8 @@ public class EntityBox extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
+    protected void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag compound = PortUtil.readRoot(valueInput);
         if (compound.contains(STAGE_TAG)) {
             setOpenStage(compound.getIntOr(STAGE_TAG, 0));
         }
@@ -99,9 +103,14 @@ public class EntityBox extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
-        compound.putInt(STAGE_TAG, getOpenStage());
-        compound.putInt(TEXTURE_TAG, getTextureIndex());
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag compound = new CompoundTag();
+        try {
+            compound.putInt(STAGE_TAG, getOpenStage());
+            compound.putInt(TEXTURE_TAG, getTextureIndex());
+        } finally {
+            PortUtil.writeRoot(valueOutput, compound);
+        }
     }
 
     @Override

@@ -33,8 +33,8 @@ public class SoundPackButton extends FlatColorButton {
     }
 
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
-        super.extractWidgetRenderState(graphics, mouseX, mouseY, pPartialTick);
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
+        super.extractContents(graphics, mouseX, mouseY, pPartialTick);
         Identifier icon = info.getIcon();
         if (icon == null) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);

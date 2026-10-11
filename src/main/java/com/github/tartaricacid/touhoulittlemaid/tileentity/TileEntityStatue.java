@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import com.google.common.collect.Lists;
@@ -55,25 +57,33 @@ public class TileEntityStatue extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        getPersistentData().putInt(STATUE_SIZE_TAG, size.ordinal());
-        getPersistentData().putBoolean(CORE_BLOCK_TAG, isCoreBlock);
-        getPersistentData().put(CORE_BLOCK_POS_TAG, PortUtil.writeBlockPos(coreBlockPos));
-        getPersistentData().putString(STATUE_FACING_TAG, facing.getSerializedName());
-        ListTag blockList = new ListTag();
-        for (BlockPos pos : allBlocks) {
-            blockList.add(PortUtil.writeBlockPos(pos));
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider pRegistries = PortUtil.registries();
+        CompoundTag pTag = new CompoundTag();
+        try {
+            getPersistentData().putInt(STATUE_SIZE_TAG, size.ordinal());
+            getPersistentData().putBoolean(CORE_BLOCK_TAG, isCoreBlock);
+            getPersistentData().put(CORE_BLOCK_POS_TAG, PortUtil.writeBlockPos(coreBlockPos));
+            getPersistentData().putString(STATUE_FACING_TAG, facing.getSerializedName());
+            ListTag blockList = new ListTag();
+            for (BlockPos pos : allBlocks) {
+                blockList.add(PortUtil.writeBlockPos(pos));
+            }
+            getPersistentData().put(ALL_BLOCKS_TAG, blockList);
+            if (extraMaidData != null) {
+                getPersistentData().put(EXTRA_MAID_DATA, extraMaidData);
+            }
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, pTag);
         }
-        getPersistentData().put(ALL_BLOCKS_TAG, blockList);
-        if (extraMaidData != null) {
-            getPersistentData().put(EXTRA_MAID_DATA, extraMaidData);
-        }
-        super.saveAdditional(pTag, pRegistries);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider pRegistries = valueInput.lookup();
+        CompoundTag pTag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         size = Size.getSizeByIndex(getPersistentData().getIntOr(STATUE_SIZE_TAG, 0));
         isCoreBlock = getPersistentData().getBooleanOr(CORE_BLOCK_TAG, false);
         NbtUtils.readBlockPos(getPersistentData(), CORE_BLOCK_POS_TAG).ifPresent(pos -> coreBlockPos = pos);

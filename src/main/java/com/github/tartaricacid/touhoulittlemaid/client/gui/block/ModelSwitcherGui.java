@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.block;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -147,12 +148,12 @@ public class ModelSwitcherGui extends Screen {
     }
 
     @Override
-    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+    public void resize(int pWidth, int pHeight) {
         String value = "";
         if (this.description != null) {
             value = this.description.getValue();
         }
-        super.resize(pMinecraft, pWidth, pHeight);
+        super.resize(pWidth, pHeight);
         if (this.description != null) {
             this.description.setValue(value);
         }
@@ -213,12 +214,15 @@ public class ModelSwitcherGui extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.description != null && this.description.mouseClicked(mouseX, mouseY, button)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
+        if (this.description != null && this.description.mouseClicked(event, doubleClick)) {
             this.setFocused(this.description);
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override

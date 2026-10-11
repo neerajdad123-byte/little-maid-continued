@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.block.BlockSnackCabinet;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import net.minecraft.core.BlockPos;
@@ -62,16 +65,24 @@ public class TileEntitySnackCabinet extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        if (!this.trySaveLootTable(tag)) {
-            ContainerHelper.saveAllItems(tag, this.items, registries);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider registries = PortUtil.registries();
+        CompoundTag tag = new CompoundTag();
+        try {
+            super.saveAdditional(valueOutput);
+            if (!this.trySaveLootTable(tag)) {
+                ContainerHelper.saveAllItems(tag, this.items, registries);
+            }
+        } finally {
+            PortUtil.writeRoot(valueOutput, tag);
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider registries = valueInput.lookup();
+        CompoundTag tag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(tag)) {
             ContainerHelper.loadAllItems(tag, this.items, registries);

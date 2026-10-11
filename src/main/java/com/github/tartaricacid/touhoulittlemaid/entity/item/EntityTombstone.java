@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.core.UUIDUtil;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.world.data.MaidWorldData;
@@ -112,9 +115,10 @@ public class EntityTombstone extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
+    protected void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag tag = PortUtil.readRoot(valueInput);
         if (tag.contains(OWNER_ID_TAG)) {
-            this.ownerId = tag.getUUID(OWNER_ID_TAG);
+            this.ownerId = tag.read(OWNER_ID_TAG, UUIDUtil.CODEC).orElseThrow();
         }
         if (tag.contains(TOMBSTONE_ITEMS_TAG)) {
             items.deserializeNBT(this.registryAccess(), tag.getCompound(TOMBSTONE_ITEMS_TAG));
@@ -126,10 +130,15 @@ public class EntityTombstone extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
-        tag.store(OWNER_ID_TAG, UUIDUtil.CODEC, this.ownerId);
-        tag.put(TOMBSTONE_ITEMS_TAG, this.items.serializeNBT(this.registryAccess()));
-        tag.putString(MAID_NAME_TAG, Component.Serializer.toJson(this.getMaidName(), this.registryAccess()));
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag tag = new CompoundTag();
+        try {
+            tag.store(OWNER_ID_TAG, UUIDUtil.CODEC, this.ownerId);
+            tag.put(TOMBSTONE_ITEMS_TAG, this.items.serializeNBT(this.registryAccess()));
+            tag.putString(MAID_NAME_TAG, Component.Serializer.toJson(this.getMaidName(), this.registryAccess()));
+        } finally {
+            PortUtil.writeRoot(valueOutput, tag);
+        }
     }
 
     @Override

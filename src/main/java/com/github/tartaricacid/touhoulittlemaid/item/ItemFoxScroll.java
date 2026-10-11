@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.github.tartaricacid.touhoulittlemaid.advancements.maid.TriggerType;
 import com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
@@ -82,19 +85,24 @@ public class ItemFoxScroll extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, List<Component> components, TooltipFlag flagIn) {
-        TrackInfo info = getTrackInfo(stack);
-        if (info != null) {
-            components.add(Component.translatable("tooltips.touhou_little_maid.fox_scroll.dimension", info.dimension).withStyle(ChatFormatting.GOLD));
-            components.add(Component.translatable("tooltips.touhou_little_maid.fox_scroll.position", info.position.toShortString()).withStyle(ChatFormatting.RED));
-            components.add(Component.empty());
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flagIn) {
+        List<Component> components = new ArrayList<>();
+        try {
+            TrackInfo info = getTrackInfo(stack);
+            if (info != null) {
+                components.add(Component.translatable("tooltips.touhou_little_maid.fox_scroll.dimension", info.dimension).withStyle(ChatFormatting.GOLD));
+                components.add(Component.translatable("tooltips.touhou_little_maid.fox_scroll.position", info.position.toShortString()).withStyle(ChatFormatting.RED));
+                components.add(Component.empty());
+            }
+            if (stack.getItem() == InitItems.RED_FOX_SCROLL.get()) {
+                components.add(Component.translatable("tooltips.touhou_little_maid.fox_scroll.red").withStyle(ChatFormatting.GRAY));
+            } else if (stack.getItem() == InitItems.WHITE_FOX_SCROLL.get()) {
+                components.add(Component.translatable("tooltips.touhou_little_maid.fox_scroll.white").withStyle(ChatFormatting.GRAY));
+            }
+            super.appendHoverText(stack, worldIn, tooltipDisplay, components::add, flagIn);
+        } finally {
+            components.forEach(tooltipAdder);
         }
-        if (stack.getItem() == InitItems.RED_FOX_SCROLL.get()) {
-            components.add(Component.translatable("tooltips.touhou_little_maid.fox_scroll.red").withStyle(ChatFormatting.GRAY));
-        } else if (stack.getItem() == InitItems.WHITE_FOX_SCROLL.get()) {
-            components.add(Component.translatable("tooltips.touhou_little_maid.fox_scroll.white").withStyle(ChatFormatting.GRAY));
-        }
-        super.appendHoverText(stack, worldIn, components, flagIn);
     }
 
     public record TrackInfo(String dimension, BlockPos position) {

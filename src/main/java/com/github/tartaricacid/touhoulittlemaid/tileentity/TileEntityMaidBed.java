@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -30,14 +33,22 @@ public class TileEntityMaidBed extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        getPersistentData().putInt(COLOR_TAG, color.getId());
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider registries = PortUtil.registries();
+        CompoundTag tag = new CompoundTag();
+        try {
+            getPersistentData().putInt(COLOR_TAG, color.getId());
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, tag);
+        }
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider registries = valueInput.lookup();
+        CompoundTag tag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         color = DyeColor.byId(getPersistentData().getIntOr(COLOR_TAG, 0));
     }
 

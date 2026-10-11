@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity;
 
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -246,30 +249,35 @@ public class ModelDownloadGui extends Screen {
     }
 
     @Override
-    public void resize(Minecraft minecraft, int width, int height) {
+    public void resize(int width, int height) {
         String value = this.textField.getValue();
-        super.resize(minecraft, width, height);
+        super.resize(width, height);
         this.textField.setValue(value);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.textField.mouseClicked(mouseX, mouseY, button)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
+        if (this.textField.mouseClicked(event, doubleClick)) {
             this.setFocused(this.textField);
             return true;
         } else if (this.textField.isFocused()) {
             this.textField.setFocused(false);
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
+    public boolean charTyped(CharacterEvent event) {
+        char codePoint = (char) event.codepoint();
+        int modifiers = 0;
         if (textField == null) {
             return false;
         }
         String perText = this.textField.getValue();
-        if (this.textField.charTyped(codePoint, modifiers)) {
+        if (this.textField.charTyped(event)) {
             if (!Objects.equals(perText, this.textField.getValue())) {
                 this.currentPage = 0;
                 this.init();
@@ -280,20 +288,23 @@ public class ModelDownloadGui extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
+        int keyCode = event.key();
+        int scanCode = event.scancode();
+        int modifiers = event.modifiers();
         boolean hasKeyCode = InputConstants.getKey(keyCode, scanCode).getNumericKeyValue().isPresent();
         String preText = this.textField.getValue();
         if (hasKeyCode) {
             return true;
         }
-        if (this.textField.keyPressed(keyCode, scanCode, modifiers)) {
+        if (this.textField.keyPressed(event)) {
             if (!Objects.equals(preText, this.textField.getValue())) {
                 this.currentPage = 0;
                 this.init();
             }
             return true;
         } else {
-            return this.textField.isFocused() && this.textField.isVisible() && keyCode != 256 || super.keyPressed(keyCode, scanCode, modifiers);
+            return this.textField.isFocused() && this.textField.isVisible() && keyCode != 256 || super.keyPressed(event);
         }
     }
 

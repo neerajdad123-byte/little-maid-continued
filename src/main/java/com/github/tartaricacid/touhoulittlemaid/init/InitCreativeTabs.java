@@ -92,7 +92,7 @@ public class InitCreativeTabs {
                 output.accept(SCARECROW.get());
                 output.accept(ENTITY_ID_COPY.get());
                 output.accept(OWNER_CONVERSION_TOOL.get());
-                if (FMLEnvironment.dist == Dist.CLIENT) {
+                if (FMLEnvironment.getDist() == Dist.CLIENT) {
                     ItemEntityPlaceholder.fillItemCategory(output);
                 }
                 par.holders().lookup(Registries.ENCHANTMENT).ifPresent(reg -> {
@@ -106,7 +106,7 @@ public class InitCreativeTabs {
             .title(Component.translatable("item_group.touhou_little_maid.chair"))
             .icon(() -> InitItems.CHAIR.get().getDefaultInstance())
             .displayItems((par, output) -> {
-                if (FMLEnvironment.dist == Dist.CLIENT) {
+                if (FMLEnvironment.getDist() == Dist.CLIENT) {
                     ItemChair.fillItemCategory(output);
                 }
             }).build());
@@ -115,7 +115,7 @@ public class InitCreativeTabs {
             .title(Component.translatable("item_group.touhou_little_maid.garage_kit"))
             .icon(() -> InitItems.GARAGE_KIT.get().getDefaultInstance())
             .displayItems((par, output) -> {
-                if (FMLEnvironment.dist == Dist.CLIENT) {
+                if (FMLEnvironment.getDist() == Dist.CLIENT) {
                     BlockGarageKit.fillItemCategory(output);
                 }
             }).build());

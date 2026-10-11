@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
@@ -41,22 +44,30 @@ public class TileEntityModelSwitcher extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        ListTag listTag = new ListTag();
-        for (ModeInfo info : infoList) {
-            listTag.add(info.serialize());
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider pRegistries = PortUtil.registries();
+        CompoundTag pTag = new CompoundTag();
+        try {
+            ListTag listTag = new ListTag();
+            for (ModeInfo info : infoList) {
+                listTag.add(info.serialize());
+            }
+            getPersistentData().put(INFO_LIST, listTag);
+            if (this.uuid != null) {
+                getPersistentData().put(ENTITY_UUID, NbtUtils.createUUID(this.uuid));
+            }
+            getPersistentData().putInt(LIST_INDEX, this.index);
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, pTag);
         }
-        getPersistentData().put(INFO_LIST, listTag);
-        if (this.uuid != null) {
-            getPersistentData().put(ENTITY_UUID, NbtUtils.createUUID(this.uuid));
-        }
-        getPersistentData().putInt(LIST_INDEX, this.index);
-        super.saveAdditional(pTag, pRegistries);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider pRegistries = valueInput.lookup();
+        CompoundTag pTag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         infoList.clear();
         ListTag listTag = getPersistentData().getListOrEmpty(INFO_LIST);
         for (int i = 0; i < listTag.size(); i++) {

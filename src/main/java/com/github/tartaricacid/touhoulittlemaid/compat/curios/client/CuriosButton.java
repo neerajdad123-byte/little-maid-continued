@@ -26,7 +26,7 @@ public class CuriosButton extends Button implements ITooltipButton {
     }
 
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.renderTexture(guiGraphics, TEXTURE, this.getX(), this.getY(),
                 108, this.vStart, 0, this.getWidth(), this.getHeight(),
                 256, 256);

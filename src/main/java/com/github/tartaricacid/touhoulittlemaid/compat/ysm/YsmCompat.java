@@ -30,7 +30,7 @@ public class YsmCompat {
                 INSTALLED = true;
             } else {
                 // 开发环境下，version 是空的，所以需要额外判断
-                INSTALLED = !FMLEnvironment.production;
+                INSTALLED = !FMLEnvironment.isProduction();
             }
         });
     }

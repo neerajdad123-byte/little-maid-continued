@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MiscConfig;
 import com.github.tartaricacid.touhoulittlemaid.util.VoxelShapeUtils;
 import com.mojang.serialization.MapCodec;
@@ -133,8 +136,13 @@ public class BlockScarecrow extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        int range = MiscConfig.SCARECROW_RANGE.get();
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.scarecrow.desc", range, range).withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        List<Component> tooltip = new ArrayList<>();
+        try {
+            int range = MiscConfig.SCARECROW_RANGE.get();
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.scarecrow.desc", range, range).withStyle(ChatFormatting.GRAY));
+        } finally {
+            tooltip.forEach(tooltipAdder);
+        }
     }
 }

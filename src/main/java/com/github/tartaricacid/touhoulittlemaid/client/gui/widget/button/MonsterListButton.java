@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.task.AttackTaskConfigGui;
@@ -23,7 +24,7 @@ public class MonsterListButton extends Button {
     }
 
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
         Minecraft mc = Minecraft.getInstance();
         if (deleteClick(mouseX, mouseY)) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX(), this.getY(), 0, 163, this.width, this.height, 256, 256);
@@ -37,7 +38,9 @@ public class MonsterListButton extends Button {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onClick(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
         if (deleteClick(mouseX, mouseY)) {
             this.parents.removeMonsterType(this.entityId);
         } else if (leftClick(mouseX, mouseY)) {

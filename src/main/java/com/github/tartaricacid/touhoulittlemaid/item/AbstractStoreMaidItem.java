@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import net.minecraft.core.UUIDUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidAndItemTransformEvent;
 import com.github.tartaricacid.touhoulittlemaid.compat.ysm.YsmCompat;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -91,7 +92,7 @@ public abstract class AbstractStoreMaidItem extends Item {
         CustomData compoundData = stack.get(InitDataComponent.MAID_INFO);
         if (compoundData != null) {
             CompoundTag maidCompound = compoundData.copyTag();
-            UUID ownerUid = maidCompound.getUUID(MAID_OWNER);
+            UUID ownerUid = maidCompound.read(MAID_OWNER, UUIDUtil.CODEC).orElseThrow();
             if (!player.getUUID().equals(ownerUid)) {
                 MutableComponent tip = Component.translatable("tooltips.touhou_little_maid.smart_slab.not_your_maid").withStyle(ChatFormatting.DARK_RED);
                 if (!worldIn.isClientSide()) {

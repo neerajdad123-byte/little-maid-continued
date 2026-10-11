@@ -42,6 +42,8 @@ GLOBAL = [
     (r"(?<![\w.])Screen\.hasControlDown\(\)", "Minecraft.getInstance().hasControlDown()"),
     (r"(?<![\w.])Screen\.hasAltDown\(\)", "Minecraft.getInstance().hasAltDown()"),
     (r"(?<![\w.])hasShiftDown\(\)", "Minecraft.getInstance().hasShiftDown()"),
+    (r"\bFMLEnvironment\.dist\b", "FMLEnvironment.getDist()"),
+    (r"\bFMLEnvironment\.production\b", "FMLEnvironment.isProduction()"),
     (r"\bsoundEvent\.getLocation\(\)", "soundEvent.location()"),
     (r"\.getLocation\(\)(?=\.(?:getPath|getNamespace|toString)\(\))", ".location()"),
 ]

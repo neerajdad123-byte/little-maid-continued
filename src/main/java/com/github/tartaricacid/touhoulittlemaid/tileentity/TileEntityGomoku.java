@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.block.IBoardGameEntityBlock;
 import com.github.tartaricacid.touhoulittlemaid.api.game.gomoku.GomokuCodec;
 import com.github.tartaricacid.touhoulittlemaid.api.game.gomoku.Point;
@@ -36,22 +39,30 @@ public class TileEntityGomoku extends TileEntityJoy implements IBoardGameEntityB
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        ListTag listTag = new ListTag();
-        for (byte[] chessRow : chessData) {
-            listTag.add(new ByteArrayTag(chessRow));
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider pRegistries = PortUtil.registries();
+        CompoundTag pTag = new CompoundTag();
+        try {
+            ListTag listTag = new ListTag();
+            for (byte[] chessRow : chessData) {
+                listTag.add(new ByteArrayTag(chessRow));
+            }
+            getPersistentData().put(CHESS_DATA, listTag);
+            getPersistentData().putInt(STATUE, this.statue);
+            getPersistentData().putBoolean(PLAYER_TURN, this.playerTurn);
+            getPersistentData().putInt(CHESS_COUNTER, this.chessCounter);
+            getPersistentData().put(LATEST_CHESS_POINT, Point.toTag(this.latestChessPoint));
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, pTag);
         }
-        getPersistentData().put(CHESS_DATA, listTag);
-        getPersistentData().putInt(STATUE, this.statue);
-        getPersistentData().putBoolean(PLAYER_TURN, this.playerTurn);
-        getPersistentData().putInt(CHESS_COUNTER, this.chessCounter);
-        getPersistentData().put(LATEST_CHESS_POINT, Point.toTag(this.latestChessPoint));
-        super.saveAdditional(pTag, pRegistries);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider pRegistries = valueInput.lookup();
+        CompoundTag pTag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         ListTag listTag = getPersistentData().getListOrEmpty(CHESS_DATA);
         for (int i = 0; i < listTag.size(); i++) {
             ByteArrayTag byteArray = (ByteArrayTag) listTag.get(i);

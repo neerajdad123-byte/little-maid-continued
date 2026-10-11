@@ -45,7 +45,7 @@ import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.*;
 
 public class ItemChair extends Item {
     private static final String DEFAULT_MODEL_ID = "touhou_little_maid:cushion";
-    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.dist == Dist.CLIENT ? new IClientItemExtensions() {
+    public static final IClientItemExtensions ITEM_EXTENSIONS = FMLEnvironment.getDist() == Dist.CLIENT ? new IClientItemExtensions() {
         private static final Supplier<TileEntityItemStackChairRenderer> MEMOIZE = Suppliers.memoize(() -> {
             Minecraft minecraft = Minecraft.getInstance();
             return new TileEntityItemStackChairRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
@@ -137,7 +137,7 @@ public class ItemChair extends Item {
     @Override
     @OnlyIn(Dist.CLIENT)
     public Component getName(ItemStack stack) {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             // 添加坐垫前缀，方便搜索
             MutableComponent prefix = Component.translatable("item.touhou_little_maid.chair.prefix");
             ItemChair.Data data = getData(stack);

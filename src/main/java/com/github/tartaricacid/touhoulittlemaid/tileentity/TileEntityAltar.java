@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import com.github.tartaricacid.touhoulittlemaid.inventory.handler.AltarItemHandler;
 import com.github.tartaricacid.touhoulittlemaid.util.PosListData;
@@ -54,20 +57,28 @@ public class TileEntityAltar extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        getPersistentData().putBoolean(IS_RENDER, isRender);
-        getPersistentData().putBoolean(CAN_PLACE_ITEM, canPlaceItem);
-        getPersistentData().putInt(STORAGE_STATE_ID, Block.getId(storageState));
-        getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
-        getPersistentData().putString(DIRECTION, direction.getSerializedName());
-        getPersistentData().put(STORAGE_BLOCK_LIST, blockPosList.serialize());
-        getPersistentData().put(CAN_PLACE_ITEM_POS_LIST, canPlaceItemPosList.serialize());
-        super.saveAdditional(pTag, pRegistries);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider pRegistries = PortUtil.registries();
+        CompoundTag pTag = new CompoundTag();
+        try {
+            getPersistentData().putBoolean(IS_RENDER, isRender);
+            getPersistentData().putBoolean(CAN_PLACE_ITEM, canPlaceItem);
+            getPersistentData().putInt(STORAGE_STATE_ID, Block.getId(storageState));
+            getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
+            getPersistentData().putString(DIRECTION, direction.getSerializedName());
+            getPersistentData().put(STORAGE_BLOCK_LIST, blockPosList.serialize());
+            getPersistentData().put(CAN_PLACE_ITEM_POS_LIST, canPlaceItemPosList.serialize());
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, pTag);
+        }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider pRegistries = valueInput.lookup();
+        CompoundTag pTag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         isRender = getPersistentData().getBooleanOr(IS_RENDER, false);
         canPlaceItem = getPersistentData().getBooleanOr(CAN_PLACE_ITEM, false);
         storageState = Block.stateById(getPersistentData().getIntOr(STORAGE_STATE_ID, 0));

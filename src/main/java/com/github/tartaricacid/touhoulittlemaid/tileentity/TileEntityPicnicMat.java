@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import net.minecraft.util.Util;
@@ -86,20 +88,28 @@ public class TileEntityPicnicMat extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        getPersistentData().put(CENTER_POS_NAME, PortUtil.writeBlockPos(centerPos));
-        getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
-        ListTag listTag = new ListTag();
-        for (UUID uuid : sitIds) {
-            listTag.add(NbtUtils.createUUID(uuid));
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider pRegistries = PortUtil.registries();
+        CompoundTag pTag = new CompoundTag();
+        try {
+            getPersistentData().put(CENTER_POS_NAME, PortUtil.writeBlockPos(centerPos));
+            getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
+            ListTag listTag = new ListTag();
+            for (UUID uuid : sitIds) {
+                listTag.add(NbtUtils.createUUID(uuid));
+            }
+            getPersistentData().put(SIT_IDS, listTag);
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, pTag);
         }
-        getPersistentData().put(SIT_IDS, listTag);
-        super.saveAdditional(pTag, pRegistries);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider pRegistries = valueInput.lookup();
+        CompoundTag pTag = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         NbtUtils.readBlockPos(getPersistentData(), CENTER_POS_NAME).ifPresent(pos -> centerPos = pos);
         this.handler.deserializeNBT(pRegistries, getPersistentData().getCompound(STORAGE_ITEM));
         ListTag sitIdsTag = getPersistentData().getListOrEmpty(SIT_IDS);

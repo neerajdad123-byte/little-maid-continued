@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.detail;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.TouhouImageButton;
 import com.github.tartaricacid.touhoulittlemaid.client.model.DebugFloorModel;
@@ -140,7 +141,10 @@ public abstract class AbstractModelDetailsGui<T extends LivingEntity, E extends 
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         boolean isInWidthRange = 132 < mouseX && mouseX < width - 1;
         boolean isInHeightRange = 15 < mouseY && mouseY < height - 16;
         boolean isInRange = isInWidthRange && isInHeightRange;

@@ -1,5 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.model;
 
+import java.util.ArrayList;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.ImageButtonWithId;
@@ -641,35 +645,43 @@ public abstract class AbstractModelGui<T extends LivingEntity, E extends IModelI
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         // 处理搜索框的点击事件
-        if (this.searchBox != null && this.searchBox.mouseClicked(mouseX, mouseY, button)) {
+        if (this.searchBox != null && this.searchBox.mouseClicked(event, doubleClick)) {
             this.setFocused(this.searchBox);
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
+        int keyCode = event.key();
+        int scanCode = event.scancode();
+        int modifiers = event.modifiers();
         // 处理搜索框的键盘输入
         if (this.searchBox != null && this.searchBox.isFocused()) {
-            if (this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
+            if (this.searchBox.keyPressed(event)) {
                 return true;
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
+    public boolean charTyped(CharacterEvent event) {
+        char codePoint = (char) event.codepoint();
+        int modifiers = 0;
         // 处理搜索框的字符输入
         if (this.searchBox != null && this.searchBox.isFocused()) {
-            if (this.searchBox.charTyped(codePoint, modifiers)) {
+            if (this.searchBox.charTyped(event)) {
                 return true;
             }
         }
-        return super.charTyped(codePoint, modifiers);
+        return super.charTyped(event);
     }
 
     /**

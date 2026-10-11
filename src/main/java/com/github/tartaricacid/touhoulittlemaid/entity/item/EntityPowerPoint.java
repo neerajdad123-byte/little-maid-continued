@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.advancements.maid.TriggerType;
 import com.github.tartaricacid.touhoulittlemaid.data.MaidNumAttachment;
 import com.github.tartaricacid.touhoulittlemaid.data.PowerAttachment;
@@ -229,14 +232,20 @@ public class EntityPowerPoint extends Entity implements IEntityWithComplexSpawn 
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putShort("Health", (short) this.health);
-        compound.putShort("Age", (short) this.age);
-        compound.putShort("Value", (short) this.value);
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag compound = new CompoundTag();
+        try {
+            compound.putShort("Health", (short) this.health);
+            compound.putShort("Age", (short) this.age);
+            compound.putShort("Value", (short) this.value);
+        } finally {
+            PortUtil.writeRoot(valueOutput, compound);
+        }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag compound = PortUtil.readRoot(valueInput);
         this.health = compound.getShort("Health");
         this.age = compound.getShort("Age");
         this.value = compound.getShort("Value");

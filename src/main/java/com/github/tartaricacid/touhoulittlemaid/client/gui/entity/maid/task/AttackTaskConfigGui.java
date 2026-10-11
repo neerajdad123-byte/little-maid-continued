@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.task;
 
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -131,9 +132,9 @@ public class AttackTaskConfigGui extends MaidTaskConfigGui<TaskConfigContainer> 
     }
 
     @Override
-    public void resize(Minecraft minecraft, int width, int height) {
+    public void resize(int width, int height) {
         String value = this.inputField.getValue();
-        super.resize(minecraft, width, height);
+        super.resize(width, height);
         this.inputField.setValue(value);
     }
 
@@ -154,11 +155,14 @@ public class AttackTaskConfigGui extends MaidTaskConfigGui<TaskConfigContainer> 
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
+        int keyCode = event.key();
+        int scanCode = event.scancode();
+        int modifiers = event.modifiers();
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.getMinecraft().player != null) {
             this.getMinecraft().player.closeContainer();
         }
-        return this.inputField.keyPressed(keyCode, scanCode, modifiers) || this.inputField.canConsumeInput() || super.keyPressed(keyCode, scanCode, modifiers);
+        return this.inputField.keyPressed(event) || this.inputField.canConsumeInput() || super.keyPressed(event);
     }
 
     @Override

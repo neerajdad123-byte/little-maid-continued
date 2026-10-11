@@ -19,7 +19,7 @@ public class SideButton extends Button {
     }
 
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
         graphics.fillGradient(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, 0xbf_090909, 0xbf_090909);
         if (isSelect) {
             graphics.fillGradient(this.getX(), this.getY(), this.getX() + 2, this.getY() + this.height, 0xff_55ff55, 0xff_55ff55);

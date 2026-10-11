@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid;
 
+import net.minecraft.client.input.MouseButtonEvent;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -449,7 +450,9 @@ public abstract class AbstractMaidContainerGui<T extends AbstractMaidContainer> 
     private void addRideButton() {
         ride = new TouhouStateSwitchButton(leftPos + 51, topPos + 206, 20, 20, maid.isRideable()) {
             @Override
-            public void onClick(double mouseX, double mouseY) {
+            public void onClick(MouseButtonEvent event, boolean doubleClick) {
+                double mouseX = event.x();
+                double mouseY = event.y();
                 this.isStateTriggered = !this.isStateTriggered;
                 ClientPacketDistributor.sendToServer(new MaidConfigPackage(maid.getId(), maid.isHomeModeEnable(), maid.isPickup(), isStateTriggered, maid.getSchedule()));
             }
@@ -461,7 +464,9 @@ public abstract class AbstractMaidContainerGui<T extends AbstractMaidContainer> 
     private void addPickButton() {
         pick = new TouhouStateSwitchButton(leftPos + 30, topPos + 206, 20, 20, maid.isPickup()) {
             @Override
-            public void onClick(double mouseX, double mouseY) {
+            public void onClick(MouseButtonEvent event, boolean doubleClick) {
+                double mouseX = event.x();
+                double mouseY = event.y();
                 this.isStateTriggered = !this.isStateTriggered;
                 ClientPacketDistributor.sendToServer(new MaidConfigPackage(maid.getId(), maid.isHomeModeEnable(), isStateTriggered, maid.isRideable(), maid.getSchedule()));
             }
@@ -473,7 +478,9 @@ public abstract class AbstractMaidContainerGui<T extends AbstractMaidContainer> 
     private void addHomeButton() {
         home = new TouhouStateSwitchButton(leftPos + 9, topPos + 206, 20, 20, maid.isHomeModeEnable()) {
             @Override
-            public void onClick(double mouseX, double mouseY) {
+            public void onClick(MouseButtonEvent event, boolean doubleClick) {
+                double mouseX = event.x();
+                double mouseY = event.y();
                 this.isStateTriggered = !this.isStateTriggered;
                 ClientPacketDistributor.sendToServer(new MaidConfigPackage(maid.getId(), isStateTriggered, maid.isPickup(), maid.isRideable(), maid.getSchedule()));
             }

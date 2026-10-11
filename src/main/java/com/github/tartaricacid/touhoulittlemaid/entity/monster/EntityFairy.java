@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.monster;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MiscConfig;
 import com.github.tartaricacid.touhoulittlemaid.entity.ai.goal.FairyAttackGoal;
@@ -187,15 +190,21 @@ public class EntityFairy extends Monster implements RangedAttackMob, FlyingAnima
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt(FAIRY_TYPE_TAG_NAME, getFairyTypeOrdinal());
-        compound.putBoolean(BABY_TAG_NAME, this.isBaby());
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        CompoundTag compound = new CompoundTag();
+        try {
+            super.addAdditionalSaveData(valueOutput);
+            compound.putInt(FAIRY_TYPE_TAG_NAME, getFairyTypeOrdinal());
+            compound.putBoolean(BABY_TAG_NAME, this.isBaby());
+        } finally {
+            PortUtil.writeRoot(valueOutput, compound);
+        }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        CompoundTag compound = PortUtil.readRoot(valueInput);
+        super.readAdditionalSaveData(valueInput);
         if (compound.contains(FAIRY_TYPE_TAG_NAME)) {
             setFairyTypeOrdinal(compound.getIntOr(FAIRY_TYPE_TAG_NAME, 0));
         }

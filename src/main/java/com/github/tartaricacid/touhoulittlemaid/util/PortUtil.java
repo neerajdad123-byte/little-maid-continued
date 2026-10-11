@@ -1,16 +1,30 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ARGB;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 /**
  * Little Maid Continued: small helpers that replace APIs removed between MC 1.21.1 and 26.x.
  */
 public final class PortUtil {
+    /**
+     * Reads or writes the whole entity / block entity record as one {@link CompoundTag}.
+     */
+    private static final MapCodec<CompoundTag> ROOT = MapCodec.assumeMapUnsafe(CompoundTag.CODEC);
+
     private PortUtil() {
     }
 
@@ -27,5 +41,38 @@ public final class PortUtil {
      */
     public static Tag writeBlockPos(BlockPos pos) {
         return BlockPos.CODEC.encodeStart(NbtOps.INSTANCE, pos).getOrThrow();
+    }
+
+    /**
+     * Bridges {@link ValueInput} back to the CompoundTag based load code of 1.21.1.
+     */
+    public static CompoundTag readRoot(ValueInput input) {
+        return input.read(ROOT).orElseGet(CompoundTag::new);
+    }
+
+    /**
+     * Bridges CompoundTag based save code of 1.21.1 to {@link ValueOutput}; keys are merged into the record.
+     */
+    public static void writeRoot(ValueOutput output, CompoundTag tag) {
+        if (!tag.isEmpty()) {
+            output.store(ROOT, tag);
+        }
+    }
+
+    /**
+     * Registry access for save code that has no lookup of its own.
+     */
+    public static HolderLookup.Provider registries() {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server != null) {
+            return server.registryAccess();
+        }
+        if (FMLEnvironment.getDist().isClient()) {
+            HolderLookup.Provider client = ClientPortUtil.registries();
+            if (client != null) {
+                return client;
+            }
+        }
+        return RegistryAccess.EMPTY;
     }
 }

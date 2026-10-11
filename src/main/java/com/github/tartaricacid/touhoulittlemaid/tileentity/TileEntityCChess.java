@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.block.IBoardGameEntityBlock;
 import com.github.tartaricacid.touhoulittlemaid.api.game.xqwlight.Position;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
@@ -48,20 +51,28 @@ public class TileEntityCChess extends TileEntityJoy implements IBoardGameEntityB
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        CompoundTag data = getPersistentData();
-        data.putString(CHESS_DATA, chessData.toFen());
-        data.putInt(CHESS_COUNTER, chessCounter);
-        data.putInt(SELECT_CHESS_POINT, selectChessPoint);
-        data.putBoolean(CHECKMATE, checkmate);
-        data.putBoolean(REPEAT, repeat);
-        data.putBoolean(MOVE_NUMBER_LIMIT, moveNumberLimit);
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        HolderLookup.Provider provider = PortUtil.registries();
+        CompoundTag tag = new CompoundTag();
+        try {
+            CompoundTag data = getPersistentData();
+            data.putString(CHESS_DATA, chessData.toFen());
+            data.putInt(CHESS_COUNTER, chessCounter);
+            data.putInt(SELECT_CHESS_POINT, selectChessPoint);
+            data.putBoolean(CHECKMATE, checkmate);
+            data.putBoolean(REPEAT, repeat);
+            data.putBoolean(MOVE_NUMBER_LIMIT, moveNumberLimit);
+            super.saveAdditional(valueOutput);
+        } finally {
+            PortUtil.writeRoot(valueOutput, tag);
+        }
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
-        super.loadAdditional(nbt, provider);
+    protected void loadAdditional(ValueInput valueInput) {
+        HolderLookup.Provider provider = valueInput.lookup();
+        CompoundTag nbt = PortUtil.readRoot(valueInput);
+        super.loadAdditional(valueInput);
         CompoundTag data = getPersistentData();
         chessCounter = data.getIntOr(CHESS_COUNTER, 0);
         selectChessPoint = data.getIntOr(SELECT_CHESS_POINT, 0);
