@@ -1,13 +1,14 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.VanillaConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ExperienceOrbRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -19,7 +20,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public class ReplaceExperienceOrbRenderer extends EntityRenderer<ExperienceOrb> {
+public class ReplaceExperienceOrbRenderer extends LegacyEntityRenderer<ExperienceOrb> {
     private static final Identifier POINT_ITEM_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/entity/point_item.png");
     private static final RenderType RENDER_TYPE = RenderTypes.entityCutout(POINT_ITEM_TEXTURE);
     private final ExperienceOrbRenderer vanillaRender;
@@ -45,7 +46,7 @@ public class ReplaceExperienceOrbRenderer extends EntityRenderer<ExperienceOrb> 
         if (VanillaConfig.REPLACE_XP_TEXTURE.get()) {
             renderPointItem(orb, pEntityYaw, partialTicks, poseStack, buffer, packedLight);
         } else {
-            vanillaRender.render(orb, pEntityYaw, partialTicks, poseStack, buffer, packedLight);
+            LegacyDraw.entity(vanillaRender, orb, partialTicks, poseStack, buffer);
         }
     }
 
@@ -57,7 +58,7 @@ public class ReplaceExperienceOrbRenderer extends EntityRenderer<ExperienceOrb> 
         float texV2 = (float) (icon / 4 * 16) / 64.0F;
         float texV1 = (float) (icon / 4 * 16 + 16) / 64.0F;
         poseStack.translate(0.0F, 0.1F, 0.0F);
-        poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+        poseStack.mulPose(this.entityRenderDispatcher.camera.rotation());
         poseStack.scale(0.3F, 0.3F, 0.3F);
         VertexConsumer consumer = buffer.getBuffer(RENDER_TYPE);
         PoseStack.Pose lasted = poseStack.last();

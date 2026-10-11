@@ -1,13 +1,14 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.compat.oculus.OculusCompat;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.entity.projectile.MaidFishingHook;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
@@ -17,9 +18,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class MaidFishingHookRenderer<T extends MaidFishingHook> extends EntityRenderer<T> {
+public class MaidFishingHookRenderer<T extends MaidFishingHook> extends LegacyEntityRenderer<T> {
     private static final Identifier TEXTURE_LOCATION = Identifier.withDefaultNamespace("textures/entity/fishing_hook.png");
-    private static final RenderType RENDER_TYPE = RenderType.entityCutout(TEXTURE_LOCATION);
+    private static final RenderType RENDER_TYPE = RenderTypes.entityCutout(TEXTURE_LOCATION);
 
     public MaidFishingHookRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -41,7 +42,7 @@ public class MaidFishingHookRenderer<T extends MaidFishingHook> extends EntityRe
     protected void renderBobber(T fishingHook, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
         poseStack.scale(0.5F, 0.5F, 0.5F);
-        poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+        poseStack.mulPose(this.entityRenderDispatcher.camera.rotation());
         PoseStack.Pose lastedPose = poseStack.last();
 
         VertexConsumer consumer = buffer.getBuffer(RENDER_TYPE);
@@ -81,7 +82,7 @@ public class MaidFishingHookRenderer<T extends MaidFishingHook> extends EntityRe
 
         float[] colors = getLineColor(fishingHook);
 
-        VertexConsumer lineConsumer = buffer.getBuffer(RenderType.lineStrip());
+        VertexConsumer lineConsumer = buffer.getBuffer(RenderTypes.lineStrip());
         PoseStack.Pose lasted = poseStack.last();
         for (int i = 0; i <= 16; ++i) {
             stringVertex(x, y, z, lineConsumer, lasted, fraction(i), fraction(i + 1), colors[0], colors[1], colors[2]);

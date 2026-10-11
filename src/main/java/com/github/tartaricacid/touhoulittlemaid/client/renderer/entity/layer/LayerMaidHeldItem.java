@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.layer;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.BedrockModel;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.EntityMaidRenderer;
 import com.github.tartaricacid.touhoulittlemaid.compat.carryon.RenderFixer;
@@ -8,18 +9,17 @@ import com.github.tartaricacid.touhoulittlemaid.compat.slashblade.SlashBladeComp
 import com.github.tartaricacid.touhoulittlemaid.compat.slashblade.SlashBladeRender;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyRenderLayer;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-public class LayerMaidHeldItem extends RenderLayer<Mob, BedrockModel<Mob>> {
-    private final ItemInHandRenderer itemInHandRenderer;
+public class LayerMaidHeldItem extends LegacyRenderLayer<Mob, BedrockModel<Mob>> {
+    private final Object itemInHandRenderer;
 
-    public LayerMaidHeldItem(EntityMaidRenderer maidRenderer, ItemInHandRenderer pItemInHandRenderer) {
+    public LayerMaidHeldItem(EntityMaidRenderer maidRenderer, Object pItemInHandRenderer) {
         super(maidRenderer);
         this.itemInHandRenderer = pItemInHandRenderer;
     }
@@ -61,7 +61,7 @@ public class LayerMaidHeldItem extends RenderLayer<Mob, BedrockModel<Mob>> {
                 poseStack.translate((isLeft ? -1 : 1) / 16.0, 0.125, -0.525);
             }
             GunClientUtil.addItemTranslate(poseStack, itemStack, isLeft);
-            this.itemInHandRenderer.renderItem(maid, itemStack, transformTypeIn, isLeft, poseStack, typeBuffer, combinedLightIn);
+            LegacyDraw.itemInHand(maid, itemStack, transformTypeIn, isLeft, poseStack, typeBuffer, combinedLightIn);
             poseStack.popPose();
         }
     }

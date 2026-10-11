@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.game.gomoku.Point;
@@ -15,10 +16,10 @@ import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyBlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +29,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
-public class TileEntityGomokuRenderer implements BlockEntityRenderer<TileEntityGomoku> {
+public class TileEntityGomokuRenderer implements LegacyBlockEntityRenderer<TileEntityGomoku> {
     private static final Identifier CHECKER_BOARD_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/gomoku.png");
     private static final Identifier BLACK_PIECE_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/gomoku_black_piece.png");
     private static final Identifier WHITE_PIECE_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/gomoku_white_piece.png");
@@ -42,8 +43,8 @@ public class TileEntityGomokuRenderer implements BlockEntityRenderer<TileEntityG
     public TileEntityGomokuRenderer(BlockEntityRendererProvider.Context context) {
         CHECKER_BOARD_MODEL = BedrockModelLoader.getModel(BedrockModelLoader.GOMOKU);
         PIECE_MODEL = BedrockModelLoader.getModel(BedrockModelLoader.GOMOKU_PIECE);
-        this.font = context.getFont();
-        this.dispatcher = context.getBlockEntityRenderDispatcher();
+        this.font = context.font();
+        this.dispatcher = context.blockEntityRenderDispatcher();
     }
 
     @Override
@@ -61,10 +62,10 @@ public class TileEntityGomokuRenderer implements BlockEntityRenderer<TileEntityG
             poseStack.pushPose();
             poseStack.translate(-0.42, 0.25, -0.42);
             poseStack.translate(point.x * 0.1316, 0, point.y * 0.1316);
-            poseStack.mulPose(Axis.YN.rotationDegrees(180 + camera.getYRot()));
+            poseStack.mulPose(Axis.YN.rotationDegrees(180 + camera.yRot()));
             poseStack.scale(0.015625F, -0.015625F, 0.015625F);
             float width = (float) (-this.font.width("▼") / 2) + 0.5f;
-            this.font.drawInBatch("▼", width, -1.5f, 0xFF0000, false, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
+            LegacyDraw.text(this.font, "▼", width, -1.5f, 0xFF0000, false, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
             poseStack.popPose();
         }
     }
@@ -132,13 +133,13 @@ public class TileEntityGomokuRenderer implements BlockEntityRenderer<TileEntityG
             float roundTipsWidth = (float) (-this.font.width(roundTips) / 2);
             poseStack.pushPose();
             poseStack.translate(0.5, 0.75, 0.5);
-            poseStack.mulPose(Axis.YN.rotationDegrees(180 + camera.getYRot()));
-            poseStack.mulPose(Axis.XN.rotationDegrees(camera.getXRot()));
+            poseStack.mulPose(Axis.YN.rotationDegrees(180 + camera.yRot()));
+            poseStack.mulPose(Axis.XN.rotationDegrees(camera.xRot()));
             poseStack.scale(0.03F, -0.03F, 0.03F);
-            this.font.drawInBatch(loseTips, loseTipsWidth, -10, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
+            LegacyDraw.text(this.font, loseTips, loseTipsWidth, -10, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
             poseStack.scale(0.5F, 0.5F, 0.5F);
-            this.font.drawInBatch(roundTips, roundTipsWidth, -30, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
-            this.font.drawInBatch(resetTips, resetTipsWidth, 0, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
+            LegacyDraw.text(this.font, roundTips, roundTipsWidth, -30, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
+            LegacyDraw.text(this.font, resetTips, resetTipsWidth, 0, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
             poseStack.popPose();
         }
     }
@@ -149,7 +150,7 @@ public class TileEntityGomokuRenderer implements BlockEntityRenderer<TileEntityG
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TileEntityGomoku te) {
+    public boolean shouldRenderOffScreen() {
         return true;
     }
 

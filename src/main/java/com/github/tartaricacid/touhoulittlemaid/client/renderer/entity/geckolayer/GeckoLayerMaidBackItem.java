@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.geckolayer;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IMaid;
 import com.github.tartaricacid.touhoulittlemaid.compat.carryon.RenderFixer;
 import com.github.tartaricacid.touhoulittlemaid.compat.gun.common.GunClientUtil;
@@ -13,12 +15,11 @@ import com.github.tartaricacid.touhoulittlemaid.geckolib3.util.RenderUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TieredItem;
 
 public class GeckoLayerMaidBackItem<T extends Mob, R extends IGeoEntityRenderer<T>> extends GeoLayerRenderer<T, R> {
     public GeckoLayerMaidBackItem(R entityRendererIn) {
@@ -47,7 +48,7 @@ public class GeckoLayerMaidBackItem<T extends Mob, R extends IGeoEntityRenderer<
         if (entity instanceof EntityMaid entityMaid && !entityMaid.getConfigManager().isShowBackItem()) {
             return;
         }
-        if (stack.getItem() instanceof TieredItem) {
+        if (PortUtil.isTieredTool(stack)) {
             matrixStack.pushPose();
 
             if (!model.backpackBones().isEmpty()) {
@@ -65,7 +66,7 @@ public class GeckoLayerMaidBackItem<T extends Mob, R extends IGeoEntityRenderer<
             if (SlashBladeCompat.isSlashBladeItem(stack)) {
                 SlashBladeRender.renderGeckoMaidBackSlashBlade(matrixStack, buffer, packedLight, stack);
             } else {
-                Minecraft.getInstance().getItemRenderer().renderStatic(entity, stack, ItemDisplayContext.FIXED, false, matrixStack, buffer, entity.level(), packedLight, OverlayTexture.NO_OVERLAY, entity.getId());
+                LegacyDraw.item(entity, stack, ItemDisplayContext.FIXED, false, matrixStack, buffer, entity.level(), packedLight, OverlayTexture.NO_OVERLAY, entity.getId());
             }
             matrixStack.popPose();
             return;

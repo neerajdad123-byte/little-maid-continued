@@ -20,7 +20,7 @@ public class ChatBubbleRenderer {
     public void render(EntityGraphics graphics) {
         EntityMaid maid = graphics.getMaid();
         double distance = renderer.getDispatcher().distanceToSqr(maid);
-        if (!ClientHooks.isNameplateInRenderDistance(maid, distance)) {
+        if (distance > 4096.0) {
             return;
         }
 
@@ -74,7 +74,6 @@ public class ChatBubbleRenderer {
 
         graphics.getPoseStack().pushPose();
         graphics.getPoseStack().translate(0, -y, 0);
-        RenderSystem.enableDepthTest();
 
         if (position == IChatBubbleRenderer.Position.LEFT) {
             graphics.blitNineSliced(texture, -marginX - bgWidth, -bgHeight, bgWidth, bgHeight, 8, 8, 48, 24, 0, 0);

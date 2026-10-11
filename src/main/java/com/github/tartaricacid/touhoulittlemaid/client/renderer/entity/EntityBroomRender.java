@@ -5,12 +5,12 @@ import com.github.tartaricacid.touhoulittlemaid.client.model.BroomModel;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityBroom;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyLivingEntityRenderer;
 import net.minecraft.resources.Identifier;
 
 import static com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader.BROOM;
 
-public class EntityBroomRender extends LivingEntityRenderer<EntityBroom, BroomModel> {
+public class EntityBroomRender extends LegacyLivingEntityRenderer<EntityBroom, BroomModel> {
     private static final Identifier BROOM_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/broom.png");
 
     public EntityBroomRender(EntityRendererProvider.Context context) {

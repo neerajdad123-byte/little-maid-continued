@@ -8,9 +8,9 @@ import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityBox;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 
 import static com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader.CAKE_BOX;
 
-public class EntityBoxRender extends EntityRenderer<EntityBox> {
+public class EntityBoxRender extends LegacyEntityRenderer<EntityBox> {
     private final List<Identifier> texturesGroup = Lists.newArrayList();
     private final SimpleBedrockModel<EntityBox> boxModel;
 

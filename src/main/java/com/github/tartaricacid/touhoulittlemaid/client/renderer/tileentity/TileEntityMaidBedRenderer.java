@@ -11,9 +11,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.util.Util;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyBlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -23,7 +23,7 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.function.Function;
 
-public class TileEntityMaidBedRenderer implements BlockEntityRenderer<TileEntityMaidBed> {
+public class TileEntityMaidBedRenderer implements LegacyBlockEntityRenderer<TileEntityMaidBed> {
     private final BlockEntityRendererProvider.Context context;
     private final Function<DyeColor, SimpleBedrockModel<?>> cacheModel = Util.memoize(color -> {
         Identifier id = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "bedrock/block/maid_bed/" + color.getName());
@@ -50,7 +50,7 @@ public class TileEntityMaidBedRenderer implements BlockEntityRenderer<TileEntity
         poseStack.scale(-1, -1, 1);
         VertexConsumer vertexConsumer;
         if (dyeColor == DyeColor.BLUE) {
-            vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(texture));
+            vertexConsumer = buffer.getBuffer(RenderTypes.entityTranslucent(texture));
         } else {
             vertexConsumer = buffer.getBuffer(RenderTypes.entityCutout(texture));
         }
@@ -59,7 +59,7 @@ public class TileEntityMaidBedRenderer implements BlockEntityRenderer<TileEntity
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TileEntityMaidBed pBlockEntity) {
+    public boolean shouldRenderOffScreen() {
         return true;
     }
 

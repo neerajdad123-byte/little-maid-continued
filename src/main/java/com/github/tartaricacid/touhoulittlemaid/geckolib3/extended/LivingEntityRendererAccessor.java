@@ -1,7 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.geckolib3.extended;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.world.entity.LivingEntity;
 
 public interface LivingEntityRendererAccessor {

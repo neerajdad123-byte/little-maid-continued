@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.geckolayer;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockPart;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IMaid;
@@ -16,7 +17,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -73,7 +74,7 @@ public class GeckoLayerMaidBanner<T extends Mob, R extends IGeoEntityRenderer<T>
             poseStack.scale(0.65F, -0.65F, -0.65F);
             poseStack.mulPose(Axis.YN.rotationDegrees(180));
             poseStack.mulPose(Axis.XN.rotationDegrees(5));
-            VertexConsumer buffer = bufferIn.getBuffer(RenderType.entitySolid(TEXTURE));
+            VertexConsumer buffer = bufferIn.getBuffer(RenderTypes.entitySolid(TEXTURE));
             this.bannerModel.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY);
             BannerPatternLayers patterns = maid.getBackpackShowItem().get(DataComponents.BANNER_PATTERNS);
             DyeColor dyeColor = ((AbstractBannerBlock) bannerItem.getBlock()).getColor();
@@ -86,7 +87,7 @@ public class GeckoLayerMaidBanner<T extends Mob, R extends IGeoEntityRenderer<T>
 
     private void renderPatterns(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
                                 BedrockPart banner, BannerPatternLayers patterns, DyeColor dyeColor) {
-        banner.render(poseStack, ModelBakery.BANNER_BASE.buffer(bufferSource, RenderType::entitySolid, false),
+        banner.render(poseStack, ModelBakery.BANNER_BASE.buffer(bufferSource, RenderTypes::entitySolid, false),
                 packedLight, OverlayTexture.NO_OVERLAY);
         renderPatternLayer(poseStack, bufferSource, packedLight, banner, Sheets.BANNER_BASE, dyeColor);
         for (int i = 0; i < 16 && i < patterns.layers().size(); ++i) {
@@ -98,9 +99,9 @@ public class GeckoLayerMaidBanner<T extends Mob, R extends IGeoEntityRenderer<T>
 
     private void renderPatternLayer(PoseStack poseStack, MultiBufferSource buffer, int packedLight, BedrockPart banner, Material material, DyeColor color) {
         int packedColor = color.getTextureDiffuseColor();
-        float red = ARGB.ARGB32.red(packedColor) / 255f;
-        float green = ARGB.ARGB32.green(packedColor) / 255f;
-        float blue = ARGB.ARGB32.blue(packedColor) / 255f;
-        banner.render(poseStack, material.buffer(buffer, RenderType::entityNoOutline), packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, 1.0F);
+        float red = ARGB.red(packedColor) / 255f;
+        float green = ARGB.green(packedColor) / 255f;
+        float blue = ARGB.blue(packedColor) / 255f;
+        banner.render(poseStack, material.buffer(buffer, RenderTypes::entityNoOutline), packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, 1.0F);
     }
 }

@@ -29,7 +29,7 @@ public record LootTableTypeCondition(Identifier lootTableType,
     @Override
     public boolean test(LootContext context) {
         Identifier currentLootTable = context.getQueriedLootTableId();
-        return !currentLootTable.equals(lootTableAdd.location()) && typeAreEquals(context) && idAreEquals(context);
+        return !currentLootTable.equals(lootTableAdd.identifier()) && typeAreEquals(context) && idAreEquals(context);
     }
 
     private boolean typeAreEquals(LootContext context) {
@@ -43,7 +43,7 @@ public record LootTableTypeCondition(Identifier lootTableType,
         if (this.lootTableId == null) {
             return true;
         }
-        return context.getQueriedLootTableId().equals(this.lootTableId.location());
+        return context.getQueriedLootTableId().equals(this.lootTableId.identifier());
     }
 
     @Override

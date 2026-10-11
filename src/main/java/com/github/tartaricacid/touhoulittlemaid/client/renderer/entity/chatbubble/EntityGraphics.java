@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.chatbubble;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -7,7 +9,7 @@ import com.mojang.math.Divisor;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -37,7 +39,7 @@ public class EntityGraphics {
     }
 
     public void fill(int minX, int minY, int maxX, int maxY, int z, int color) {
-        this.fill(RenderType.textBackground(), minX, minY, maxX, maxY, z, color);
+        this.fill(RenderTypes.textBackground(), minX, minY, maxX, maxY, z, color);
     }
 
     public void fill(RenderType renderType, int minX, int minY, int maxX, int maxY, int color) {
@@ -68,7 +70,7 @@ public class EntityGraphics {
     }
 
     public int drawString(Font font, FormattedCharSequence text, float x, float y, int color, boolean dropShadow) {
-        return font.drawInBatch(text, x, y, color, dropShadow, this.pose.last().pose(), this.bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
+        return LegacyDraw.text(font, text, x, y, color, dropShadow, this.pose.last().pose(), this.bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
     }
 
     public int drawString(Font font, Component text, int x, int y, int color, boolean dropShadow) {

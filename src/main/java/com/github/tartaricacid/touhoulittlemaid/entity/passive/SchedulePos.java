@@ -151,7 +151,7 @@ public final class SchedulePos {
         this.idlePos = this.workPos;
         this.sleepPos = this.workPos;
         this.configured = false;
-        this.dimension = maid.level.dimension().location();
+        this.dimension = maid.level.dimension().identifier();
         this.restrictTo(maid);
     }
 
@@ -160,7 +160,7 @@ public final class SchedulePos {
             this.workPos = pos;
             this.idlePos = pos;
             this.sleepPos = pos;
-            this.dimension = maid.level.dimension().location();
+            this.dimension = maid.level.dimension().identifier();
         }
         this.restrictTo(maid);
     }

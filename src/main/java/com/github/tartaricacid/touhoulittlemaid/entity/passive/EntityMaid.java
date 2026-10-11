@@ -344,7 +344,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
 
         // 尝试修复 https://github.com/TartaricAcid/TouhouLittleMaid/issues/631
         ResourceKey<Level> dimension = Objects.requireNonNullElse(world.dimension(), Level.OVERWORLD);
-        this.schedulePos = new SchedulePos(BlockPos.ZERO, dimension.location());
+        this.schedulePos = new SchedulePos(BlockPos.ZERO, dimension.identifier());
 
         this.moveControl = new MaidMoveControl(this);
         this.swimManager = new MaidSwimManager(this);
@@ -1119,7 +1119,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
                     [name:"%s", x:%d, y:%d, z:%d, dim:%s]""".formatted(
                     name,
                     blockPos.getX(), blockPos.getY(), blockPos.getZ(),
-                    this.level.dimension().location().toString()
+                    this.level.dimension().identifier().toString()
             );
             OutgoingChatMessage message = OutgoingChatMessage.create(PlayerChatMessage.system(msg));
             serverPlayer.sendChatMessage(message, false, ChatType.bind(ChatType.CHAT, serverPlayer));

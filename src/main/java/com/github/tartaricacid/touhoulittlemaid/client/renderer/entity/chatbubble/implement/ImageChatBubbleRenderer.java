@@ -40,8 +40,6 @@ public class ImageChatBubbleRenderer implements IChatBubbleRenderer {
 
     @Override
     public void render(EntityMaidRenderer renderer, EntityGraphics graphics) {
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
         graphics.blit(this.image, 0, 0, this.uOffset, this.vOffset, this.width, this.height, this.textureWidth, this.textureHeight);
     }
 

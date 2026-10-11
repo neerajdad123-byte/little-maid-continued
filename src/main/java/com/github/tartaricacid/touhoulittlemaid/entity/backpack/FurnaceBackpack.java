@@ -13,7 +13,7 @@ import com.github.tartaricacid.touhoulittlemaid.inventory.container.backpack.Fur
 import com.github.tartaricacid.touhoulittlemaid.item.BackpackLevel;
 import com.github.tartaricacid.touhoulittlemaid.util.ItemsUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.EntityModel;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -98,7 +98,7 @@ public class FurnaceBackpack extends IMaidBackpack {
     @Nullable
     @Override
     @OnlyIn(Dist.CLIENT)
-    public EntityModel<EntityMaid> getBackpackModel(EntityModelSet modelSet) {
+    public LegacyEntityModel<EntityMaid> getBackpackModel(EntityModelSet modelSet) {
         return BedrockModelLoader.getModel(FURNACE_BACKPACK);
     }
 

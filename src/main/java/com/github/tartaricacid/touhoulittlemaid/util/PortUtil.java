@@ -5,6 +5,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -34,6 +37,13 @@ public final class PortUtil {
     public static int color(ChatFormatting formatting) {
         TextColor color = TextColor.fromLegacyFormat(formatting);
         return color == null ? 0xFFFFFFFF : ARGB.opaque(color.getValue());
+    }
+
+    /**
+     * Replacement for {@code item instanceof TieredItem} (tools and swords became data components in 1.21.5).
+     */
+    public static boolean isTieredTool(ItemStack stack) {
+        return stack.has(DataComponents.TOOL) || stack.has(DataComponents.WEAPON) || stack.is(ItemTags.SWORDS);
     }
 
     /**

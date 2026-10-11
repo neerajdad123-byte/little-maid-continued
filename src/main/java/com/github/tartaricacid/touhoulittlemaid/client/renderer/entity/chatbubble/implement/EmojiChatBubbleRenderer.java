@@ -43,7 +43,7 @@ public class EmojiChatBubbleRenderer implements IChatBubbleRenderer {
             return;
         }
         if (!RenderSystem.isOnRenderThread()) {
-            RenderSystem.recordRenderCall(() -> manager.register(this.emoji, new GifTexture(this.emoji)));
+            Minecraft.getInstance().execute(() -> manager.register(this.emoji, new GifTexture(this.emoji)));
         } else {
             manager.register(this.emoji, new GifTexture(this.emoji));
         }
@@ -61,8 +61,6 @@ public class EmojiChatBubbleRenderer implements IChatBubbleRenderer {
 
     @Override
     public void render(EntityMaidRenderer renderer, EntityGraphics graphics) {
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
         graphics.blit(this.emoji, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
     }
 

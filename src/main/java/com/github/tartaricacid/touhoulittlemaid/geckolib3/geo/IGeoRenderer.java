@@ -1,8 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.geckolib3.geo;
 
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import com.github.tartaricacid.touhoulittlemaid.compat.embeddium.EmbeddiumCompat;
-import com.github.tartaricacid.touhoulittlemaid.compat.sodium.SodiumCompat;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.core.util.Color;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.animated.AnimatedGeoBone;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.animated.AnimatedGeoModel;
@@ -14,7 +12,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.util.LightCoordsUtil;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.resources.Identifier;
 import org.joml.Matrix3f;
@@ -75,11 +73,7 @@ public interface IGeoRenderer<T> {
         }
         poseStack.pushPose();
         RenderUtils.prepMatrixForBone(poseStack, bone);
-        if (!SodiumCompat.sodiumRenderCubesOfBone(bone, poseStack, buffer, cubePackedLight, packedOverlay, red, green, blue, alpha)
-                && !EmbeddiumCompat.embeddiumRenderCubesOfBone(bone, poseStack, buffer, cubePackedLight, packedOverlay, red, green, blue, alpha)
-        ) {
-            renderCubesOfBone(bone, poseStack, buffer, cubePackedLight, packedOverlay, red, green, blue, alpha);
-        }
+        renderCubesOfBone(bone, poseStack, buffer, cubePackedLight, packedOverlay, red, green, blue, alpha);
         renderChildBones(bone, poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         poseStack.popPose();
     }

@@ -87,7 +87,7 @@ public record MaidConfigPackage(int id, boolean home, boolean pick, boolean ride
             SchedulePos schedulePos = maid.getSchedulePos();
             if (schedulePos.isConfigured()) {
                 Identifier dimension = schedulePos.getDimension();
-                if (!dimension.equals(maid.level.dimension().location())) {
+                if (!dimension.equals(maid.level.dimension().identifier())) {
                     CheckSchedulePosPacket tips = new CheckSchedulePosPacket("message.touhou_little_maid.check_schedule_pos.dimension");
                     PacketDistributor.sendToPlayer(sender, tips);
                     return;

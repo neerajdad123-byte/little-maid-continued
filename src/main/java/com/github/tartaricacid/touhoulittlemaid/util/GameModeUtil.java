@@ -46,7 +46,7 @@ public class GameModeUtil {
      * 是否为单人游戏（未开放局域网的 IntegratedServer）
      */
     public static boolean isSinglePlayer(Player player) {
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         if (server == null) {
             return false;
         }
@@ -57,7 +57,7 @@ public class GameModeUtil {
      * 是否为局域网联机（IntegratedServer 且已开放局域网）
      */
     public static boolean isLanGame(Player player) {
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         if (server == null) {
             return false;
         }
@@ -68,7 +68,7 @@ public class GameModeUtil {
      * 是否为局域网联机的主机玩家（房主）
      */
     public static boolean isLanHost(Player player) {
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         if (server == null) {
             return false;
         }
@@ -82,7 +82,7 @@ public class GameModeUtil {
      * 是否为局域网联机的客机玩家（非房主）
      */
     public static boolean isLanClient(Player player) {
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         if (server == null) {
             return false;
         }
@@ -96,7 +96,7 @@ public class GameModeUtil {
      * 是否为专用服务器（DedicatedServer）
      */
     public static boolean isDedicatedServer(Player player) {
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         if (server == null) {
             return false;
         }

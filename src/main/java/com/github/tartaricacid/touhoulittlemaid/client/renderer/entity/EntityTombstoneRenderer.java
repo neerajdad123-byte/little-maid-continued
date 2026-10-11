@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.SimpleBedrockModel;
@@ -9,9 +10,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,7 @@ import java.util.Objects;
 
 import static com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader.TOMBSTONE;
 
-public class EntityTombstoneRenderer extends EntityRenderer<EntityTombstone> {
+public class EntityTombstoneRenderer extends LegacyEntityRenderer<EntityTombstone> {
     private static final Identifier DEFAULT_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/tombstone/tombstone_overworld.png");
     private static final Identifier THE_NETHER_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/tombstone/tombstone_the_nether.png");
     private static final Identifier THE_END_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/tombstone/tombstone_the_end.png");
@@ -64,11 +65,11 @@ public class EntityTombstoneRenderer extends EntityRenderer<EntityTombstone> {
 
     @Override
     public Identifier getTextureLocation(EntityTombstone entity) {
-        Identifier dimension = entity.level.dimension().location();
-        if (dimension.equals(Level.NETHER.location())) {
+        Identifier dimension = entity.level.dimension().identifier();
+        if (dimension.equals(Level.NETHER.identifier())) {
             return THE_NETHER_TEXTURE;
         }
-        if (dimension.equals(Level.END.location())) {
+        if (dimension.equals(Level.END.identifier())) {
             return THE_END_TEXTURE;
         }
         if (dimension.equals(TWILIGHT_FOREST_LEVEL_ID)) {
@@ -85,12 +86,12 @@ public class EntityTombstoneRenderer extends EntityRenderer<EntityTombstone> {
         if (distance < (NAME_SHOW_DISTANCE * NAME_SHOW_DISTANCE)) {
             poseStack.pushPose();
             poseStack.translate(0.0F, yOffset, 0.0F);
-            poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+            poseStack.mulPose(this.entityRenderDispatcher.camera.rotation());
             poseStack.scale(-0.025F, -0.025F, 0.025F);
             Matrix4f matrix4f = poseStack.last().pose();
             Font font = this.getFont();
             float width = (float) (-font.width(component) / 2);
-            font.drawInBatch(component, width, 0, -1, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
+            LegacyDraw.text(font, component, width, 0, -1, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
             poseStack.popPose();
         }
     }

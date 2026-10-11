@@ -7,7 +7,7 @@ package com.github.tartaricacid.touhoulittlemaid.geckolib3.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityRenderer;
 import net.minecraft.world.entity.Entity;
 
 @SuppressWarnings({"unchecked"})
@@ -23,8 +23,8 @@ public class AnimationUtils {
     /**
      * 获取实体的 Renderer
      */
-    public static <T extends Entity> EntityRenderer<T> getRenderer(T entity) {
+    public static <T extends Entity> LegacyEntityRenderer<T> getRenderer(T entity) {
         EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
-        return (EntityRenderer<T>) renderManager.getRenderer(entity);
+        return (LegacyEntityRenderer<T>) renderManager.getRenderer(entity);
     }
 }

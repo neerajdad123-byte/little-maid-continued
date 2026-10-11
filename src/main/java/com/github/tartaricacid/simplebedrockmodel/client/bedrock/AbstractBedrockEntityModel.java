@@ -1,19 +1,14 @@
 package com.github.tartaricacid.simplebedrockmodel.client.bedrock;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockCube;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockCubeBox;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockCubePerFace;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.model.BedrockPart;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.pojo.*;
-import com.github.tartaricacid.simplebedrockmodel.client.compat.embeddium.EmbeddiumBedrockCubeBox;
-import com.github.tartaricacid.simplebedrockmodel.client.compat.embeddium.EmbeddiumBedrockCubePerFace;
-import com.github.tartaricacid.simplebedrockmodel.client.compat.embeddium.EmbeddiumCompat;
-import com.github.tartaricacid.simplebedrockmodel.client.compat.sodium.SodiumBedrockCubeBox;
-import com.github.tartaricacid.simplebedrockmodel.client.compat.sodium.SodiumBedrockCubePerFace;
-import com.github.tartaricacid.simplebedrockmodel.client.compat.sodium.SodiumCompat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.EntityModel;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityModel;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
@@ -36,7 +31,7 @@ import java.util.List;
  * 但由于 net.minecraft.client.model.EntityModel 和 net.minecraft.client.model.Model 是继承关系，无法复用，故重复代码
  */
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractBedrockEntityModel<T extends Entity> extends EntityModel<T> implements BedrockModelProvider<AbstractBedrockEntityModel<T>> {
+public abstract class AbstractBedrockEntityModel<T extends Entity> extends LegacyEntityModel<T> implements BedrockModelProvider<AbstractBedrockEntityModel<T>> {
     /**
      * 存储 BedrockPart 的 HashMap
      */
@@ -55,7 +50,7 @@ public abstract class AbstractBedrockEntityModel<T extends Entity> extends Entit
     protected AABB renderBoundingBox;
 
     public AbstractBedrockEntityModel(InputStream stream) {
-        super(RenderType::entityCutoutNoCull);
+        super(RenderTypes::entityCutout);
         BedrockModelPOJO pojo = BedrockModelUtil.GSON.fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), BedrockModelPOJO.class);
         if (BedrockVersion.isLegacyVersion(pojo)) {
             loadLegacyModel(pojo);
@@ -70,7 +65,7 @@ public abstract class AbstractBedrockEntityModel<T extends Entity> extends Entit
     }
 
     public AbstractBedrockEntityModel(BedrockModelPOJO pojo, BedrockVersion version) {
-        super(RenderType::entityCutoutNoCull);
+        super(RenderTypes::entityCutout);
         if (version == BedrockVersion.LEGACY) {
             loadLegacyModel(pojo);
         }
@@ -80,7 +75,7 @@ public abstract class AbstractBedrockEntityModel<T extends Entity> extends Entit
     }
 
     public AbstractBedrockEntityModel() {
-        super(RenderType::entityCutoutNoCull);
+        super(RenderTypes::entityCutout);
         renderBoundingBox = new AABB(-1, 0, -1, 1, 2, 1);
     }
 
@@ -269,23 +264,11 @@ public abstract class AbstractBedrockEntityModel<T extends Entity> extends Entit
 
     protected BedrockCube createCubeBox(float texOffX, float texOffY, float x, float y, float z, float width, float height, float depth,
                                         float delta, boolean mirror, float texWidth, float texHeight) {
-        if (SodiumCompat.isSodiumInstalled()) {
-            return new SodiumBedrockCubeBox(texOffX, texOffY, x, y, z, width, height, depth, delta, mirror, texWidth, texHeight);
-        }
-        if (EmbeddiumCompat.isEmbeddiumInstalled()) {
-            return new EmbeddiumBedrockCubeBox(texOffX, texOffY, x, y, z, width, height, depth, delta, mirror, texWidth, texHeight);
-        }
         return new BedrockCubeBox(texOffX, texOffY, x, y, z, width, height, depth, delta, mirror, texWidth, texHeight);
     }
 
     protected BedrockCube createCubePerFace(float x, float y, float z, float width, float height, float depth, float delta,
                                             float texWidth, float texHeight, FaceUVsItem faces) {
-        if (SodiumCompat.isSodiumInstalled()) {
-            return new SodiumBedrockCubePerFace(x, y, z, width, height, depth, delta, texWidth, texHeight, faces);
-        }
-        if (EmbeddiumCompat.isEmbeddiumInstalled()) {
-            return new EmbeddiumBedrockCubePerFace(x, y, z, width, height, depth, delta, texWidth, texHeight, faces);
-        }
         return new BedrockCubePerFace(x, y, z, width, height, depth, delta, texWidth, texHeight, faces);
     }
 

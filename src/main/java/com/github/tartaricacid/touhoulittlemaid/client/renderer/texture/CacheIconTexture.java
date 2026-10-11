@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.texture;
 
+import net.minecraft.client.Minecraft;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -18,8 +19,8 @@ public class CacheIconTexture extends AbstractTexture {
 
     @Override
     public void load(ResourceManager manager) {
-        if (!RenderSystem.isOnRenderThreadOrInit()) {
-            RenderSystem.recordRenderCall(this::doLoad);
+        if (!RenderSystem.isOnRenderThread()) {
+            Minecraft.getInstance().execute(this::doLoad);
         } else {
             this.doLoad();
         }

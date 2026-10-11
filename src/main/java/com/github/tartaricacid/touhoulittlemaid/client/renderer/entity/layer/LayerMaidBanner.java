@@ -13,10 +13,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyRenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -34,7 +34,7 @@ import java.util.Objects;
 
 import static com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader.MAID_BANNER;
 
-public class LayerMaidBanner extends RenderLayer<Mob, BedrockModel<Mob>> {
+public class LayerMaidBanner extends LegacyRenderLayer<Mob, BedrockModel<Mob>> {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/maid_banner.png");
     private final EntityMaidRenderer renderer;
     private final SimpleBedrockModel<EntityMaid> bannerModel;
@@ -76,7 +76,7 @@ public class LayerMaidBanner extends RenderLayer<Mob, BedrockModel<Mob>> {
 
     private void renderPatterns(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
                                 BedrockPart banner, BannerPatternLayers patterns, DyeColor dyeColor) {
-        banner.render(poseStack, ModelBakery.BANNER_BASE.buffer(bufferSource, RenderType::entitySolid, false),
+        banner.render(poseStack, ModelBakery.BANNER_BASE.buffer(bufferSource, RenderTypes::entitySolid, false),
                 packedLight, OverlayTexture.NO_OVERLAY);
         renderPatternLayer(poseStack, bufferSource, packedLight, banner, Sheets.BANNER_BASE, dyeColor);
         for (int i = 0; i < 16 && i < patterns.layers().size(); ++i) {
@@ -88,9 +88,9 @@ public class LayerMaidBanner extends RenderLayer<Mob, BedrockModel<Mob>> {
 
     private void renderPatternLayer(PoseStack poseStack, MultiBufferSource buffer, int packedLight, BedrockPart banner, Material material, DyeColor color) {
         int packedColor = color.getTextureDiffuseColor();
-        float red = ARGB.ARGB32.red(packedColor) / 255f;
-        float green = ARGB.ARGB32.green(packedColor) / 255f;
-        float blue = ARGB.ARGB32.blue(packedColor) / 255f;
-        banner.render(poseStack, material.buffer(buffer, RenderType::entityNoOutline), packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, 1.0F);
+        float red = ARGB.red(packedColor) / 255f;
+        float green = ARGB.green(packedColor) / 255f;
+        float blue = ARGB.blue(packedColor) / 255f;
+        banner.render(poseStack, material.buffer(buffer, RenderTypes::entityNoOutline), packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, 1.0F);
     }
 }

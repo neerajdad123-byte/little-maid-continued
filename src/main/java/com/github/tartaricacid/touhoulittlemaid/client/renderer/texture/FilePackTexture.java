@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.texture;
 
+import net.minecraft.client.Minecraft;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
@@ -32,8 +33,8 @@ public class FilePackTexture extends SizeTexture {
 
     @Override
     public void load(ResourceManager manager) {
-        if (!RenderSystem.isOnRenderThreadOrInit()) {
-            RenderSystem.recordRenderCall(this::doLoad);
+        if (!RenderSystem.isOnRenderThread()) {
+            Minecraft.getInstance().execute(this::doLoad);
         } else {
             this.doLoad();
         }

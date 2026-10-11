@@ -75,7 +75,7 @@ public final class WorldContexts {
             if (dimension == Level.END) {
                 return END;
             }
-            return dimension.location().toString();
+            return dimension.identifier().toString();
         }
     }
 

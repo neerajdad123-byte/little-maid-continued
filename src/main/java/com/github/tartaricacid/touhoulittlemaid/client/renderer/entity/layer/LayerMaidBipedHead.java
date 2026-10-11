@@ -8,10 +8,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.object.skull.SkullModelBase;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyRenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,7 +27,7 @@ import net.neoforged.neoforge.model.data.ModelData;
 
 import java.util.Map;
 
-public class LayerMaidBipedHead extends RenderLayer<Mob, BedrockModel<Mob>> {
+public class LayerMaidBipedHead extends LegacyRenderLayer<Mob, BedrockModel<Mob>> {
     private final EntityMaidRenderer maidRenderer;
     private final Map<SkullBlock.Type, SkullModelBase> skullModels;
 

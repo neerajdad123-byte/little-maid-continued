@@ -103,7 +103,7 @@ public final class MaidBackupsManager {
      */
     public static CompoundTag getMaidIndex(ServerPlayer player) {
         UUID ownerId = player.getUUID();
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         if (server == null) {
             return new CompoundTag();
         }
@@ -152,7 +152,7 @@ public final class MaidBackupsManager {
     private static CompoundTag createIndexData(@NotNull EntityMaid maid) {
         CompoundTag indexData = new CompoundTag();
         indexData.putString("Name", Component.Serializer.toJson(maid.getName(), maid.level.registryAccess()));
-        indexData.putString("Dimension", maid.level.dimension().location().toString());
+        indexData.putString("Dimension", maid.level.dimension().identifier().toString());
         indexData.put("Pos", PortUtil.writeBlockPos(maid.blockPosition()));
         indexData.putLong("Timestamp", System.currentTimeMillis());
         return indexData;
@@ -175,7 +175,7 @@ public final class MaidBackupsManager {
 
     public static List<String> getMaidBackupFiles(ServerPlayer player, UUID maidUuid) {
         List<String> backupFiles = Lists.newArrayList();
-        Path folderPath = player.serverLevel().getDataStorage().dataFolder.toPath()
+        Path folderPath = player.level().getDataStorage().dataFolder.toPath()
                 .resolve(BACKUPS_FOLDER_NAME)
                 .resolve(player.getUUID().toString())
                 .resolve(maidUuid.toString());
@@ -194,7 +194,7 @@ public final class MaidBackupsManager {
     }
 
     public static CompoundTag getMaidBackFile(ServerPlayer player, UUID maidUuid, String fileName) {
-        Path filePath = player.serverLevel().getDataStorage().dataFolder.toPath()
+        Path filePath = player.level().getDataStorage().dataFolder.toPath()
                 .resolve(BACKUPS_FOLDER_NAME)
                 .resolve(player.getUUID().toString())
                 .resolve(maidUuid.toString())

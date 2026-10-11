@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.game.chess.Position;
@@ -17,10 +18,10 @@ import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyBlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +31,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
-public class TileEntityWChessRenderer implements BlockEntityRenderer<TileEntityWChess> {
+public class TileEntityWChessRenderer implements LegacyBlockEntityRenderer<TileEntityWChess> {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/wchess.png");
     private static final Identifier PIECES_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/wchess_pieces.png");
     private static final int TIPS_RENDER_DISTANCE = 16;
@@ -45,8 +46,8 @@ public class TileEntityWChessRenderer implements BlockEntityRenderer<TileEntityW
         chessModel = BedrockModelLoader.getModel(BedrockModelLoader.WCHESS);
         chessPiecesModels = WChessPiecesModel.initModel();
         selectedModels = WChessPiecesModel.getSelectedModel();
-        dispatcher = context.getBlockEntityRenderDispatcher();
-        font = context.getFont();
+        dispatcher = context.blockEntityRenderDispatcher();
+        font = context.font();
     }
 
     @Override
@@ -91,13 +92,13 @@ public class TileEntityWChessRenderer implements BlockEntityRenderer<TileEntityW
         float roundTipsWidth = (float) (-this.font.width(roundTips) / 2);
         poseStack.pushPose();
         poseStack.translate(0.5, 0.75, 0.5);
-        poseStack.mulPose(Axis.YN.rotationDegrees(180 + camera.getYRot()));
-        poseStack.mulPose(Axis.XN.rotationDegrees(camera.getXRot()));
+        poseStack.mulPose(Axis.YN.rotationDegrees(180 + camera.yRot()));
+        poseStack.mulPose(Axis.XN.rotationDegrees(camera.xRot()));
         poseStack.scale(0.03F, -0.03F, 0.03F);
-        this.font.drawInBatch(loseTips, loseTipsWidth, -10, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
+        LegacyDraw.text(this.font, loseTips, loseTipsWidth, -10, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
         poseStack.scale(0.5F, 0.5F, 0.5F);
-        this.font.drawInBatch(roundTips, roundTipsWidth, -30, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
-        this.font.drawInBatch(resetTips, resetTipsWidth, 0, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
+        LegacyDraw.text(this.font, roundTips, roundTipsWidth, -30, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
+        LegacyDraw.text(this.font, resetTips, resetTipsWidth, 0, 0xFFFFFF, true, poseStack.last().pose(), bufferIn, Font.DisplayMode.POLYGON_OFFSET, 0, combinedLightIn);
         poseStack.popPose();
     }
 
@@ -164,7 +165,7 @@ public class TileEntityWChessRenderer implements BlockEntityRenderer<TileEntityW
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TileEntityWChess te) {
+    public boolean shouldRenderOffScreen() {
         return true;
     }
 

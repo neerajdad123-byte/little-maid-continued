@@ -1,12 +1,13 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityPowerPoint;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
@@ -14,9 +15,9 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public class EntityPowerPointRenderer extends EntityRenderer<EntityPowerPoint> {
+public class EntityPowerPointRenderer extends LegacyEntityRenderer<EntityPowerPoint> {
     private static final Identifier POWER_POINT_TEXTURES = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/entity/power_point.png");
-    private static final RenderType RENDER_TYPE = RenderType.itemEntityTranslucentCull(POWER_POINT_TEXTURES);
+    private static final RenderType RENDER_TYPE = RenderTypes.entityTranslucentCullItemTarget(POWER_POINT_TEXTURES);
 
     public EntityPowerPointRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
@@ -39,7 +40,7 @@ public class EntityPowerPointRenderer extends EntityRenderer<EntityPowerPoint> {
 
         poseStack.pushPose();
         poseStack.translate(0, 0.1, 0);
-        poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+        poseStack.mulPose(this.entityRenderDispatcher.camera.rotation());
         poseStack.scale(0.3F, 0.3F, 0.3F);
 
         VertexConsumer buffer = bufferIn.getBuffer(RENDER_TYPE);

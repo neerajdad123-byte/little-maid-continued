@@ -1,8 +1,6 @@
 package com.github.tartaricacid.simplebedrockmodel.client;
 
 import com.github.tartaricacid.simplebedrockmodel.SimpleBedrockModel;
-import com.github.tartaricacid.simplebedrockmodel.client.compat.embeddium.EmbeddiumCompat;
-import com.github.tartaricacid.simplebedrockmodel.client.compat.sodium.SodiumCompat;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -13,7 +11,5 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientSetupEvent {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        SodiumCompat.init();
-        EmbeddiumCompat.init();
     }
 }

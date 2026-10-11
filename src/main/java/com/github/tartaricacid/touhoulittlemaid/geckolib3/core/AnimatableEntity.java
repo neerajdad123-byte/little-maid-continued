@@ -126,8 +126,8 @@ public abstract class AnimatableEntity<E extends Entity> {
 
     public double getCurrentTick(AnimationEvent<?> animationEvent) {
         float partialTick = animationEvent.getPartialTick();
-        if (partialTick == 1.0f && partialTick != Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false)) {
-            partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
+        if (partialTick == 1.0f && partialTick != Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false)) {
+            partialTick = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         }
         return this.entity.tickCount + partialTick;
     }

@@ -6,7 +6,7 @@ import com.github.tartaricacid.touhoulittlemaid.api.backpack.IMaidBackpack;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.minecraft.client.model.EntityModel;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +23,7 @@ public class BackpackManager {
     private static Map<Identifier, IMaidBackpack> BACKPACK_ID_MAP;
     private static Map<Item, IMaidBackpack> BACKPACK_ITEM_MAP;
     @OnlyIn(Dist.CLIENT)
-    private static Map<Identifier, Pair<EntityModel<EntityMaid>, Identifier>> BACKPACK_MODEL_MAP;
+    private static Map<Identifier, Pair<LegacyEntityModel<EntityMaid>, Identifier>> BACKPACK_MODEL_MAP;
     private static IMaidBackpack EMPTY_BACKPACK;
 
     private BackpackManager() {
@@ -81,8 +81,8 @@ public class BackpackManager {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static Optional<Pair<EntityModel<EntityMaid>, Identifier>> findBackpackModel(Identifier id) {
-        Pair<EntityModel<EntityMaid>, Identifier> pair = BACKPACK_MODEL_MAP.get(id);
+    public static Optional<Pair<LegacyEntityModel<EntityMaid>, Identifier>> findBackpackModel(Identifier id) {
+        Pair<LegacyEntityModel<EntityMaid>, Identifier> pair = BACKPACK_MODEL_MAP.get(id);
         if (pair == null) {
             return Optional.empty();
         }

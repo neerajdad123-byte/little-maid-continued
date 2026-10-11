@@ -1,13 +1,14 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.SimpleBedrockModel;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.VanillaConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyMobRenderer;
 import net.minecraft.client.renderer.entity.SlimeRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -17,7 +18,7 @@ import java.util.Objects;
 
 import static com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader.REIMU_YUKKURI;
 
-public class EntityYukkuriSlimeRender extends MobRenderer<Slime, SimpleBedrockModel<Slime>> {
+public class EntityYukkuriSlimeRender extends LegacyMobRenderer<Slime, SimpleBedrockModel<Slime>> {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/reimu_yukkuri.png");
     private final SlimeRenderer vanillaRender;
 
@@ -31,7 +32,7 @@ public class EntityYukkuriSlimeRender extends MobRenderer<Slime, SimpleBedrockMo
         if (VanillaConfig.REPLACE_SLIME_MODEL.get()) {
             renderYukkuri(slime, yaw, partialTicks, poseStack, buffer, packedLight);
         } else {
-            vanillaRender.render(slime, yaw, partialTicks, poseStack, buffer, packedLight);
+            LegacyDraw.entity(vanillaRender, slime, partialTicks, poseStack, buffer);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.geckolayer;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import com.github.tartaricacid.touhoulittlemaid.compat.carryon.RenderFixer;
 import com.github.tartaricacid.touhoulittlemaid.compat.slashblade.SlashBladeCompat;
 import com.github.tartaricacid.touhoulittlemaid.compat.slashblade.SlashBladeRender;
@@ -10,8 +11,7 @@ import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.animated.ILocation
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.util.RenderUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -20,9 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class GeckoLayerMaidHeld<T extends Mob, R extends IGeoEntityRenderer<T>> extends GeoLayerRenderer<T, R> {
-    private final ItemInHandRenderer itemInHandRenderer;
+    private final Object itemInHandRenderer;
 
-    public GeckoLayerMaidHeld(R entityRendererIn, ItemInHandRenderer itemInHandRenderer) {
+    public GeckoLayerMaidHeld(R entityRendererIn, Object itemInHandRenderer) {
         super(entityRendererIn);
         this.itemInHandRenderer = itemInHandRenderer;
     }
@@ -71,7 +71,7 @@ public class GeckoLayerMaidHeld<T extends Mob, R extends IGeoEntityRenderer<T>> 
             if (!scaleResult) {
                 poseStack.translate(0, -0.0625, -0.1);
                 poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
-                this.itemInHandRenderer.renderItem(livingEntity, itemStack, displayContext, isLeftHand, poseStack, bufferSource, light);
+                LegacyDraw.itemInHand(livingEntity, itemStack, displayContext, isLeftHand, poseStack, bufferSource, light);
             }
             poseStack.popPose();
 
@@ -84,7 +84,7 @@ public class GeckoLayerMaidHeld<T extends Mob, R extends IGeoEntityRenderer<T>> 
                 if (!extraScaleResult) {
                     poseStack.translate(0, -0.0625, -0.1);
                     poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
-                    this.itemInHandRenderer.renderItem(livingEntity, itemStack, displayContext, isLeftHand, poseStack, bufferSource, light);
+                    LegacyDraw.itemInHand(livingEntity, itemStack, displayContext, isLeftHand, poseStack, bufferSource, light);
                 }
                 poseStack.popPose();
             });

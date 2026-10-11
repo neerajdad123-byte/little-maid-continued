@@ -19,10 +19,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.util.LightCoordsUtil;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyLivingEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,7 +44,7 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extends AnimatableEntity<T>> extends LivingEntityRenderer<T, HumanoidModel<T>> implements IGeoRenderer<T> {
+public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extends AnimatableEntity<T>> extends LegacyLivingEntityRenderer<T, HumanoidModel<T>> implements IGeoRenderer<T> {
     protected final List<GeoLayerRenderer> layerRenderers = new ObjectArrayList<>();
     protected AnimatableEntity<T> currentAnimatable;
     protected float widthScale = 1;
@@ -293,7 +293,7 @@ public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extend
         float offsetMod = (float) Mth.fastInvSqrt(xDif * xDif + zDif * zDif) * 0.025f / 2f;
         float xOffset = zDif * offsetMod;
         float zOffset = xDif * offsetMod;
-        VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.leash());
+        VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderTypes.leash());
         BlockPos entityEyePos = BlockPos.containing(entity.getEyePosition(partialTick));
         BlockPos holderEyePos = BlockPos.containing(leashHolder.getEyePosition(partialTick));
         int entityBlockLight = getBlockLightLevel(entity, entityEyePos);

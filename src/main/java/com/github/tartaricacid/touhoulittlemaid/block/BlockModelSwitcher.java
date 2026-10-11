@@ -34,7 +34,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class BlockModelSwitcher extends BaseEntityBlock {
-    public static final EnumProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public BlockModelSwitcher() {
         super(BlockBehaviour.Properties.of().sound(SoundType.STONE).strength(50.0F, 1200.0F));

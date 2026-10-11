@@ -95,7 +95,7 @@ public final class MaidDebugCommand {
                 BlockPos blockPos = serverPlayer.blockPosition();
                 int x = blockPos.getX() + i % 10 + 1;
                 int z = blockPos.getZ() + i / 10 + 1;
-                ServerLevel level = serverPlayer.serverLevel();
+                ServerLevel level = serverPlayer.level();
                 EntityMaid entityMaid = new EntityMaid(level);
                 entityMaid.setPos(x, blockPos.getY(), z);
                 entityMaid.tame(serverPlayer);

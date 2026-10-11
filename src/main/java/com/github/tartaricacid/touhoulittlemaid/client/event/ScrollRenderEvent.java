@@ -33,7 +33,7 @@ public class ScrollRenderEvent {
             ItemFoxScroll.TrackInfo info = trackInfo.get();
             String dimension = info.dimension();
             Vec3 trackVec = new Vec3(info.position().getX(), info.position().getY(), info.position().getZ());
-            if (!dimension.equals(player.level.dimension().location().toString())) {
+            if (!dimension.equals(player.level.dimension().identifier().toString())) {
                 return;
             }
             Vec3 playerVec = player.position();
@@ -49,8 +49,6 @@ public class ScrollRenderEvent {
                 viewDistance = maxRenderDistance;
             }
             float scale = 0.02f * (((float) viewDistance + 4.0f) / 3.0f);
-            RenderSystem.disableDepthTest();
-            RenderSystem.depthMask(false);
             RenderHelper.renderFloatingText(event.getPoseStack(), Math.round(actualDistance) + " m", trackVec, 0xff8800, scale, -17);
             RenderHelper.renderFloatingText(event.getPoseStack(), "▼", trackVec, 0xff0000, scale * 1.2f, -5);
         }

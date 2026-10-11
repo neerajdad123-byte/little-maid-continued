@@ -42,7 +42,7 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class BlockSnackCabinet extends BaseEntityBlock {
     public static final MapCodec<BlockSnackCabinet> CODEC = simpleCodec((properties) -> new BlockSnackCabinet());
-    public static final EnumProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 2);
 
     public static final int TYPE_NONE = 0;

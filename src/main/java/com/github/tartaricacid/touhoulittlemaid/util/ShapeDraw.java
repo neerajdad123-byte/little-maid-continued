@@ -12,8 +12,6 @@ public final class ShapeDraw {
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
         bufferbuilder.addVertex(x, y, 0).setColor(red, green, blue, alpha);
         double precisionAngle = 2 * Math.PI / precision;
         for (int i = (int) (endAngle / precisionAngle); i >= (int) (startAngle / precisionAngle); i--) {
@@ -22,7 +20,6 @@ public final class ShapeDraw {
                     0).setColor(red, green, blue, alpha);
         }
         BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
-        RenderSystem.disableBlend();
     }
 
     public static void drawCircle(int x, int y, int r, int precision, int color) {

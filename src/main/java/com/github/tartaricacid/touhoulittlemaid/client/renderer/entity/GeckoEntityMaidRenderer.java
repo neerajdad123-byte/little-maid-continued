@@ -9,14 +9,14 @@ import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.GeoReplacedEntityR
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.IGeoEntity;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.IGeoEntityRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Mob;
 
 public class GeckoEntityMaidRenderer<T extends Mob> extends GeoReplacedEntityRenderer<T, GeckoMaidEntity<T>> implements IGeoEntityRenderer<T> {
     public GeckoEntityMaidRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager);
-        addLayer(new GeckoLayerMaidHeld<>(this, renderManager.getItemInHandRenderer()));
+        addLayer(new GeckoLayerMaidHeld<>(this, null));
         addLayer(new GeckoLayerMaidBipedHead<>(this, renderManager.getModelSet()));
         addLayer(new GeckoLayerMaidBackpack<>(this));
         addLayer(new GeckoLayerMaidBackItem<>(this));

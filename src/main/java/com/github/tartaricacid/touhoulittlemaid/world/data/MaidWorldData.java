@@ -151,7 +151,7 @@ public class MaidWorldData extends SavedData {
     }
 
     public void addInfo(EntityMaid maid) {
-        String dimension = maid.level.dimension().location().toString();
+        String dimension = maid.level.dimension().identifier().toString();
         BlockPos chunkPos = maid.blockPosition();
         UUID ownerId = maid.getOwnerUUID();
         UUID maidId = maid.getUUID();
@@ -187,7 +187,7 @@ public class MaidWorldData extends SavedData {
     }
 
     public void addTombstones(EntityMaid maid, EntityTombstone tombstone) {
-        String dimension = maid.level.dimension().location().toString();
+        String dimension = maid.level.dimension().identifier().toString();
         BlockPos chunkPos = tombstone.blockPosition();
         UUID ownerId = maid.getOwnerUUID();
         UUID tombstoneId = tombstone.getUUID();

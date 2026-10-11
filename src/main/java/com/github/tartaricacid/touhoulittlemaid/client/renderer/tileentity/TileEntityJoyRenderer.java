@@ -2,12 +2,12 @@ package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
 import com.github.tartaricacid.touhoulittlemaid.tileentity.TileEntityJoy;
 import com.github.tartaricacid.touhoulittlemaid.util.RenderHelper;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyBlockEntityRenderer;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-public abstract class TileEntityJoyRenderer<T extends TileEntityJoy> implements BlockEntityRenderer<T> {
+public abstract class TileEntityJoyRenderer<T extends TileEntityJoy> implements LegacyBlockEntityRenderer<T> {
     @Override
     @OnlyIn(Dist.CLIENT)
     public AABB getRenderBoundingBox(T te) {
@@ -15,7 +15,7 @@ public abstract class TileEntityJoyRenderer<T extends TileEntityJoy> implements 
     }
 
     @Override
-    public boolean shouldRenderOffScreen(T te) {
+    public boolean shouldRenderOffScreen() {
         return true;
     }
 }

@@ -52,7 +52,7 @@ public class MaidAreaRenderEvent {
                     return;
                 }
                 Identifier dimension = pos.getDimension();
-                if (mc.player.level.dimension().location().equals(dimension)) {
+                if (mc.player.level.dimension().identifier().equals(dimension)) {
                     renderPos(pos.getWorkPos(), pos.getIdlePos(), pos.getSleepPos(), camera, poseStack, mc, maid, mc.player);
                 }
             }

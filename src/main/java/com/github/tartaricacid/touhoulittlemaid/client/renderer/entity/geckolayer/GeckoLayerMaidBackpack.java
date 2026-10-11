@@ -12,10 +12,10 @@ import com.github.tartaricacid.touhoulittlemaid.geckolib3.util.RenderUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityModel;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyLivingEntityRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -25,9 +25,9 @@ public class GeckoLayerMaidBackpack<T extends Mob, R extends IGeoEntityRenderer<
         super(entityRendererIn);
     }
 
-    protected static <T extends LivingEntity> void renderColoredCutoutModel(EntityModel<T> pModel, Identifier pTextureLocation, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pEntity, float pRed, float pGreen, float pBlue) {
+    protected static <T extends LivingEntity> void renderColoredCutoutModel(LegacyEntityModel<T> pModel, Identifier pTextureLocation, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pEntity, float pRed, float pGreen, float pBlue) {
         VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderTypes.entityCutout(pTextureLocation));
-        pModel.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, LivingEntityRenderer.getOverlayCoords(pEntity, 0.0F));
+        pModel.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, LegacyLivingEntityRenderer.getOverlayCoords(pEntity, 0.0F));
     }
 
     @Override

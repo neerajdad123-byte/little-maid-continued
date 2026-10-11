@@ -150,7 +150,7 @@ public class FoxScrollScreen extends Screen {
     @Nullable
     private String getPlayerDimension() {
         if (this.getMinecraft().player != null) {
-            return this.getMinecraft().player.level.dimension().location().toString();
+            return this.getMinecraft().player.level.dimension().identifier().toString();
         }
         return null;
     }

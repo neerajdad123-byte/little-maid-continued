@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.block.BlockPicnicMat;
@@ -10,9 +11,9 @@ import com.github.tartaricacid.touhoulittlemaid.util.RenderHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyBlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class PicnicMatRender implements BlockEntityRenderer<TileEntityPicnicMat> {
+public class PicnicMatRender implements LegacyBlockEntityRenderer<TileEntityPicnicMat> {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/picnic_mat.png");
     private final SimpleBedrockModel<Entity> model;
     private final BlockEntityRendererProvider.Context context;
@@ -71,13 +72,13 @@ public class PicnicMatRender implements BlockEntityRenderer<TileEntityPicnicMat>
             poseStack.mulPose(Axis.XN.rotationDegrees(90));
             poseStack.translate(x, y, z);
             poseStack.scale(0.4f, 0.4f, 0.4f);
-            context.getItemRenderer().renderStatic(storageItem, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, picnicMat.getLevel(), 0);
+            LegacyDraw.item(storageItem, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, picnicMat.getLevel(), 0);
             if (count >= 10) {
                 int stackCount = count / 10;
                 for (int i = 0; i < stackCount; i++) {
                     poseStack.translate(Math.sin(i) * 0.05, Math.cos(i) * 0.03, -0.07);
                     poseStack.mulPose(Axis.ZN.rotationDegrees((float) Math.cos(i) * 60));
-                    context.getItemRenderer().renderStatic(storageItem, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, picnicMat.getLevel(), 0);
+                    LegacyDraw.item(storageItem, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, picnicMat.getLevel(), 0);
                 }
             }
             poseStack.popPose();
@@ -85,7 +86,7 @@ public class PicnicMatRender implements BlockEntityRenderer<TileEntityPicnicMat>
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TileEntityPicnicMat te) {
+    public boolean shouldRenderOffScreen() {
         return true;
     }
 

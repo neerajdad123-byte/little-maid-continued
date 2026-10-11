@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.texture;
 
+import net.minecraft.client.Minecraft;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.client.decoder.GifDecoder;
 import com.mojang.blaze3d.platform.NativeImage;
@@ -28,8 +29,8 @@ public class GifTexture extends SizeTexture implements Tickable {
 
     @Override
     public void load(ResourceManager manager) {
-        if (!RenderSystem.isOnRenderThreadOrInit()) {
-            RenderSystem.recordRenderCall(() -> doLoad(manager));
+        if (!RenderSystem.isOnRenderThread()) {
+            Minecraft.getInstance().execute(() -> doLoad(manager));
         } else {
             this.doLoad(manager);
         }

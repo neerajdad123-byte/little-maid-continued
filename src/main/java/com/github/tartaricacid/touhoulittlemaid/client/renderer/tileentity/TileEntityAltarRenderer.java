@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.model.bedrock.SimpleBedrockModel;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.BedrockModelLoader;
@@ -9,9 +11,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyBlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +21,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
-public class TileEntityAltarRenderer implements BlockEntityRenderer<TileEntityAltar> {
+public class TileEntityAltarRenderer implements LegacyBlockEntityRenderer<TileEntityAltar> {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/block/altar.png");
     private final SimpleBedrockModel<? extends Entity> model;
 
@@ -33,7 +35,7 @@ public class TileEntityAltarRenderer implements BlockEntityRenderer<TileEntityAl
             poseStack.pushPose();
             this.setTranslateAndPose(te, poseStack);
             poseStack.mulPose(Axis.ZN.rotationDegrees(180));
-            VertexConsumer buffer = bufferIn.getBuffer(RenderType.entityTranslucent(TEXTURE));
+            VertexConsumer buffer = bufferIn.getBuffer(RenderTypes.entityTranslucent(TEXTURE));
             model.renderToBuffer(poseStack, buffer, combinedLightIn, combinedOverlayIn);
             poseStack.popPose();
         }
@@ -44,13 +46,13 @@ public class TileEntityAltarRenderer implements BlockEntityRenderer<TileEntityAl
             double time = (System.currentTimeMillis() + te.getBlockPos().asLong()) % 3600;
             poseStack.translate(0.5, 1.25 + Math.sin(time / 1800 * Math.PI) * 0.1, 0.5);
             poseStack.mulPose(Axis.YP.rotationDegrees((float) time / 10));
-            Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.GROUND, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, te.getLevel(), 0);
+            LegacyDraw.item(stack, ItemDisplayContext.GROUND, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, te.getLevel(), 0);
             poseStack.popPose();
         }
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TileEntityAltar te) {
+    public boolean shouldRenderOffScreen() {
         return true;
     }
 

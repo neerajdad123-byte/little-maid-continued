@@ -139,7 +139,7 @@ public class ItemServantBell extends Item {
         }
         infos.stream().filter(info -> info.getEntityId().equals(searchUuid)).findFirst().ifPresentOrElse(info -> {
             String dimension = info.getDimension();
-            String playerDimension = player.level.dimension().location().toString();
+            String playerDimension = player.level.dimension().identifier().toString();
             stack.set(SAKUYA_BELL_SHOW_TAG, new ItemFoxScroll.TrackInfo(dimension, info.getChunkPos()));
             if (dimension.equals(playerDimension)) {
                 player.sendSystemMessage(Component.translatable("message.touhou_little_maid.servant_bell.show_pos"));

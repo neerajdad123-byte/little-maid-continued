@@ -93,7 +93,7 @@ public class ItemKappaCompass extends Item {
             }
             Identifier dimension = getDimension(compass);
             if (compass.has(KAPPA_COMPASS_ACTIVITY_POS) || dimension != null) {
-                if (!maid.level.dimension().location().equals(dimension)) {
+                if (!maid.level.dimension().identifier().equals(dimension)) {
                     player.sendSystemMessage(Component.translatable("message.touhou_little_maid.kappa_compass.maid_dimension_check"));
                     return InteractionResult.CONSUME;
                 }
@@ -145,7 +145,7 @@ public class ItemKappaCompass extends Item {
                     sendMessage(player, Component.translatable("message.touhou_little_maid.kappa_compass.far_away"));
                     return super.useOn(context);
                 }
-                if (dimension != null && !player.level.dimension().location().equals(dimension)) {
+                if (dimension != null && !player.level.dimension().identifier().equals(dimension)) {
                     sendMessage(player, Component.translatable("message.touhou_little_maid.kappa_compass.diff_dimension"));
                     return super.useOn(context);
                 }
@@ -157,7 +157,7 @@ public class ItemKappaCompass extends Item {
                     sendMessage(player, Component.translatable("message.touhou_little_maid.kappa_compass.far_away"));
                     return super.useOn(context);
                 }
-                if (dimension != null && !player.level.dimension().location().equals(dimension)) {
+                if (dimension != null && !player.level.dimension().identifier().equals(dimension)) {
                     sendMessage(player, Component.translatable("message.touhou_little_maid.kappa_compass.diff_dimension"));
                     return super.useOn(context);
                 }
@@ -167,7 +167,7 @@ public class ItemKappaCompass extends Item {
                 addPoint(Activity.WORK, clickedPos, compass);
                 sendMessage(player, Component.translatable("message.touhou_little_maid.kappa_compass.work", clickedPos.getX(), clickedPos.getY(), clickedPos.getZ()));
             }
-            addDimension(player.level.dimension().location(), compass);
+            addDimension(player.level.dimension().identifier(), compass);
         }
 
         player.level.playSound(null, player.blockPosition(), InitSounds.COMPASS_POINT.get(), SoundSource.PLAYERS, 0.8f, 1.5f);

@@ -7,14 +7,14 @@ import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MiscConfig;
 import com.github.tartaricacid.touhoulittlemaid.entity.monster.EntityFairy;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyMobRenderer;
 import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 
-public class EntityFairyRenderer extends MobRenderer<EntityFairy, SimpleBedrockModel<EntityFairy>> {
+public class EntityFairyRenderer extends LegacyMobRenderer<EntityFairy, SimpleBedrockModel<EntityFairy>> {
     private static final Identifier TEXTURE_0 = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/maid_fairy/maid_fairy_0.png");
     private static final Identifier TEXTURE_1 = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/maid_fairy/maid_fairy_1.png");
     private static final Identifier TEXTURE_2 = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/bedrock/entity/maid_fairy/maid_fairy_2.png");

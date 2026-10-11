@@ -9,13 +9,13 @@ import com.github.tartaricacid.touhoulittlemaid.entity.backpack.BackpackManager;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyRenderLayer;
 import net.minecraft.world.entity.Mob;
 
 import java.awt.*;
 
-public class LayerMaidBackpack extends RenderLayer<Mob, BedrockModel<Mob>> {
+public class LayerMaidBackpack extends LegacyRenderLayer<Mob, BedrockModel<Mob>> {
     private final EntityMaidRenderer renderer;
 
     public LayerMaidBackpack(EntityMaidRenderer renderer, EntityModelSet modelSet) {

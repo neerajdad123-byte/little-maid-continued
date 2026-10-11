@@ -42,7 +42,7 @@ public class CompassRenderEvent {
                 return;
             }
             Identifier dimension = ItemKappaCompass.getDimension(stack);
-            if (dimension != null && !mc.player.level.dimension().location().equals(dimension)) {
+            if (dimension != null && !mc.player.level.dimension().identifier().equals(dimension)) {
                 return;
             }
             BlockPos workPos = ItemKappaCompass.getPoint(Activity.WORK, stack);

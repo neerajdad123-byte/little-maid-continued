@@ -24,10 +24,10 @@ import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.IGeoEntityRenderer
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyMobRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityAttachment;
 import net.minecraft.world.entity.Mob;
@@ -43,7 +43,7 @@ import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("rawtypes,unchecked")
-public class EntityMaidRenderer extends MobRenderer<Mob, BedrockModel<Mob>> {
+public class EntityMaidRenderer extends LegacyMobRenderer<Mob, BedrockModel<Mob>> {
     private static final Identifier DEFAULT_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/entity/empty.png");
     private static final String DEFAULT_MODEL_ID = "touhou_little_maid:hakurei_reimu";
     /**
@@ -64,7 +64,7 @@ public class EntityMaidRenderer extends MobRenderer<Mob, BedrockModel<Mob>> {
 
     public EntityMaidRenderer(EntityRendererProvider.Context manager) {
         super(manager, new BedrockModel<>(), 0.5f);
-        this.addLayer(new LayerMaidHeldItem(this, manager.getItemInHandRenderer()));
+        this.addLayer(new LayerMaidHeldItem(this, null));
         this.addLayer(new LayerMaidBipedHead(this, manager.getModelSet()));
         this.addLayer(new LayerMaidBackpack(this, manager.getModelSet()));
         this.addLayer(new LayerMaidBackItem(this));
@@ -139,7 +139,7 @@ public class EntityMaidRenderer extends MobRenderer<Mob, BedrockModel<Mob>> {
                     offsetY -= 0.25f;
                 }
                 poseStack.translate(vec3.x, offsetY, vec3.z);
-                poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+                poseStack.mulPose(this.entityRenderDispatcher.camera.rotation());
                 poseStack.mulPose(Axis.YP.rotationDegrees(180));
                 poseStack.scale(-0.025F, -0.025F, 0.025F);
                 EntityGraphics graphics = new EntityGraphics(bufferIn, poseStack, maidEntity, packedLightIn, partialTicks);

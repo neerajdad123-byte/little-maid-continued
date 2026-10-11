@@ -6,7 +6,7 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.item.BackpackLevel;
 import com.github.tartaricacid.touhoulittlemaid.util.ItemsUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.EntityModel;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.MenuProvider;
@@ -52,7 +52,7 @@ public abstract class IMaidBackpack {
 
     @Nullable
     @OnlyIn(Dist.CLIENT)
-    public abstract EntityModel<EntityMaid> getBackpackModel(EntityModelSet modelSet);
+    public abstract LegacyEntityModel<EntityMaid> getBackpackModel(EntityModelSet modelSet);
 
     @Nullable
     @OnlyIn(Dist.CLIENT)

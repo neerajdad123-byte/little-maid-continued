@@ -27,7 +27,7 @@ public final class MobSpawnInfoRegistry {
                 // 优先判断等于 0 的情况，减少性能消耗
                 return;
             }
-            Identifier dimension = level.dimension().location();
+            Identifier dimension = level.dimension().identifier();
             if (event.getMobCategory() == MobCategory.MONSTER && dimensionIsOkay(dimension)) {
                 List<MobSpawnSettings.SpawnerData> spawnerData = event.getSpawnerDataList();
                 boolean canZombieSpawn = spawnerData.stream().anyMatch(data -> data.type.equals(EntityType.ZOMBIE));
