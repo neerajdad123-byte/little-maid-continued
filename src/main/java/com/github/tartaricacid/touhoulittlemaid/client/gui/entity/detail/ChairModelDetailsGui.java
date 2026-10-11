@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.detail;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.cache.CacheIconManager;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.ModelDetailsButton;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.pojo.ChairModelInfo;
@@ -16,7 +17,7 @@ public class ChairModelDetailsGui extends AbstractModelDetailsGui<EntityChair, C
     private boolean showPassenger = false;
 
     public ChairModelDetailsGui(EntityChair sourceEntity, ChairModelInfo modelInfo) {
-        super(sourceEntity, InitEntities.CHAIR.get().create(sourceEntity.level()), modelInfo);
+        super(sourceEntity, InitEntities.CHAIR.get().create(sourceEntity.level(), EntitySpawnReason.LOAD), modelInfo);
         guiEntity.setModelId(modelInfo.getModelId().toString());
         if (Minecraft.getInstance().level != null) {
             this.maid = InitEntities.MAID.get().create(Minecraft.getInstance().level);

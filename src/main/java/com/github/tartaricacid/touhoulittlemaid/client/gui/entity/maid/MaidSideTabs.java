@@ -52,9 +52,9 @@ public class MaidSideTabs<T extends AbstractMaidContainer> {
                 ClothConfigCompat.openConfigScreen();
             } else {
                 ModList.get().getModContainerById(TouhouLittleMaid.MOD_ID).ifPresent(modContainer -> {
-                    Screen parent = Minecraft.getInstance().screen;
+                    Screen parent = Minecraft.getInstance().gui.screen();
                     if (parent != null) {
-                        Minecraft.getInstance().setScreen(new ConfigurationScreen(modContainer, parent));
+                        Minecraft.getInstance().setScreenAndShow(new ConfigurationScreen(modContainer, parent));
                     }
                 });
             }

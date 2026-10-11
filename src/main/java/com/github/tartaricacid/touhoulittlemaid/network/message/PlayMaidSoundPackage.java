@@ -47,7 +47,7 @@ public record PlayMaidSoundPackage(Identifier soundEvent, String id,
         if (!(entity instanceof EntityMaid maid)) {
             return;
         }
-        SoundEvent event = BuiltInRegistries.SOUND_EVENT.get(message.soundEvent);
+        SoundEvent event = BuiltInRegistries.SOUND_EVENT.getValue(message.soundEvent);
         if (event == null) {
             return;
         }

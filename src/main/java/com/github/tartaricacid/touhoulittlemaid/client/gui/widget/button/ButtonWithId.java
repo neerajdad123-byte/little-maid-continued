@@ -1,12 +1,13 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
 
-public class ButtonWithId extends Button {
+public class ButtonWithId extends PlainButton {
     private final Consumer<Integer> onClick;
     private final int id;
 

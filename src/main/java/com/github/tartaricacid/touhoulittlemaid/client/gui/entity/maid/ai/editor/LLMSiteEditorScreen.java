@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.editor;
 
+import net.minecraft.locale.Language;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.llm.LLMSite;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.llm.openai.LLMOpenAISite;
@@ -79,7 +80,7 @@ public class LLMSiteEditorScreen extends Screen {
         this.supportsReasoning = supportsReasoning;
 
         String nameKey = sourceSite.getNameKey();
-        this.siteDisplayName = I18n.exists(nameKey) ? I18n.get(nameKey) : sourceSite.id();
+        this.siteDisplayName = Language.getInstance().has(nameKey) ? I18n.get(nameKey) : sourceSite.id();
 
         if (!this.createMode && this.sourceSite instanceof LLMOpenAISite site) {
             // 如果非创建模式，那么需要预先填充 models 字段
@@ -118,7 +119,7 @@ public class LLMSiteEditorScreen extends Screen {
         // 秘钥，隐藏显示
         this.secretInput = this.addInput(left, this.startY + 65, contentWidth, SECRET_KEY_NAME, secretValue);
         // 将秘钥输入框的字符显示为 ·，但末尾两个字符正常显示
-        this.secretInput.setFormatter((text, pos) -> FormattedCharSequence.forward("·".repeat(text.length()), Style.EMPTY));
+        this.secretInput.addFormatter((text, pos) -> FormattedCharSequence.forward("·".repeat(text.length()), Style.EMPTY));
 
         // 模型列表
         this.modelArea = new Rectangle(left, this.startY + 104, contentWidth, BASE_HEIGHT - 103 - 34);
@@ -270,7 +271,7 @@ public class LLMSiteEditorScreen extends Screen {
     @Override
     public void onClose() {
         if (this.minecraft != null) {
-            this.minecraft.setScreen(this.parent);
+            this.minecraft.setScreenAndShow(this.parent);
         }
     }
 

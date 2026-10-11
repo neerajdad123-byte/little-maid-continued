@@ -10,7 +10,6 @@ import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.animated.AnimatedG
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.model.provider.data.EntityModelData;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.util.EModelRenderCycle;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.util.IRenderCycle;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -197,7 +196,6 @@ public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extend
         AnimatedGeoModel model = animatable.getCurrentModel();
         if (model != null) {
             poseStack.translate(0, 0.01f, 0);
-            RenderSystem.setShaderTexture(0, getTextureLocation(entity));
 
             Color renderColor = getRenderColor(entity, partialTick, poseStack, bufferSource, null, packedLight);
             RenderType renderType = getRenderType(entity, partialTick, poseStack, bufferSource, null, packedLight,

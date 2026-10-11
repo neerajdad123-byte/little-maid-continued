@@ -129,7 +129,7 @@ public class HistoryAIChatScreen extends Screen {
         MutableComponent clearName = Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.clear_history_chat");
         MutableComponent clearMsg = Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.clear_history_chat.confirm");
         this.addRenderableWidget(new FlatColorButton(this.getRightColumnLeft(), this.getClearButtonY(), SUMMARY_WIDTH, BUTTON_HEIGHT, clearName, button -> {
-            this.getMinecraft().setScreen(new ConfirmScreen(yes -> {
+            this.getMinecraft().setScreenAndShow(new ConfirmScreen(yes -> {
                 if (yes) {
                     this.history.clear();
                     this.historyWidgets.clear();
@@ -138,7 +138,7 @@ public class HistoryAIChatScreen extends Screen {
                     ClientPacketDistributor.sendToServer(new ClearMaidAIDataPacket(this.maid.getId()));
                     this.init();
                 }
-                this.getMinecraft().setScreen(this);
+                this.getMinecraft().setScreenAndShow(this);
             }, clearName, clearMsg));
         }));
         this.addRenderableWidget(new FlatColorButton(this.getRightColumnLeft(), this.getBackButtonY(), SUMMARY_WIDTH, BUTTON_HEIGHT,
@@ -221,7 +221,7 @@ public class HistoryAIChatScreen extends Screen {
     public void onClose() {
         if (this.minecraft != null) {
             Screen screen = Objects.requireNonNullElse(this.parent, new AIChatScreen(this.maid));
-            this.minecraft.setScreen(screen);
+            this.minecraft.setScreenAndShow(screen);
         }
     }
 

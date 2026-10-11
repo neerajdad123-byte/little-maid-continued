@@ -189,7 +189,7 @@ public class ModelDownloadGui extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pPartialTick) {
-        super.renderBlurredBackground(pPartialTick);
+        super.extractBlurredBackground(graphics);
         this.renderBase(graphics);
         this.renderSearchBox(graphics, mouseX, mouseY, pPartialTick);
         this.renderPageNumber(graphics);
@@ -320,8 +320,8 @@ public class ModelDownloadGui extends Screen {
     @Override
     public void onClose() {
         if (this.needReload && this.getMinecraft().player != null) {
-            this.getMinecraft().gui.setTitle(Component.translatable("gui.touhou_little_maid.resources_download.need_reload.title"));
-            this.getMinecraft().gui.setSubtitle(Component.translatable("gui.touhou_little_maid.resources_download.need_reload.subtitle"));
+            this.getMinecraft().gui.hud.setTitle(Component.translatable("gui.touhou_little_maid.resources_download.need_reload.title"));
+            this.getMinecraft().gui.hud.setSubtitle(Component.translatable("gui.touhou_little_maid.resources_download.need_reload.subtitle"));
             this.getMinecraft().player.sendSystemMessage(Component.translatable("gui.touhou_little_maid.resources_download.need_reload.subtitle"));
         }
         super.onClose();
@@ -373,11 +373,11 @@ public class ModelDownloadGui extends Screen {
     private void openPackWebsite(DownloadInfo info) {
         String website = info.getWebsite();
         if (StringUtils.isNotBlank(website)) {
-            this.getMinecraft().setScreen(new ConfirmLinkScreen(yes -> {
+            this.getMinecraft().setScreenAndShow(new ConfirmLinkScreen(yes -> {
                 if (yes) {
                     Util.getPlatform().openUri(website);
                 }
-                this.getMinecraft().setScreen(this);
+                this.getMinecraft().setScreenAndShow(this);
             }, website, false));
         }
     }
@@ -385,7 +385,7 @@ public class ModelDownloadGui extends Screen {
     private void deletePack(DownloadInfo info) {
         Set<String> deleteFiles = this.getDeleteFiles(info);
         if (info.getStatus() == DownloadStatus.DOWNLOADED || info.getStatus() == DownloadStatus.NEED_UPDATE) {
-            this.getMinecraft().setScreen(new ConfirmScreen(yes -> this.deleteFilesAndReload(yes, deleteFiles),
+            this.getMinecraft().setScreenAndShow(new ConfirmScreen(yes -> this.deleteFilesAndReload(yes, deleteFiles),
                     Component.translatable("gui.touhou_little_maid.resources_download.delete.confirm"),
                     Component.translatable(info.getName())));
         }
@@ -435,7 +435,7 @@ public class ModelDownloadGui extends Screen {
             this.checkDownloadInfo();
             this.init();
         }
-        this.getMinecraft().setScreen(this);
+        this.getMinecraft().setScreenAndShow(this);
     }
 
     public enum Condition {

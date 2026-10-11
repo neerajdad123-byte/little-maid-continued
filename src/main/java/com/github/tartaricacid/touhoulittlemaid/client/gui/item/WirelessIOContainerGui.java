@@ -8,11 +8,9 @@ import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.Wireles
 import com.github.tartaricacid.touhoulittlemaid.inventory.container.other.WirelessIOContainer;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemWirelessIO;
 import com.github.tartaricacid.touhoulittlemaid.network.message.WirelessIOGuiPackage;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -48,7 +46,7 @@ public class WirelessIOContainerGui extends AbstractContainerScreen<WirelessIOCo
         filterModeToggle.initTextureValues(176, 0, 16, 16, MAIN);
 
         TouhouImageButton configButton = new TouhouImageButton(leftPos + 136, topPos + 44, 16, 16, 208, 0, 16,
-                MAIN, 256, 256, buttons -> getMinecraft().setScreen(new WirelessIOConfigSlotGui(menu.getWirelessIO())));
+                MAIN, 256, 256, buttons -> getMinecraft().setScreenAndShow(new WirelessIOConfigSlotGui(menu.getWirelessIO())));
         configButton.setTooltip(Tooltip.create(Component.translatable("gui.touhou_little_maid.wireless_io.config_slot")));
 
         addRenderableWidget(filterModeToggle);
@@ -65,9 +63,7 @@ public class WirelessIOContainerGui extends AbstractContainerScreen<WirelessIOCo
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
         super.extractBackground(graphics, x, y, partialTicks);
-        super.renderTransparentBackground(graphics);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, MAIN);
+        super.extractTransparentBackground(graphics);
         graphics.blit(RenderPipelines.GUI_TEXTURED, MAIN, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
         if (isBlacklist) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, MAIN, leftPos + 61, topPos + 15, 0, 166, 54, 55, 256, 256);

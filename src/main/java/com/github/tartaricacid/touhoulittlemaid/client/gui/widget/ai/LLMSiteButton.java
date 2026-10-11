@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.ai;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
+import net.minecraft.locale.Language;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -7,7 +9,6 @@ import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.llm.LLMSite;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.settings.AIChatSettingsLLMSiteScreen;
 import com.github.tartaricacid.touhoulittlemaid.network.message.ai.SaveLLMSitePacket;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -18,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class LLMSiteButton extends Button {
+public class LLMSiteButton extends PlainButton {
     private static final Identifier MISC = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/ai_chat/misc.png");
 
     private final LLMSite site;
@@ -32,7 +33,7 @@ public class LLMSiteButton extends Button {
 
         // 语言文件
         String nameKey = this.site.getNameKey();
-        if (I18n.exists(nameKey)) {
+        if (Language.getInstance().has(nameKey)) {
             this.setMessage(Component.literal(I18n.get(nameKey)));
         } else {
             this.setMessage(Component.literal(this.site.id()));
@@ -80,11 +81,11 @@ public class LLMSiteButton extends Button {
         if (right - 28 <= mouseX && mouseX <= right - 4) {
             Minecraft mc = Minecraft.getInstance();
             Component title = Component.translatable("ai.touhou_little_maid.chat.settings.hub.delete_confirm", this.getMessage());
-            mc.setScreen(new ConfirmScreen(yes -> {
+            mc.setScreenAndShow(new ConfirmScreen(yes -> {
                 if (yes) {
                     ClientPacketDistributor.sendToServer(SaveLLMSitePacket.delete(site.id()));
                 }
-                mc.setScreen(parent);
+                mc.setScreenAndShow(parent);
             }, title, Component.empty()));
         }
     }

@@ -27,7 +27,7 @@ public class ItemFairySpawnEgg extends DeferredSpawnEggItem {
         if (!(parentMob instanceof EntityFairy)) {
             return Optional.empty();
         }
-        EntityFairy fairy = EntityFairy.TYPE.create(level);
+        EntityFairy fairy = EntityFairy.TYPE.create(level, EntitySpawnReason.LOAD);
         if (fairy == null) {
             return Optional.empty();
         }

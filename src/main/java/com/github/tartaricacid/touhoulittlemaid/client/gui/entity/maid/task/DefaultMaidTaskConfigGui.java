@@ -19,7 +19,7 @@ public class DefaultMaidTaskConfigGui extends MaidTaskConfigGui<TaskConfigContai
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
         super.extractBackground(graphics, x, y, partialTicks);
-        super.renderBg(graphics, partialTicks, x, y);
+        super.extractBackground(graphics, x, y, partialTicks);
         graphics.blit(RenderPipelines.GUI_TEXTURED, BG, leftPos + 80, topPos + 28, 0, 0, imageWidth, 137, 256, 256);
     }
 

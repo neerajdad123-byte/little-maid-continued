@@ -72,7 +72,7 @@ public class PressAIChatKeyEvent {
             return false;
         }
         // 不能打开任何 GUI
-        if (mc.screen != null) {
+        if (mc.gui.screen() != null) {
             return false;
         }
         // 当前窗口捕获鼠标操作

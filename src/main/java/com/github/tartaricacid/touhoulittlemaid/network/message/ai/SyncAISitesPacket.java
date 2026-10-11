@@ -97,16 +97,16 @@ public record SyncAISitesPacket(
     @OnlyIn(Dist.CLIENT)
     private static void onHandle(SyncAISitesPacket message) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.screen instanceof LLMSiteEditorScreen editor) {
+        if (mc.gui.screen() instanceof LLMSiteEditorScreen editor) {
             editor.getParentHub().reopenSelf(message.llmSites, message.ttsSites);
-        } else if (mc.screen instanceof TTSSiteEditorScreen editor) {
+        } else if (mc.gui.screen() instanceof TTSSiteEditorScreen editor) {
             editor.getParentHub().reopenSelf(message.llmSites, message.ttsSites);
-        } else if (mc.screen instanceof AIChatSettingsHubScreen hubScreen) {
+        } else if (mc.gui.screen() instanceof AIChatSettingsHubScreen hubScreen) {
             hubScreen.reopenSelf(message.llmSites, message.ttsSites);
-        } else if (mc.screen instanceof AIChatScreen screen) {
-            mc.setScreen(new AIChatSettingsLLMSiteScreen(screen, message.llmSites, message.ttsSites, message.insufficientPermissions));
+        } else if (mc.gui.screen() instanceof AIChatScreen screen) {
+            mc.setScreenAndShow(new AIChatSettingsLLMSiteScreen(screen, message.llmSites, message.ttsSites, message.insufficientPermissions));
         } else {
-            mc.setScreen(AIChatSettingsHubScreen.openDefault(null, message.llmSites, message.ttsSites, message.insufficientPermissions));
+            mc.setScreenAndShow(AIChatSettingsHubScreen.openDefault(null, message.llmSites, message.ttsSites, message.insufficientPermissions));
         }
     }
 

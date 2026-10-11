@@ -1,11 +1,12 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.ai;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
+import net.minecraft.locale.Language;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.stt.STTSite;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.settings.AIChatSettingsSTTSiteScreen;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -14,7 +15,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-public class STTSiteButton extends Button {
+public class STTSiteButton extends PlainButton {
     private static final Identifier MISC = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/ai_chat/misc.png");
 
     private final STTSite site;
@@ -27,7 +28,7 @@ public class STTSiteButton extends Button {
         this.parent = parent;
 
         String nameKey = this.site.getNameKey();
-        if (I18n.exists(nameKey)) {
+        if (Language.getInstance().has(nameKey)) {
             this.setMessage(Component.literal(I18n.get(nameKey)));
         } else {
             this.setMessage(Component.literal(this.site.id()));

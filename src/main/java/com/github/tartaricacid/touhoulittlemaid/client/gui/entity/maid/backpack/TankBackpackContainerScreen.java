@@ -10,10 +10,8 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.inventory.container.backpack.TankBackpackContainer;
 import com.github.tartaricacid.touhoulittlemaid.util.MaidFluidRender;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -24,8 +22,6 @@ public class TankBackpackContainerScreen extends AbstractMaidContainerGui<TankBa
 
     public TankBackpackContainerScreen(TankBackpackContainer container, Inventory inv, Component titleIn) {
         super(container, inv, titleIn);
-        this.imageHeight = 256;
-        this.imageWidth = 256;
         this.maid = menu.getMaid();
     }
 
@@ -43,9 +39,7 @@ public class TankBackpackContainerScreen extends AbstractMaidContainerGui<TankBa
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
         super.extractBackground(graphics, x, y, partialTicks);
-        super.renderBg(graphics, partialTicks, x, y);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, BACKPACK);
+        super.extractBackground(graphics, x, y, partialTicks);
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKPACK, leftPos + 85, topPos + 36, 0, 0, 165, 128, 256, 256);
 
         MaidFluidRender.drawFluid(graphics, leftPos + 200, topPos + 108, 29, 50, maid.getBackpackFluid(), this.menu.getFluidCount(), TankBackpackData.CAPACITY);

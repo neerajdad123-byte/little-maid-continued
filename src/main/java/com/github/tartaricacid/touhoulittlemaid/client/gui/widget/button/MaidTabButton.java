@@ -1,10 +1,10 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.client.gui.ITooltipButton;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -14,7 +14,7 @@ import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
-public class MaidTabButton extends Button implements ITooltipButton {
+public class MaidTabButton extends PlainButton implements ITooltipButton {
     private static final Identifier SIDE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/maid_gui_side.png");
     private final int left;
     private final List<Component> tooltips;

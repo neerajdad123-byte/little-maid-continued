@@ -24,7 +24,7 @@ public final class UseNameTagEvent {
 
         if (stack.get(DataComponents.CUSTOM_NAME) == null && player.getMainHandItem().getItem() == Items.NAME_TAG && player.equals(maid.getOwner())) {
             if (player.level.isClientSide()) {
-                Minecraft.getInstance().setScreen(new NameTagGui(maid));
+                Minecraft.getInstance().setScreenAndShow(new NameTagGui(maid));
             }
             event.setCanceled(true);
         }

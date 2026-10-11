@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -10,7 +11,6 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.inventory.container.AbstractMaidContainer;
 import com.github.tartaricacid.touhoulittlemaid.network.message.MaidConfigPackage;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
@@ -23,7 +23,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class ScheduleButton<T extends AbstractMaidContainer> extends Button {
+public class ScheduleButton<T extends AbstractMaidContainer> extends PlainButton {
     private static final Identifier BUTTON = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/maid_gui_button.png");
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("00");
     private final EntityMaid maid;

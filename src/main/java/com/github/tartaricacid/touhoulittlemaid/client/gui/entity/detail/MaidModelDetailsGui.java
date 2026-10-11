@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.detail;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.cache.CacheIconManager;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.ModelDetailsButton;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.pojo.MaidModelInfo;
@@ -22,7 +23,7 @@ public class MaidModelDetailsGui extends AbstractModelDetailsGui<EntityMaid, Mai
     private volatile boolean isEnableWalk = false;
 
     public MaidModelDetailsGui(EntityMaid sourceEntity, MaidModelInfo modelInfo) {
-        super(sourceEntity, InitEntities.MAID.get().create(sourceEntity.level()), modelInfo);
+        super(sourceEntity, InitEntities.MAID.get().create(sourceEntity.level(), EntitySpawnReason.LOAD), modelInfo);
         this.guiEntity.setModelId(modelInfo.getModelId().toString());
         this.guiEntity.setOnGround(true);
         this.guiEntity.yHeadRot = 0;

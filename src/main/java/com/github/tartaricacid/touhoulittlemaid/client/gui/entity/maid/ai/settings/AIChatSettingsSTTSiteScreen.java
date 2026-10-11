@@ -64,7 +64,7 @@ public class AIChatSettingsSTTSiteScreen extends AIChatSettingsHubScreen {
             return;
         }
         this.state.selectedSttSiteId = siteId;
-        this.minecraft.setScreen(new STTSiteEditorScreen(this, site));
+        this.minecraft.setScreenAndShow(new STTSiteEditorScreen(this, site));
     }
 
     public void toggleSTTSite(String siteId) {

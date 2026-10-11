@@ -1,11 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -31,7 +29,7 @@ public final class MaidFluidRender {
     private static final int TEXTURE_SIZE = 16;
 
     public static Component getFluidName(String fluidId, int amount) {
-        Fluid fluid = BuiltInRegistries.FLUID.get(Identifier.parse(fluidId));
+        Fluid fluid = BuiltInRegistries.FLUID.getValue(Identifier.parse(fluidId));
         if (amount <= 0 || fluid == null || fluid.isSame(Fluids.EMPTY)) {
             return Component.translatable("tooltips.touhou_little_maid.tank_backpack.empty_fluid");
         }
@@ -39,7 +37,7 @@ public final class MaidFluidRender {
     }
 
     public static void drawFluid(GuiGraphicsExtractor graphics, int x, int y, int width, int height, String fluidId, int amount, int capacity) {
-        Fluid fluid = BuiltInRegistries.FLUID.get(Identifier.parse(fluidId));
+        Fluid fluid = BuiltInRegistries.FLUID.getValue(Identifier.parse(fluidId));
         if (amount <= 0 || fluid == null || fluid.isSame(Fluids.EMPTY)) {
             return;
         }
@@ -80,7 +78,6 @@ public final class MaidFluidRender {
     }
 
     private static void drawTiledSprite(GuiGraphicsExtractor guiGraphics, final int tiledWidth, final int tiledHeight, int color, long scaledAmount, TextureAtlasSprite sprite) {
-        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
         Matrix4f matrix = guiGraphics.pose().last().pose();
         setGLColorFromInt(color);
 
@@ -120,7 +117,6 @@ public final class MaidFluidRender {
         uMax = uMax - (maskRight / 16F * (uMax - uMin));
         vMax = vMax - (maskTop / 16F * (vMax - vMin));
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);

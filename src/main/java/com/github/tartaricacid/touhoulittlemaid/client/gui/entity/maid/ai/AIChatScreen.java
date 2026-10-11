@@ -121,13 +121,13 @@ public class AIChatScreen extends Screen {
     private void addLeftButtons(int leftX, int y, int size, int gap) {
         this.historyButton = this.addRenderableWidget(new FlatColorButton(leftX, y, size, size, Component.literal("🕑"), b -> {
             HistoryAIChatScreen screen = new HistoryAIChatScreen(this, this.maid);
-            this.getMinecraft().setScreen(screen);
+            this.getMinecraft().setScreenAndShow(screen);
         }).setTooltips("ai.touhou_little_maid.chat.button.history.tip"));
 
         leftX = leftX + size + gap;
         this.settingButton = this.addRenderableWidget(new FlatColorButton(leftX, y, size, size, Component.literal("✎"), b -> {
             SettingEditScreen editScreen = new SettingEditScreen(this, this.maid);
-            this.getMinecraft().setScreen(editScreen);
+            this.getMinecraft().setScreenAndShow(editScreen);
         }).setTooltips("ai.touhou_little_maid.chat.button.setting.tip"));
 
         leftX = leftX + size + gap;

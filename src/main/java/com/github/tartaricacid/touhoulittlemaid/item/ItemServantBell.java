@@ -156,7 +156,7 @@ public class ItemServantBell extends Item {
     @OnlyIn(Dist.CLIENT)
     private void openServantBellSetScreen(EntityMaid maid) {
         if (maid.level.isClientSide()) {
-            Minecraft.getInstance().setScreen(new ServantBellSetScreen(maid));
+            Minecraft.getInstance().setScreenAndShow(new ServantBellSetScreen(maid));
         }
     }
 

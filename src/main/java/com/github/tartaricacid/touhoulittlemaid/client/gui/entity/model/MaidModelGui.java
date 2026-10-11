@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.model;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.detail.MaidModelDetailsGui;
@@ -44,7 +45,7 @@ public class MaidModelGui extends AbstractModelGui<EntityMaid, MaidModelInfo> {
         float renderItemScale = CustomPackLoader.MAID_MODELS.getModelRenderItemScale(entity.getModelId());
         int centerX = (middleX - 256 / 2) / 2;
         int yOffset = (int) (45 * (renderItemScale - 1));
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 graphics,
                 centerX - 100,
                 middleY - 100,
@@ -72,7 +73,7 @@ public class MaidModelGui extends AbstractModelGui<EntityMaid, MaidModelInfo> {
     @Override
     protected void openDetailsGui(EntityMaid maid, MaidModelInfo modelInfo) {
         if (minecraft != null && modelInfo.getEasterEgg() == null) {
-            minecraft.setScreen(new MaidModelDetailsGui(maid, modelInfo));
+            minecraft.setScreenAndShow(new MaidModelDetailsGui(maid, modelInfo));
         }
     }
 
@@ -138,7 +139,7 @@ public class MaidModelGui extends AbstractModelGui<EntityMaid, MaidModelInfo> {
         EntityMaid maid;
         try {
             maid = (EntityMaid) EntityCacheUtil.ENTITY_CACHE.get(EntityMaid.TYPE, () -> {
-                Entity e = EntityMaid.TYPE.create(world);
+                Entity e = EntityMaid.TYPE.create(world, EntitySpawnReason.LOAD);
                 return Objects.requireNonNullElseGet(e, () -> new EntityMaid(world));
             });
         } catch (ExecutionException | ClassCastException e) {
@@ -154,7 +155,7 @@ public class MaidModelGui extends AbstractModelGui<EntityMaid, MaidModelInfo> {
         }
         // 女仆换皮肤界面需要指定 YSM 渲染为空
         maid.setIsYsmModel(false);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 graphics,
                 posX - 10,
                 posY - 32,

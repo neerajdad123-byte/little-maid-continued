@@ -57,7 +57,7 @@ public class AltarRecipe extends ShapelessRecipe {
     }
 
     public void spawnOutputEntity(ServerLevel world, BlockPos pos, @Nullable List<ItemStack> list) {
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entityType);
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(entityType);
 
         if (type == EntityTypes.ITEM) {
             this.spawnItem(world, pos);

@@ -1,10 +1,10 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import net.minecraft.client.input.InputWithModifiers;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -16,7 +16,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-public class MaidConfigButton extends Button {
+public class MaidConfigButton extends PlainButton {
     private static final Identifier ICON = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/maid_gui_button.png");
     private final MaidConfigButton.OnPress leftPress;
     private final MaidConfigButton.OnPress rightPress;

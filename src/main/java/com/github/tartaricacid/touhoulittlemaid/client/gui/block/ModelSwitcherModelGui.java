@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.block;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.detail.MaidModelDetailsGui;
@@ -45,7 +46,7 @@ public class ModelSwitcherModelGui extends AbstractModelGui<EntityMaid, MaidMode
         float renderItemScale = CustomPackLoader.MAID_MODELS.getModelRenderItemScale(entity.getModelId());
         int centerX = (middleX - 256 / 2) / 2;
         int yOffset = (int) (45 * (renderItemScale - 1));
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 graphics,
                 centerX - 100,
                 middleY - 100,
@@ -73,7 +74,7 @@ public class ModelSwitcherModelGui extends AbstractModelGui<EntityMaid, MaidMode
     @Override
     protected void openDetailsGui(EntityMaid maid, MaidModelInfo modelInfo) {
         if (minecraft != null && modelInfo.getEasterEgg() == null) {
-            minecraft.setScreen(new MaidModelDetailsGui(maid, modelInfo));
+            minecraft.setScreenAndShow(new MaidModelDetailsGui(maid, modelInfo));
         }
     }
 
@@ -82,7 +83,7 @@ public class ModelSwitcherModelGui extends AbstractModelGui<EntityMaid, MaidMode
         if (info.getEasterEgg() == null) {
             maid.setModelId(info.getModelId().toString());
             infoIn.setModelId(info.getModelId());
-            getMinecraft().setScreen(this.modelSwitcherGui);
+            getMinecraft().setScreenAndShow(this.modelSwitcherGui);
         }
     }
 
@@ -134,7 +135,7 @@ public class ModelSwitcherModelGui extends AbstractModelGui<EntityMaid, MaidMode
         EntityMaid maid;
         try {
             maid = (EntityMaid) EntityCacheUtil.ENTITY_CACHE.get(EntityMaid.TYPE, () -> {
-                Entity e = EntityMaid.TYPE.create(world);
+                Entity e = EntityMaid.TYPE.create(world, EntitySpawnReason.LOAD);
                 return Objects.requireNonNullElseGet(e, () -> new EntityMaid(world));
             });
         } catch (ExecutionException | ClassCastException e) {
@@ -150,7 +151,7 @@ public class ModelSwitcherModelGui extends AbstractModelGui<EntityMaid, MaidMode
         }
         // 女仆换皮肤界面需要指定 YSM 渲染为空
         maid.setIsYsmModel(false);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 graphics,
                 posX - 10,
                 posY - 32,

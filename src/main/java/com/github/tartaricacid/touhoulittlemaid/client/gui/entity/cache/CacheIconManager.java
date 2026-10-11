@@ -45,9 +45,9 @@ public final class CacheIconManager {
         MaidModelGui maidModelGui = new MaidModelGui(maid);
         if (MiscConfig.MODEL_ICON_CACHE.get() && !MAID_CACHE_QUEUE.isEmpty()) {
             var maidCacheScreen = getMaidCacheScreen(maidModelGui);
-            Minecraft.getInstance().setScreen(maidCacheScreen);
+            Minecraft.getInstance().setScreenAndShow(maidCacheScreen);
         } else {
-            Minecraft.getInstance().setScreen(maidModelGui);
+            Minecraft.getInstance().setScreenAndShow(maidModelGui);
         }
     }
 
@@ -55,9 +55,9 @@ public final class CacheIconManager {
         ChairModelGui chairModelGui = new ChairModelGui(chair);
         if (MiscConfig.MODEL_ICON_CACHE.get() && !CHAIR_CACHE_QUEUE.isEmpty()) {
             var chairCacheScreen = getChairCacheScreen(chairModelGui);
-            Minecraft.getInstance().setScreen(chairCacheScreen);
+            Minecraft.getInstance().setScreenAndShow(chairCacheScreen);
         } else {
-            Minecraft.getInstance().setScreen(chairModelGui);
+            Minecraft.getInstance().setScreenAndShow(chairModelGui);
         }
     }
 
@@ -65,9 +65,9 @@ public final class CacheIconManager {
         ModelSwitcherModelGui switcherModelGui = new ModelSwitcherModelGui(maid, info, modelSwitcherGui);
         if (MiscConfig.MODEL_ICON_CACHE.get() && !MAID_CACHE_QUEUE.isEmpty()) {
             var maidCacheScreen = getMaidCacheScreen(switcherModelGui);
-            Minecraft.getInstance().setScreen(maidCacheScreen);
+            Minecraft.getInstance().setScreenAndShow(maidCacheScreen);
         } else {
-            Minecraft.getInstance().setScreen(switcherModelGui);
+            Minecraft.getInstance().setScreenAndShow(switcherModelGui);
         }
     }
 
@@ -83,7 +83,7 @@ public final class CacheIconManager {
             maid.setIsYsmModel(false);
             int half = scaleModified / 2;
             int yOffset = scaleModified * 6 / 5;
-            InventoryScreen.renderEntityInInventoryFollowsMouse(
+            InventoryScreen.extractEntityInInventoryFollowsMouse(
                     graphics,
                     posX,
                     posY - 3,
@@ -103,7 +103,7 @@ public final class CacheIconManager {
 
             int half = scaleModified / 2;
             int yOffset = scaleModified * 3 / 2;
-            InventoryScreen.renderEntityInInventoryFollowsMouse(
+            InventoryScreen.extractEntityInInventoryFollowsMouse(
                     graphics,
                     posX,
                     posY,

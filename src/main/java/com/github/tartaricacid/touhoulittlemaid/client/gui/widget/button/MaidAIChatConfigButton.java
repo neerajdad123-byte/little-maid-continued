@@ -1,9 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -14,7 +14,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-public class MaidAIChatConfigButton extends Button {
+public class MaidAIChatConfigButton extends PlainButton {
     private static final Identifier ICON = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/maid_ai_chat_config.png");
     private final MaidAIChatConfigButton.OnPress leftPress;
     private final MaidAIChatConfigButton.OnPress rightPress;
@@ -89,8 +89,8 @@ public class MaidAIChatConfigButton extends Button {
 
         graphics.pose().pushMatrix();
         graphics.pose().scale(scale, scale);
-        graphics.text(font, leftText, leftTextX, leftTextY, 0xFF444444, false);
-        graphics.text(font, rightText, rightTextX, rightTextY, 0xFF55FF55, false);
+        graphics.text(font, leftText, (int) leftTextX, (int) leftTextY, 0xFF444444, false);
+        graphics.text(font, rightText, (int) rightTextX, (int) rightTextY, 0xFF55FF55, false);
         graphics.pose().popMatrix();
     }
 

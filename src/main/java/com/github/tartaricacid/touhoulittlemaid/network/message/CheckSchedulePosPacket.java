@@ -35,8 +35,8 @@ public record CheckSchedulePosPacket(String tips) implements CustomPacketPayload
         if (mc.player == null) {
             return;
         }
-        if (mc.screen instanceof AbstractMaidContainerGui<?> parent) {
-            mc.setScreen(new CheckSchedulePosGui(parent, Component.translatable(message.tips)));
+        if (mc.gui.screen() instanceof AbstractMaidContainerGui<?> parent) {
+            mc.setScreenAndShow(new CheckSchedulePosGui(parent, Component.translatable(message.tips)));
         }
     }
 

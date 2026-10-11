@@ -7,12 +7,10 @@ import com.github.tartaricacid.touhoulittlemaid.client.renderer.texture.SizeText
 import com.github.tartaricacid.touhoulittlemaid.client.resource.pojo.CustomModelPack;
 import com.github.tartaricacid.touhoulittlemaid.client.sound.pojo.SoundPackInfo;
 import com.github.tartaricacid.touhoulittlemaid.util.ParseI18n;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -37,8 +35,6 @@ public class SoundPackButton extends FlatColorButton {
         super.extractContents(graphics, mouseX, mouseY, pPartialTick);
         Identifier icon = info.getIcon();
         if (icon == null) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, ICON);
             graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX() + 4, this.getY() + 5, 0, 16, 32, 32, 256, 256);
         } else {
             if (info.getIconAnimation() == CustomModelPack.AnimationState.UNCHECK) {
@@ -47,16 +43,12 @@ public class SoundPackButton extends FlatColorButton {
             if (info.getIconAnimation() == CustomModelPack.AnimationState.FALSE) {
                 graphics.blit(RenderPipelines.GUI_TEXTURED, icon, this.getX() + 4, this.getY() + 5, 0, 0, 32, 32, 32, 32);
             } else {
-                RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                RenderSystem.setShaderTexture(0, icon);
                 int time = getTickTime() / info.getIconDelay();
                 int iconIndex = time % info.getIconAspectRatio();
                 graphics.blit(RenderPipelines.GUI_TEXTURED, icon, this.getX() + 4, this.getY() + 5, 0, iconIndex * 32, 32, 32, 32, 32 * info.getIconAspectRatio());
             }
         }
         if (isUse) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, ICON);
             graphics.blit(RenderPipelines.GUI_TEXTURED, ICON, this.getX() + this.getWidth() - 20, this.getY() + 13, 32, 0, 16, 16, 256, 256);
         }
     }

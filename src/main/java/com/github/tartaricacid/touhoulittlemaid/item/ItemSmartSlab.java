@@ -73,7 +73,7 @@ public class ItemSmartSlab extends AbstractStoreMaidItem {
             return super.useOn(context);
         }
         if (clickedFace == Direction.UP && !PlaceHelper.notSuitableForPlaceMaid(worldIn, clickedPos)) {
-            EntityMaid maid = InitEntities.MAID.get().create(worldIn);
+            EntityMaid maid = InitEntities.MAID.get().create(worldIn, EntitySpawnReason.LOAD);
             if (maid == null) {
                 return super.useOn(context);
             }

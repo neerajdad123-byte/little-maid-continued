@@ -100,7 +100,7 @@ public class AIChatSettingsLLMSiteScreen extends AIChatSettingsHubScreen {
             return;
         }
         boolean supportsReasoning = "openai".equals(site.id());
-        this.minecraft.setScreen(new LLMSiteEditorScreen(this, site, false, supportsReasoning));
+        this.minecraft.setScreenAndShow(new LLMSiteEditorScreen(this, site, false, supportsReasoning));
     }
 
     public void openNewLLMSiteEditor(LLMApiType apiType) {
@@ -108,7 +108,7 @@ public class AIChatSettingsLLMSiteScreen extends AIChatSettingsHubScreen {
         if (!(site instanceof LLMOpenAISite) || this.minecraft == null) {
             return;
         }
-        this.minecraft.setScreen(new LLMSiteEditorScreen(this, site, true));
+        this.minecraft.setScreenAndShow(new LLMSiteEditorScreen(this, site, true));
     }
 
     public boolean hasLLMSite(String siteId) {

@@ -5,7 +5,6 @@ import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemFoxScroll;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemServantBell;
 import com.github.tartaricacid.touhoulittlemaid.util.RenderHelper;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

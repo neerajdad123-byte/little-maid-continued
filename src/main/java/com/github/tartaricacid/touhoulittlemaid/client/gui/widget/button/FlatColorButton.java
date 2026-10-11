@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -12,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class FlatColorButton extends Button {
+public class FlatColorButton extends PlainButton {
     private List<Component> tooltips;
     protected boolean isSelect = false;
 

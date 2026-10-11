@@ -12,8 +12,7 @@ public class PicnicBasketContainerScreen extends AbstractContainerScreen<PicnicB
     private static final Identifier CONTAINER_BACKGROUND = Identifier.withDefaultNamespace("textures/gui/container/generic_54.png");
 
     public PicnicBasketContainerScreen(PicnicBasketContainer container, Inventory inv, Component titleIn) {
-        super(container, inv, titleIn);
-        this.imageHeight = 132;
+        super(container, inv, titleIn, 176, 132);
         this.inventoryLabelY = this.imageHeight - 94;
     }
 

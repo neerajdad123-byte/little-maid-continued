@@ -7,9 +7,7 @@ import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.BaubleB
 import com.github.tartaricacid.touhoulittlemaid.compat.curios.CuriosCompat;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.inventory.container.backpack.SmallBackpackContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,8 +17,6 @@ public class SmallBackpackContainerScreen extends AbstractMaidContainerGui<Small
 
     public SmallBackpackContainerScreen(SmallBackpackContainer container, Inventory inv, Component titleIn) {
         super(container, inv, titleIn);
-        this.imageHeight = 256;
-        this.imageWidth = 256;
         this.maid = menu.getMaid();
     }
 
@@ -38,9 +34,7 @@ public class SmallBackpackContainerScreen extends AbstractMaidContainerGui<Small
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
         super.extractBackground(graphics, x, y, partialTicks);
-        super.renderBg(graphics, partialTicks, x, y);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, BACKPACK);
+        super.extractBackground(graphics, x, y, partialTicks);
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKPACK, leftPos + 85, topPos + 36, 0, 0, 165, 128, 256, 256);
         graphics.fill(leftPos + 142, topPos + 81, leftPos + 250, topPos + 117, 0xaa222222);
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKPACK, leftPos + 190, topPos + 92, 165, 0, 11, 11, 256, 256);

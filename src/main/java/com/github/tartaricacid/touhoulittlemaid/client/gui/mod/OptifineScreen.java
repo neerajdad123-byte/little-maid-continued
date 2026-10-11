@@ -41,7 +41,7 @@ public class OptifineScreen extends Screen {
         super.init();
         this.addRenderableWidget(Button.builder(Component.translatable("gui.touhou_little_maid.optifine_warning.embeddium"), b -> openUrl(embeddiumUrl)).bounds(this.width / 2 - 155, this.height * 3 / 4 - 15, 150, 20).build());
         this.addRenderableWidget(Button.builder(Component.translatable("gui.touhou_little_maid.optifine_warning.oculus"), b -> openUrl(oculusUrl)).bounds(this.width / 2 + 5, this.height * 3 / 4 - 15, 150, 20).build());
-        this.exitButton = this.addRenderableWidget(Button.builder(CommonComponents.GUI_PROCEED, (pressed) -> Minecraft.getInstance().setScreen(this.lastScreen)).bounds(this.width / 2 - 75, this.height * 3 / 4 + 25, 150, 20).build());
+        this.exitButton = this.addRenderableWidget(Button.builder(CommonComponents.GUI_PROCEED, (pressed) -> Minecraft.getInstance().setScreenAndShow(this.lastScreen)).bounds(this.width / 2 - 75, this.height * 3 / 4 + 25, 150, 20).build());
         this.exitButton.active = false;
         this.message = MultiLineLabel.create(this.font, text, this.width - 50);
     }
@@ -70,16 +70,16 @@ public class OptifineScreen extends Screen {
 
     @Override
     public void onClose() {
-        Minecraft.getInstance().setScreen(this.lastScreen);
+        Minecraft.getInstance().setScreenAndShow(this.lastScreen);
     }
 
     private void openUrl(String url) {
         if (StringUtils.isNotBlank(url) && minecraft != null) {
-            minecraft.setScreen(new ConfirmLinkScreen(yes -> {
+            minecraft.setScreenAndShow(new ConfirmLinkScreen(yes -> {
                 if (yes) {
                     Util.getPlatform().openUri(url);
                 }
-                minecraft.setScreen(this);
+                minecraft.setScreenAndShow(this);
             }, url, true));
         }
     }

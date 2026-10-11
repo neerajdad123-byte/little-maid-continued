@@ -14,7 +14,7 @@ public class MaidDownloadButton extends TouhouImageButton {
     public MaidDownloadButton(int pX, int pY, Identifier texture, EntityMaid maid) {
         super(pX, pY, 41, 20, 0, 86, 20, texture, (b) -> {
             InfoGetManager.STATUE = InfoGetManager.Statue.NOT_UPDATE;
-            Minecraft.getInstance().setScreen(new ModelDownloadGui(maid));
+            Minecraft.getInstance().setScreenAndShow(new ModelDownloadGui(maid));
         });
     }
 

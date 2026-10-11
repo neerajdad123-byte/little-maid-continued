@@ -178,7 +178,7 @@ public class BlockGarageKit extends Block implements EntityBlock {
         CompoundTag data = new CompoundTag();
         data.putString("id", id);
 
-        Entity entity = type.create(worldIn);
+        Entity entity = type.create(worldIn, EntitySpawnReason.LOAD);
         if (entity instanceof Mob mobEntity) {
             mobEntity.finalizeSpawn((ServerLevel) worldIn, worldIn.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_EGG, null);
             CustomData.of(data).loadInto(mobEntity);

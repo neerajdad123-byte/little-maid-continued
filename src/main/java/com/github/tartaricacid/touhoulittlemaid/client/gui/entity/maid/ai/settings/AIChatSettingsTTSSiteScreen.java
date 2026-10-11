@@ -64,7 +64,7 @@ public class AIChatSettingsTTSSiteScreen extends AIChatSettingsHubScreen {
         if (site == null || this.minecraft == null) {
             return;
         }
-        this.minecraft.setScreen(new TTSSiteEditorScreen(this, site));
+        this.minecraft.setScreenAndShow(new TTSSiteEditorScreen(this, site));
     }
 
     @Override

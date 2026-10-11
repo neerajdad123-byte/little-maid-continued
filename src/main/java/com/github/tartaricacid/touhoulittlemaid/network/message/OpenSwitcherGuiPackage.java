@@ -36,7 +36,7 @@ public record OpenSwitcherGuiPackage(BlockPos pos) implements CustomPacketPayloa
         }
         BlockEntity te = mc.level.getBlockEntity(message.pos);
         if (mc.player != null && mc.player.isAlive() && te instanceof TileEntityModelSwitcher) {
-            mc.setScreen(new ModelSwitcherGui((TileEntityModelSwitcher) te));
+            mc.setScreenAndShow(new ModelSwitcherGui((TileEntityModelSwitcher) te));
         }
     }
 

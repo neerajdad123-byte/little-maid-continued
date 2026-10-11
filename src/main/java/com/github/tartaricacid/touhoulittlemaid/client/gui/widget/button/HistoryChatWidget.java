@@ -3,12 +3,11 @@ package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.util.GuiTools;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.PlayerFaceRenderer;
+import net.minecraft.client.gui.components.PlayerFaceExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
@@ -105,7 +104,7 @@ public class HistoryChatWidget extends AbstractWidget {
         if (isLeft) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.getX() + xOffset, this.getHeightMiddle(size), 0, 16, size, size, 128, 128);
         } else {
-            PlayerFaceRenderer.draw(graphics, this.playerSkin, this.getX() + xOffset, this.getHeightMiddle(size), size);
+            PlayerFaceExtractor.extractRenderState(graphics, this.playerSkin, this.getX() + xOffset, this.getHeightMiddle(size), size);
         }
     }
 
@@ -133,10 +132,10 @@ public class HistoryChatWidget extends AbstractWidget {
         graphics.pose().pushMatrix();
         graphics.pose().scale(scale, scale);
         if (isLeft) {
-            graphics.text(font, this.time.getVisualOrderText(), (this.getX() + 2) / scale, (this.getY() - 5) / scale, 0xFF999999, false);
+            graphics.text(font, this.time.getVisualOrderText(), (int) ((this.getX() + 2) / scale), (int) ((this.getY() - 5) / scale), 0xFF999999, false);
         } else {
             float width = font.width(this.time) * scale;
-            graphics.text(font, this.time.getVisualOrderText(), (this.getX() + this.getWidth() - width - 2) / scale, (this.getY() - 5) / scale, 0xFF999999, false);
+            graphics.text(font, this.time.getVisualOrderText(), (int) ((this.getX() + this.getWidth() - width - 2) / scale), (int) ((this.getY() - 5) / scale), 0xFF999999, false);
         }
         graphics.pose().popMatrix();
     }

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.editor;
 
+import net.minecraft.locale.Language;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.stt.STTSite;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.FormField;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.layout.FieldDescriptor;
@@ -49,7 +50,7 @@ public class STTSiteEditorScreen extends Screen {
         this.layout = sourceSite.formLayout();
 
         String nameKey = sourceSite.getNameKey();
-        this.siteDisplayName = I18n.exists(nameKey) ? I18n.get(nameKey) : sourceSite.id();
+        this.siteDisplayName = Language.getInstance().has(nameKey) ? I18n.get(nameKey) : sourceSite.id();
 
         this.initStateFromLayout();
     }
@@ -105,7 +106,7 @@ public class STTSiteEditorScreen extends Screen {
         box.active = field.editable;
         box.setValue(field.value);
         if (field.secret) {
-            box.setFormatter((text, pos) -> FormattedCharSequence.forward("·".repeat(text.length()), Style.EMPTY));
+            box.addFormatter((text, pos) -> FormattedCharSequence.forward("·".repeat(text.length()), Style.EMPTY));
         }
         this.addWidget(box);
         field.box = box;
@@ -158,7 +159,7 @@ public class STTSiteEditorScreen extends Screen {
     @Override
     public void onClose() {
         if (this.minecraft != null) {
-            this.minecraft.setScreen(this.parent);
+            this.minecraft.setScreenAndShow(this.parent);
         }
     }
 

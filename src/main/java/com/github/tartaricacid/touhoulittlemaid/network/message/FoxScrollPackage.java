@@ -51,7 +51,7 @@ public record FoxScrollPackage(Map<String, List<FoxScrollData>> data) implements
 
     @OnlyIn(Dist.CLIENT)
     private static void onHandle(FoxScrollPackage message) {
-        Minecraft.getInstance().setScreen(new FoxScrollScreen(message.data));
+        Minecraft.getInstance().setScreenAndShow(new FoxScrollScreen(message.data));
     }
 
     @Override

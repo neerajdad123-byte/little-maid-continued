@@ -1,14 +1,14 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import net.minecraft.client.renderer.RenderPipelines;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-public class TouhouImageButton extends Button {
+public class TouhouImageButton extends PlainButton {
     protected final Identifier resourceLocation;
     protected final int xTexStart;
     protected final int yTexStart;

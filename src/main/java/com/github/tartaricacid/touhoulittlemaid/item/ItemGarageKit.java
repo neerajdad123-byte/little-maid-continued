@@ -66,7 +66,7 @@ public class ItemGarageKit extends BlockItem {
             String entityId = data.read(Codec.STRING.fieldOf(ENTITY_ID_TAG_NAME)).result().orElse(DEFAULT_ENTITY_ID);
             // 如果是其他实体，那么不需要显示 model id
             if (!entityId.equals(DEFAULT_ENTITY_ID)) {
-                EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(Identifier.parse(entityId));
+                EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(entityId));
                 return prefix.append(entityType.getDescription());
             }
 

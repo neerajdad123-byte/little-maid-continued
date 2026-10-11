@@ -1,10 +1,10 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.github.tartaricacid.touhoulittlemaid.api.client.gui.ITooltipButton;
 import com.github.tartaricacid.touhoulittlemaid.api.task.IMaidTask;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
-public class TaskButton extends Button implements ITooltipButton {
+public class TaskButton extends PlainButton implements ITooltipButton {
     private final IMaidTask task;
     private final boolean enable;
     private final Identifier resourceLocation;

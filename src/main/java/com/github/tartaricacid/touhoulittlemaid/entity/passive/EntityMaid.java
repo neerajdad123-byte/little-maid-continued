@@ -1336,8 +1336,8 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
             Minecraft minecraft = Minecraft.getInstance();
             minecraft.particleEngine.createTrackingEmitter(this, ParticleTypes.TOTEM_OF_UNDYING, 30);
             this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.BELL_BLOCK, this.getSoundSource(), 1.0F, 1.0F, false);
-            minecraft.gui.setTitle(Component.translatable("message.touhou_little_maid.gomoku.rank_up.title"));
-            minecraft.gui.setSubtitle(Component.translatable("message.touhou_little_maid.gomoku.rank_up.subtitle"));
+            minecraft.gui.hud.setTitle(Component.translatable("message.touhou_little_maid.gomoku.rank_up.title"));
+            minecraft.gui.hud.setSubtitle(Component.translatable("message.touhou_little_maid.gomoku.rank_up.subtitle"));
         }
     }
 
@@ -2704,9 +2704,9 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
                     this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
                 }
                 this.useItem = ItemStack.EMPTY;
-                this.playSound(SoundEvents.SHIELD_BREAK, 0.8F, 0.8F + this.level.getRandom().nextFloat() * 0.4F);
+                this.playSound(SoundEvents.SHIELD_BREAK.value(), 0.8F, 0.8F + this.level.getRandom().nextFloat() * 0.4F);
             } else {
-                this.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 1.0F);
+                this.playSound(SoundEvents.SHIELD_BLOCK.value(), 1.0F, 1.0F);
             }
         }
     }

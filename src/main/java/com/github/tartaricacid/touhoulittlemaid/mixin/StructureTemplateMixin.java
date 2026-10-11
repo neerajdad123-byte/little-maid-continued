@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.mixin;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MaidConfig;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -29,7 +30,7 @@ public abstract class StructureTemplateMixin {
         ci.getReturnValue().ifPresent(entity -> {
             ServerLevel level = accessor.getLevel();
             if (entity.getType().equals(EntityTypes.ALLAY) && TOUHOU_LITTLE_MAID$RANDOM.nextDouble() < MaidConfig.REPLACE_ALLAY_PERCENT.get()) {
-                EntityMaid entityMaid = InitEntities.MAID.get().create(level);
+                EntityMaid entityMaid = InitEntities.MAID.get().create(level, EntitySpawnReason.LOAD);
                 ci.setReturnValue(Optional.ofNullable(entityMaid));
             }
         });

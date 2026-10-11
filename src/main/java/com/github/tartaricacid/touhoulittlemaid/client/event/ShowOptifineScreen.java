@@ -21,7 +21,7 @@ public final class ShowOptifineScreen {
             return;
         }
         if (!MiscConfig.CLOSE_OPTIFINE_WARNING.get() && optifinePresent) {
-            Minecraft.getInstance().setScreen(new OptifineScreen(event.getScreen()));
+            Minecraft.getInstance().setScreenAndShow(new OptifineScreen(event.getScreen()));
         }
         firstTitleScreenShown = true;
     }

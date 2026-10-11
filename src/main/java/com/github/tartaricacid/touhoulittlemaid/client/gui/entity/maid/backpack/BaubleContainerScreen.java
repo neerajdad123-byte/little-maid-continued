@@ -10,9 +10,7 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.TabIndex;
 import com.github.tartaricacid.touhoulittlemaid.inventory.container.backpack.BaubleContainer;
 import com.github.tartaricacid.touhoulittlemaid.network.message.OpenMaidGuiPackage;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,8 +22,6 @@ public class BaubleContainerScreen extends AbstractMaidContainerGui<BaubleContai
 
     public BaubleContainerScreen(BaubleContainer container, Inventory inv, Component titleIn) {
         super(container, inv, titleIn);
-        this.imageHeight = 256;
-        this.imageWidth = 256;
         this.maid = menu.getMaid();
         this.favorabilityLevel = this.maid.getFavorabilityManager().getLevel();
     }
@@ -47,9 +43,7 @@ public class BaubleContainerScreen extends AbstractMaidContainerGui<BaubleContai
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
         super.extractBackground(graphics, x, y, partialTicks);
-        super.renderBg(graphics, partialTicks, x, y);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, BAUBLE_BG);
+        super.extractBackground(graphics, x, y, partialTicks);
         graphics.blit(RenderPipelines.GUI_TEXTURED, BAUBLE_BG, leftPos + 85, topPos + 36, 0, 0, 165, 128, 256, 256);
 
         // 0 级和 1 级：只有前两层

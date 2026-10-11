@@ -3,7 +3,6 @@ package com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.chatbubb
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.EntityMaidRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.chatbubble.EntityGraphics;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.chatbubble.IChatBubbleRenderer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.resources.Identifier;
 
 public class ImageChatBubbleRenderer implements IChatBubbleRenderer {

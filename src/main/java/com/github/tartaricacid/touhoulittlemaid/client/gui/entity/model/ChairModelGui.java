@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.model;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -36,7 +37,7 @@ public class ChairModelGui extends AbstractModelGui<EntityChair, ChairModelInfo>
         float renderItemScale = CustomPackLoader.CHAIR_MODELS.getModelRenderItemScale(entity.getModelId());
         int centerX = (middleX - 256 / 2) / 2;
         int centerY = middleY + 80;
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 graphics,
                 centerX - 68,
                 centerY - 100,
@@ -64,7 +65,7 @@ public class ChairModelGui extends AbstractModelGui<EntityChair, ChairModelInfo>
     @Override
     protected void openDetailsGui(EntityChair entity, ChairModelInfo modelInfo) {
         if (minecraft != null) {
-            minecraft.setScreen(new ChairModelDetailsGui(entity, modelInfo));
+            minecraft.setScreenAndShow(new ChairModelDetailsGui(entity, modelInfo));
         }
     }
 
@@ -117,7 +118,7 @@ public class ChairModelGui extends AbstractModelGui<EntityChair, ChairModelInfo>
         EntityChair chair;
         try {
             chair = (EntityChair) EntityCacheUtil.ENTITY_CACHE.get(EntityChair.TYPE, () -> {
-                Entity e = EntityChair.TYPE.create(world);
+                Entity e = EntityChair.TYPE.create(world, EntitySpawnReason.LOAD);
                 if (e == null) {
                     return new EntityChair(world);
                 } else {
@@ -130,7 +131,7 @@ public class ChairModelGui extends AbstractModelGui<EntityChair, ChairModelInfo>
         }
 
         chair.setModelId(modelItem.getModelId().toString());
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 graphics,
                 posX - 18,
                 posY - 30,

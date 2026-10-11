@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.cache;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.texture.CacheIconTexture;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.pojo.IModelInfo;
@@ -50,7 +51,7 @@ public class CacheScreen<T extends LivingEntity, E extends IModelInfo> extends S
         }
         T entity;
         try {
-            entity = (T) EntityCacheUtil.ENTITY_CACHE.get(entityType, () -> entityType.create(world));
+            entity = (T) EntityCacheUtil.ENTITY_CACHE.get(entityType, () -> entityType.create(world, EntitySpawnReason.LOAD));
         } catch (ExecutionException | ClassCastException e) {
             e.fillInStackTrace();
             return;
@@ -66,7 +67,7 @@ public class CacheScreen<T extends LivingEntity, E extends IModelInfo> extends S
             stopWatch.stop();
             double timeCost = stopWatch.getTime(TimeUnit.MILLISECONDS) / 1000.0;
             TouhouLittleMaid.LOGGER.info("Cache icon time: {} seconds", timeCost);
-            Minecraft.getInstance().setScreen(parent);
+            Minecraft.getInstance().setScreenAndShow(parent);
             return;
         }
 

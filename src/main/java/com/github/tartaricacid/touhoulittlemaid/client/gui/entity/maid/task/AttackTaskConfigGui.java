@@ -102,7 +102,7 @@ public class AttackTaskConfigGui extends MaidTaskConfigGui<TaskConfigContainer> 
                 return;
             }
             Identifier id = attackGroupsKey.get(index);
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(id);
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(id);
             Component name = type.getDescription();
             int yOffset = startTop + 31 + 13 * i;
             this.addRenderableWidget(new MonsterListButton(name, startLeft - 1, yOffset, id, this));
@@ -150,7 +150,7 @@ public class AttackTaskConfigGui extends MaidTaskConfigGui<TaskConfigContainer> 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
         super.extractBackground(graphics, x, y, partialTicks);
-        super.renderBg(graphics, partialTicks, x, y);
+        super.extractBackground(graphics, x, y, partialTicks);
         graphics.blit(RenderPipelines.GUI_TEXTURED, BG, leftPos + 80, topPos + 28, 0, 0, imageWidth, 137, 256, 256);
     }
 

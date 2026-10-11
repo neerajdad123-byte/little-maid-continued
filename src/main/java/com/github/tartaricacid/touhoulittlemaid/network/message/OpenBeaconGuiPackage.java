@@ -37,7 +37,7 @@ public record OpenBeaconGuiPackage(BlockPos pos) implements CustomPacketPayload 
         }
         BlockEntity te = mc.level.getBlockEntity(message.pos);
         if (mc.player != null && mc.player.isAlive() && te instanceof TileEntityMaidBeacon) {
-            mc.setScreen(new MaidBeaconGui((TileEntityMaidBeacon) te));
+            mc.setScreenAndShow(new MaidBeaconGui((TileEntityMaidBeacon) te));
         }
     }
 

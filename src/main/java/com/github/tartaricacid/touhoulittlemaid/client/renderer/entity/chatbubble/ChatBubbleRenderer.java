@@ -4,7 +4,6 @@ import com.github.tartaricacid.touhoulittlemaid.client.renderer.entity.EntityMai
 import com.github.tartaricacid.touhoulittlemaid.entity.chatbubble.ChatBubbleDataCollection;
 import com.github.tartaricacid.touhoulittlemaid.entity.chatbubble.IChatBubbleData;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
-import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.ClientHooks;

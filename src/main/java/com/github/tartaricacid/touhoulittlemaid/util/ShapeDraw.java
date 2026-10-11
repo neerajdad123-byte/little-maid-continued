@@ -1,6 +1,5 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 
 public final class ShapeDraw {

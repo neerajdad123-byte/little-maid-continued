@@ -166,7 +166,7 @@ public abstract class AIChatSettingsHubScreen extends Screen {
             return;
         }
         this.persistTransientState();
-        this.minecraft.setScreen(this.createTabScreen(type));
+        this.minecraft.setScreenAndShow(this.createTabScreen(type));
     }
 
     protected AIChatSettingsHubScreen createTabScreen(Type type) {
@@ -190,7 +190,7 @@ public abstract class AIChatSettingsHubScreen extends Screen {
         this.state.llmSites.putAll(llmSites);
         this.state.ttsSites.clear();
         this.state.ttsSites.putAll(ttsSites);
-        this.minecraft.setScreen(this.createTabScreen(this.getType()));
+        this.minecraft.setScreenAndShow(this.createTabScreen(this.getType()));
     }
 
     private int addSiteSideButtons(int sideY) {
@@ -232,7 +232,7 @@ public abstract class AIChatSettingsHubScreen extends Screen {
         if (this.parent instanceof AIChatScreen chatScreen && chatScreen.getMaid().isAlive()) {
             ClientPacketDistributor.sendToServer(new OpenMaidAIChatPacket(chatScreen.getMaid()));
         } else {
-            this.getMinecraft().setScreen(null);
+            this.getMinecraft().setScreenAndShow(null);
         }
     }
 

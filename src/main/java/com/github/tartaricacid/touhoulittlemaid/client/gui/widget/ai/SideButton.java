@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.ai;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai.settings.AIChatSettingsHubScreen.Type;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -8,7 +9,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
 
-public class SideButton extends Button {
+public class SideButton extends PlainButton {
     protected final Type type;
 
     protected boolean isSelect = false;

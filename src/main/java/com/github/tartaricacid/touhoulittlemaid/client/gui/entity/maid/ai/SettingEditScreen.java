@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.ai;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -195,7 +196,7 @@ public class SettingEditScreen extends Screen {
         EntityMaid maid;
         try {
             maid = (EntityMaid) EntityCacheUtil.ENTITY_CACHE.get(EntityMaid.TYPE, () -> {
-                Entity e = EntityMaid.TYPE.create(world);
+                Entity e = EntityMaid.TYPE.create(world, EntitySpawnReason.LOAD);
                 return Objects.requireNonNullElseGet(e, () -> new EntityMaid(world));
             });
         } catch (ExecutionException | ClassCastException e) {
@@ -212,7 +213,7 @@ public class SettingEditScreen extends Screen {
         // 女仆换皮肤界面需要指定 YSM 渲染为空
         maid.setIsYsmModel(false);
         float renderItemScale = modelInfo.getRenderItemScale();
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 graphics,
                 posX - 45,
                 posY - 45,
@@ -234,7 +235,7 @@ public class SettingEditScreen extends Screen {
     public void onClose() {
         if (this.minecraft != null) {
             Screen screen = Objects.requireNonNullElse(this.parent, new AIChatScreen(this.maid));
-            this.minecraft.setScreen(screen);
+            this.minecraft.setScreenAndShow(screen);
         }
     }
 

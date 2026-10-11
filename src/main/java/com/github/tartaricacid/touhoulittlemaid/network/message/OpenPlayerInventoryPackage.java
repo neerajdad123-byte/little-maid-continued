@@ -38,7 +38,7 @@ public record OpenPlayerInventoryPackage(int action) implements CustomPacketPayl
         }
         if (message.action == OPEN_PLAYER_INVENTORY) {
             // 打开玩家背包
-            Minecraft.getInstance().setScreen(new InventoryScreen(player));
+            Minecraft.getInstance().setScreenAndShow(new InventoryScreen(player));
         }
     }
 

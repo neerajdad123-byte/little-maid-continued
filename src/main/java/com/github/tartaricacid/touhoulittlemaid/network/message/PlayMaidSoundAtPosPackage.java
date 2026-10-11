@@ -53,7 +53,7 @@ public record PlayMaidSoundAtPosPackage(Identifier soundEvent, String id,
         if (mc.level == null) {
             return;
         }
-        SoundEvent event = BuiltInRegistries.SOUND_EVENT.get(message.soundEvent);
+        SoundEvent event = BuiltInRegistries.SOUND_EVENT.getValue(message.soundEvent);
         if (event == null) {
             return;
         }

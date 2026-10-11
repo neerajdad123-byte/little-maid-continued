@@ -31,7 +31,7 @@ public final class ApplyPotionEffectEvent {
                 stack.shrink(1);
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(Items.GLASS_BOTTLE));
             }
-            maid.playSound(SoundEvents.GENERIC_DRINK, 0.6f, 0.8F + world.getRandom().nextFloat() * 0.4F);
+            maid.playSound(SoundEvents.GENERIC_DRINK.value(), 0.6f, 0.8F + world.getRandom().nextFloat() * 0.4F);
             event.setCanceled(true);
         }
 
@@ -41,7 +41,7 @@ public final class ApplyPotionEffectEvent {
                 stack.shrink(1);
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(Items.BUCKET));
             }
-            maid.playSound(SoundEvents.GENERIC_DRINK, 0.6f, 0.8F + world.getRandom().nextFloat() * 0.4F);
+            maid.playSound(SoundEvents.GENERIC_DRINK.value(), 0.6f, 0.8F + world.getRandom().nextFloat() * 0.4F);
             if (player instanceof ServerPlayer serverPlayer) {
                 InitTrigger.MAID_EVENT.get().trigger(serverPlayer, TriggerType.CLEAR_MAID_EFFECTS);
             }

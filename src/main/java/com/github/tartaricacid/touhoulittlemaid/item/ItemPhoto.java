@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidAndItemTransformEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -38,7 +39,7 @@ public class ItemPhoto extends AbstractStoreMaidItem {
             return super.useOn(context);
         }
         if (clickedFace == Direction.UP && !PlaceHelper.notSuitableForPlaceMaid(worldIn, clickedPos)) {
-            EntityMaid maid = InitEntities.MAID.get().create(worldIn);
+            EntityMaid maid = InitEntities.MAID.get().create(worldIn, EntitySpawnReason.LOAD);
             if (maid == null) {
                 return super.useOn(context);
             }

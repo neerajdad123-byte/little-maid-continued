@@ -101,9 +101,7 @@ public abstract class AbstractMaidContainerGui<T extends AbstractMaidContainer> 
     private int counterTime = 0;
 
     public AbstractMaidContainerGui(T screenContainer, Inventory inv, Component titleIn) {
-        super(screenContainer, inv, titleIn);
-        this.imageHeight = 256;
-        this.imageWidth = 256;
+        super(screenContainer, inv, titleIn, 256, 256);
         this.maid = menu.getMaid();
         this.task = menu.getMaid().getTask();
         this.notHiddenTasks = TaskManager.getNotHiddenTaskList(this.maid);
@@ -190,7 +188,7 @@ public abstract class AbstractMaidContainerGui<T extends AbstractMaidContainer> 
     // 增加一些额外信息，通过截图就能方便作者检查错误
     @SuppressWarnings("all")
     private void drawModInfo(GuiGraphicsExtractor graphics) {
-        String minecraftVersion = SharedConstants.getCurrentVersion().getName();
+        String minecraftVersion = SharedConstants.getCurrentVersion().name();
         String modVersion = ModList.get().getModFileById(TouhouLittleMaid.MOD_ID).versionString();
         String debugInfo = String.format("%s-%s", minecraftVersion, modVersion);
         graphics.centeredText(font, debugInfo, leftPos + 80 / 2, topPos - 4, PortUtil.color(ChatFormatting.GRAY));
@@ -292,14 +290,14 @@ public abstract class AbstractMaidContainerGui<T extends AbstractMaidContainer> 
                     (b) -> NeoForge.EVENT_BUS.post(new OpenYsmMaidScreenEvent(maid)));
             this.sound = new TouhouImageButton(leftPos + 42, topPos + 14, 9, 9,
                     144, 43, 10, BUTTON,
-                    (b) -> getMinecraft().setScreen(new MaidSoundPackGui(maid)));
+                    (b) -> getMinecraft().setScreenAndShow(new MaidSoundPackGui(maid)));
 
             this.addRenderableWidget(ysmSkin);
             this.addRenderableWidget(sound);
         } else {
             this.sound = new TouhouImageButton(leftPos + 52, topPos + 14, 9, 9,
                     144, 43, 10, BUTTON,
-                    (b) -> getMinecraft().setScreen(new MaidSoundPackGui(maid)));
+                    (b) -> getMinecraft().setScreenAndShow(new MaidSoundPackGui(maid)));
             this.addRenderableWidget(sound);
         }
     }
@@ -571,7 +569,7 @@ public abstract class AbstractMaidContainerGui<T extends AbstractMaidContainer> 
     }
 
     private void drawMaidCharacter(GuiGraphicsExtractor graphics, int x, int y) {
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 graphics,
                 leftPos + 6,
                 topPos + 12,

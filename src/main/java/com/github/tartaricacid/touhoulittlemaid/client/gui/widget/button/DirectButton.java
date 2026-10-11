@@ -1,11 +1,12 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.PlainButton;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 
-public class DirectButton extends Button {
+public class DirectButton extends PlainButton {
     private Direction direction = Direction.SOUTH;
 
     public DirectButton(int pX, int pY, int pWidth, int pHeight, Direction direction, OnPress pOnPress) {

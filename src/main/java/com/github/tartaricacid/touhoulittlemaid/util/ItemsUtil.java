@@ -195,7 +195,7 @@ public final class ItemsUtil {
      */
     public static ItemStack getItemStack(String itemId) {
         Identifier resourceLocation = Identifier.parse(itemId);
-        Item value = BuiltInRegistries.ITEM.get(resourceLocation);
+        Item value = BuiltInRegistries.ITEM.getValue(resourceLocation);
         return new ItemStack(value);
     }
 

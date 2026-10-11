@@ -14,7 +14,6 @@ import com.github.tartaricacid.touhoulittlemaid.client.resource.pojo.IModelInfo;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MiscConfig;
 import com.github.tartaricacid.touhoulittlemaid.util.ParseI18n;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -23,7 +22,6 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.network.chat.Component;
@@ -336,7 +334,7 @@ public abstract class AbstractModelGui<T extends LivingEntity, E extends IModelI
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.renderBlurredBackground(partialTicks);
+        super.extractBlurredBackground(graphics);
 
         graphics.pose().translate(0, 0);
 
@@ -390,7 +388,7 @@ public abstract class AbstractModelGui<T extends LivingEntity, E extends IModelI
             CustomModelPack<E> pack = modelPackList.get(guiNumber.tabToPackIndex(index, getPageIndex()));
             Identifier icon = pack.getIcon();
             if (icon != null) {
-                AbstractTexture iconTexture = Minecraft.getInstance().getTextureManager().getTexture(icon, EMPTY_ICON_TEXTURE);
+                AbstractTexture iconTexture = Minecraft.getInstance().getTextureManager().getTexture(icon);
                 if (EMPTY_ICON_TEXTURE.equals(iconTexture)) {
                     icon = EMPTY_ICON;
                 }
@@ -400,8 +398,6 @@ public abstract class AbstractModelGui<T extends LivingEntity, E extends IModelI
                 if (pack.getIconAnimation() == CustomModelPack.AnimationState.FALSE) {
                     graphics.blit(RenderPipelines.GUI_TEXTURED, icon, middleX - 92 + 28 * index, middleY - 98, 0, 0, 16, 16, 16, 16);
                 } else {
-                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                    RenderSystem.setShaderTexture(0, icon);
                     int time = getTickTime() / pack.getIconDelay();
                     int iconIndex = time % pack.getIconAspectRatio();
                     graphics.blit(RenderPipelines.GUI_TEXTURED, icon, middleX - 92 + 28 * index, middleY - 98, 0, iconIndex * 16, 16, 16, 16, 16 * pack.getIconAspectRatio());

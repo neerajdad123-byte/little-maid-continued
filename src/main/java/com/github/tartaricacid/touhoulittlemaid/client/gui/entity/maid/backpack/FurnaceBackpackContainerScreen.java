@@ -6,9 +6,7 @@ import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.maid.AbstractM
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.BaubleButton;
 import com.github.tartaricacid.touhoulittlemaid.compat.curios.CuriosCompat;
 import com.github.tartaricacid.touhoulittlemaid.inventory.container.backpack.FurnaceBackpackContainer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,8 +15,6 @@ public class FurnaceBackpackContainerScreen extends AbstractMaidContainerGui<Fur
 
     public FurnaceBackpackContainerScreen(FurnaceBackpackContainer container, Inventory inv, Component titleIn) {
         super(container, inv, titleIn);
-        this.imageHeight = 256;
-        this.imageWidth = 256;
     }
 
     @Override
@@ -35,9 +31,7 @@ public class FurnaceBackpackContainerScreen extends AbstractMaidContainerGui<Fur
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int x, int y, float partialTicks) {
         super.extractBackground(graphics, x, y, partialTicks);
-        super.renderBg(graphics, partialTicks, x, y);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, BACKPACK);
+        super.extractBackground(graphics, x, y, partialTicks);
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKPACK, leftPos + 85, topPos + 36, 0, 0, 165, 128, 256, 256);
         if (this.menu.isLit()) {
             int litProgress = this.menu.getLitProgress();
