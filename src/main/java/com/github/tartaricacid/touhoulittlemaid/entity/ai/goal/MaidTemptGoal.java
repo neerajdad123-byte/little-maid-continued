@@ -32,7 +32,7 @@ public class MaidTemptGoal extends Goal {
         this.items = items;
         this.canScare = canScare;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-        this.targetingConditions = TEMP_TARGETING.copy().selector(this::shouldFollow);
+        this.targetingConditions = TEMP_TARGETING.copy().selector((entity, level) -> this.shouldFollow(entity));
     }
 
     @Override
@@ -41,7 +41,7 @@ public class MaidTemptGoal extends Goal {
             --this.calmDown;
             return false;
         } else {
-            this.maid = this.mob.level().getNearestEntity(EntityMaid.class, this.targetingConditions, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getBoundingBox().inflate(10));
+            this.maid = getServerLevel(this.mob).getNearestEntity(EntityMaid.class, this.targetingConditions, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getBoundingBox().inflate(10));
             return this.maid != null;
         }
     }

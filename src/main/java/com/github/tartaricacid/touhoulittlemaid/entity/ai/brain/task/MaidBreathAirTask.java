@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.MaidPathFindingBFS;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
@@ -188,16 +189,11 @@ public class MaidBreathAirTask extends Behavior<EntityMaid> {
         }
 
         // 或者能提供水下呼吸的食物
-        FoodProperties foodProperties = stack.get(DataComponents.FOOD);
-        if (foodProperties == null) {
+        if (stack.get(DataComponents.FOOD) == null) {
             return false;
         }
-        List<FoodProperties.PossibleEffect> effects = foodProperties.effects();
-        if (effects.isEmpty()) {
-            return false;
-        }
-        for (FoodProperties.PossibleEffect effect : effects) {
-            if (effect.effect().getEffect() == MobEffects.WATER_BREATHING) {
+        for (MobEffectInstance effect : PortUtil.foodEffects(stack)) {
+            if (effect.getEffect() == MobEffects.WATER_BREATHING) {
                 return true;
             }
         }

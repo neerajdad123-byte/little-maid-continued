@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task;
 
+import net.minecraft.world.item.ItemStack;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.network.message.MaidAnimationPackage;
 import com.google.common.collect.ImmutableMap;
@@ -100,7 +101,7 @@ public class MaidSnowballTargetTask extends Behavior<EntityMaid> {
 
     private void performRangedAttack(EntityMaid shooter, LivingEntity target) {
         // 发射的是无 shooter 雪球，避免打中其他生物惹来攻击
-        Snowball snowball = new Snowball(shooter.level(), shooter.getX(), shooter.getY(), shooter.getZ());
+        Snowball snowball = new Snowball(shooter.level(), shooter.getX(), shooter.getY(), shooter.getZ(), new ItemStack(Items.SNOWBALL));
         double x = target.getX() - shooter.getX();
         double y = target.getBoundingBox().minY + target.getBbHeight() / 3.0F - snowball.position().y;
         double z = target.getZ() - shooter.getZ();

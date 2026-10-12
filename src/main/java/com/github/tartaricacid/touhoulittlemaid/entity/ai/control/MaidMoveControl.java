@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.ai.control;
 
+import net.minecraft.world.phys.Vec3;
 import com.github.tartaricacid.touhoulittlemaid.datagen.tag.TagBlock;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import net.minecraft.core.BlockPos;
@@ -42,7 +43,7 @@ public class MaidMoveControl extends MoveControl {
             float speedLerp = Mth.lerp(1, this.maid.getSpeed(), speed);
 
             if (maid.getSwimManager().getSwimTarget() != null) {
-                maid.getLookControl().setLookAt(maid.getSwimManager().getSwimTarget().getCenter());
+                maid.getLookControl().setLookAt(Vec3.atCenterOf(maid.getSwimManager().getSwimTarget()));
             }
 
             // 太慢了，3 倍基础速度
