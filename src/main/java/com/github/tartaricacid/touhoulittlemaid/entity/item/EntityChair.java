@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
+
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -54,7 +56,7 @@ public class EntityChair extends AbstractEntityFromItem {
     private static final EntityDataAccessor<String> MODEL_ID = SynchedEntityData.defineId(EntityChair.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> MOUNTED_HEIGHT = SynchedEntityData.defineId(EntityChair.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> TAMEABLE_CAN_RIDE = SynchedEntityData.defineId(EntityChair.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityChair.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityChair.class, InitEntities.OPTIONAL_UUID);
 
     private static final String DEFAULT_MODEL_ID = "touhou_little_maid:cushion";
 

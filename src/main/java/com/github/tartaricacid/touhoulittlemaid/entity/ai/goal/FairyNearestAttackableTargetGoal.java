@@ -42,7 +42,7 @@ public class FairyNearestAttackableTargetGoal<T extends LivingEntity> extends Ta
         Level level = this.mob.level;
         AABB searchArea = this.getTargetSearchArea(this.getFollowDistance());
         List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, searchArea,
-                e -> e.getType().is(TagEntity.MAID_FAIRY_ATTACK_GOAL));
+                e -> e.getType().builtInRegistryHolder().is(TagEntity.MAID_FAIRY_ATTACK_GOAL));
         this.target = level.getNearestEntity(entities, this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
     }
 

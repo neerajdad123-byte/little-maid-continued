@@ -151,7 +151,7 @@ public final class MaidBackupsManager {
     @NotNull
     private static CompoundTag createIndexData(@NotNull EntityMaid maid) {
         CompoundTag indexData = new CompoundTag();
-        indexData.putString("Name", Component.Serializer.toJson(maid.getName(), maid.level.registryAccess()));
+        indexData.putString("Name", PortUtil.componentToJson(maid.getName(), maid.level.registryAccess()));
         indexData.putString("Dimension", maid.level.dimension().identifier().toString());
         indexData.put("Pos", PortUtil.writeBlockPos(maid.blockPosition()));
         indexData.putLong("Timestamp", System.currentTimeMillis());
@@ -164,7 +164,7 @@ public final class MaidBackupsManager {
         for (String s : indexTag.keySet()) {
             CompoundTag maidTag = indexTag.getCompoundOrEmpty(s);
             UUID maidUuid = UUID.fromString(s);
-            Component name = Component.Serializer.fromJson(maidTag.getString("Name"), player.level.registryAccess());
+            Component name = PortUtil.componentFromJson(maidTag.getStringOr("Name", ""), player.level.registryAccess());
             BlockPos pos = maidTag.read("Pos", BlockPos.CODEC).orElse(BlockPos.ZERO);
             String dimension = maidTag.getStringOr("Dimension", "");
             long timestamp = maidTag.getLongOr("Timestamp", 0L);

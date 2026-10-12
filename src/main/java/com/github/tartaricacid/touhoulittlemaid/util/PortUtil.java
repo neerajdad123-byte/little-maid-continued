@@ -18,7 +18,17 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ARGB;
+import com.google.gson.JsonParser;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.chat.MutableComponent;
+import org.jspecify.annotations.Nullable;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
@@ -99,6 +109,49 @@ public final class PortUtil {
         TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess());
         entity.saveWithoutId(output);
         return output.buildResult();
+    }
+
+    /**
+     * Replacement for MC 1.21.1 {@code ItemStackHandler#serializeNBT(Provider)}; same NBT layout ("Items", "Size").
+     */
+    public static CompoundTag serializeItems(ItemStackHandler handler, HolderLookup.Provider provider) {
+        TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, provider);
+        handler.serialize(output);
+        return output.buildResult();
+    }
+
+    /**
+     * Replacement for MC 1.21.1 {@code ItemStackHandler#deserializeNBT(Provider, CompoundTag)}.
+     */
+    public static void deserializeItems(ItemStackHandler handler, HolderLookup.Provider provider, CompoundTag tag) {
+        handler.deserialize(TagValueInput.create(ProblemReporter.DISCARDING, provider, tag));
+    }
+
+    /**
+     * Replacement for the removed {@code Component.Serializer#toJson(Component, Provider)}.
+     */
+    public static String componentToJson(Component component, HolderLookup.Provider provider) {
+        return ComponentSerialization.CODEC.encodeStart(provider.createSerializationContext(JsonOps.INSTANCE), component).getOrThrow().toString();
+    }
+
+    /**
+     * Replacement for the removed {@code Component.Serializer#fromJson(String, Provider)}; null when unparsable.
+     */
+    @Nullable
+    public static MutableComponent componentFromJson(String json, HolderLookup.Provider provider) {
+        try {
+            return ComponentSerialization.CODEC.parse(provider.createSerializationContext(JsonOps.INSTANCE), JsonParser.parseString(json))
+                    .result().map(Component::copy).orElse(null);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Game rules only exist on the server in MC 26.x; returns false on the client.
+     */
+    public static boolean gameRule(Level level, GameRule<Boolean> rule) {
+        return level instanceof ServerLevel serverLevel && serverLevel.getGameRules().get(rule);
     }
 
     /**

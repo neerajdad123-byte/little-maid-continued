@@ -52,7 +52,7 @@ public class TileEntityShrine extends BlockEntity {
         HolderLookup.Provider pRegistries = PortUtil.registries();
         CompoundTag pTag = new CompoundTag();
         try {
-            getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
+            getPersistentData().put(STORAGE_ITEM, PortUtil.serializeItems(handler, pRegistries));
             super.saveAdditional(valueOutput);
         } finally {
             PortUtil.writeRoot(valueOutput, pTag);
@@ -64,7 +64,7 @@ public class TileEntityShrine extends BlockEntity {
         HolderLookup.Provider pRegistries = valueInput.lookup();
         CompoundTag pTag = PortUtil.readRoot(valueInput);
         super.loadAdditional(valueInput);
-        handler.deserializeNBT(pRegistries, getPersistentData().getCompound(STORAGE_ITEM));
+        PortUtil.deserializeItems(handler, pRegistries, getPersistentData().getCompoundOrEmpty(STORAGE_ITEM));
     }
 
     @Override

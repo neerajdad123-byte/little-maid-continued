@@ -64,7 +64,7 @@ public class TileEntityAltar extends BlockEntity {
             getPersistentData().putBoolean(IS_RENDER, isRender);
             getPersistentData().putBoolean(CAN_PLACE_ITEM, canPlaceItem);
             getPersistentData().putInt(STORAGE_STATE_ID, Block.getId(storageState));
-            getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
+            getPersistentData().put(STORAGE_ITEM, PortUtil.serializeItems(handler, pRegistries));
             getPersistentData().putString(DIRECTION, direction.getSerializedName());
             getPersistentData().put(STORAGE_BLOCK_LIST, blockPosList.serialize());
             getPersistentData().put(CAN_PLACE_ITEM_POS_LIST, canPlaceItemPosList.serialize());
@@ -82,7 +82,7 @@ public class TileEntityAltar extends BlockEntity {
         isRender = getPersistentData().getBooleanOr(IS_RENDER, false);
         canPlaceItem = getPersistentData().getBooleanOr(CAN_PLACE_ITEM, false);
         storageState = Block.stateById(getPersistentData().getIntOr(STORAGE_STATE_ID, 0));
-        handler.deserializeNBT(pRegistries, getPersistentData().getCompound(STORAGE_ITEM));
+        PortUtil.deserializeItems(handler, pRegistries, getPersistentData().getCompoundOrEmpty(STORAGE_ITEM));
         direction = Direction.byName(getPersistentData().getStringOr(DIRECTION, ""));
         blockPosList.deserialize(getPersistentData().getListOrEmpty(STORAGE_BLOCK_LIST));
         canPlaceItemPosList.deserialize(getPersistentData().getListOrEmpty(CAN_PLACE_ITEM_POS_LIST));

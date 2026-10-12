@@ -61,7 +61,13 @@ OPT_DEFAULTS = {
     "Optional<Short> cannot be converted to short": ("getShort", "getShortOr", "(short) 0"),
     "Optional<CompoundTag> cannot be converted to CompoundTag": ("getCompound", "getCompoundOrEmpty", None),
     "method getList in class CompoundTag cannot be applied to given types": ("getList", "getListOrEmpty", "DROP2"),
-    "Optional<int[]> cannot be converted to int[]": ("getIntArray", "getIntArray", "ORELSE_INTARR"),
+    "(Optional<String>)": ("getString", "getStringOr", '""'),
+    "Optional<Float>)": ("getFloat", "getFloatOr", "0F"),
+    "Optional<Integer>)": ("getInt", "getIntOr", "0"),
+    "Optional<Boolean>)": ("getBoolean", "getBooleanOr", "false"),
+    "Optional<CompoundTag>)": ("getCompound", "getCompoundOrEmpty", None),
+    "Optional<Integer> and int": ("getInt", "getIntOr", "0"),
+    "Optional<int[]> cannot be converted to int[]":("getIntArray", "getIntArray", "ORELSE_INTARR"),
     "Optional<long[]> cannot be converted to long[]": ("getLongArray", "getLongArray", "ORELSE_LONGARR"),
 }
 

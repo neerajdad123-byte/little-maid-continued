@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.bauble.IChestType;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
 import com.github.tartaricacid.touhoulittlemaid.inventory.chest.ChestManager;
@@ -70,7 +71,7 @@ public class ItemWirelessIO extends Item implements MenuProvider {
         if (stack.getItem() == InitItems.WIRELESS_IO.get()) {
             CompoundTag tag = stack.get(FILTER_LIST_TAG);
             if (tag != null) {
-                handler.deserializeNBT(provider, tag);
+                PortUtil.deserializeItems(handler, provider, tag);
             }
         }
         return handler;
@@ -78,7 +79,7 @@ public class ItemWirelessIO extends Item implements MenuProvider {
 
     public static void setFilterList(HolderLookup.Provider provider, ItemStack stack, ItemStackHandler itemStackHandler) {
         if (stack.getItem() == InitItems.WIRELESS_IO.get()) {
-            stack.set(FILTER_LIST_TAG, itemStackHandler.serializeNBT(provider));
+            stack.set(FILTER_LIST_TAG, PortUtil.serializeItems(itemStackHandler, provider));
         }
     }
 

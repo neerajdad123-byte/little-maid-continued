@@ -72,6 +72,6 @@ public class ConditionalVehicle {
         if (tagTest.isEmpty()) {
             return EMPTY;
         }
-        return tagTest.stream().filter(tag -> vehicle.getType().is(tag)).findFirst().map(itemTagKey -> tagPre + itemTagKey.location()).orElse(EMPTY);
+        return tagTest.stream().filter(tag -> vehicle.getType().builtInRegistryHolder().is(tag)).findFirst().map(itemTagKey -> tagPre + itemTagKey.location()).orElse(EMPTY);
     }
 }

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task;
 
+import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.MaidActivitySchedule;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntitySit;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
@@ -25,7 +26,7 @@ public class MaidUpdateActivityFromSchedule extends Behavior<EntityMaid> {
 
         // 让女仆在切换日程表时能够改变自己的活动范围
         if (gameTime - brain.lastScheduleUpdate > 20L) {
-            Activity activity = brain.getSchedule().getActivityAt((int) (dayTime % 24000L));
+            Activity activity = MaidActivitySchedule.getActivityAt(maid.getSchedule(), (int) (dayTime % 24000L));
             if (this.cacheActivity == null) {
                 this.cacheActivity = activity;
             }
@@ -60,7 +61,7 @@ public class MaidUpdateActivityFromSchedule extends Behavior<EntityMaid> {
         if (maid.isMaidInSittingPose() || maid.isPassenger()) {
             if (gameTime - brain.lastScheduleUpdate > 20L) {
                 brain.lastScheduleUpdate = gameTime;
-                Activity activity = brain.getSchedule().getActivityAt((int) (dayTime % 24000L));
+                Activity activity = MaidActivitySchedule.getActivityAt(maid.getSchedule(), (int) (dayTime % 24000L));
                 Activity riderActivity;
                 if (activity.equals(Activity.WORK)) {
                     riderActivity = InitEntities.RIDE_WORK.get();
@@ -88,7 +89,7 @@ public class MaidUpdateActivityFromSchedule extends Behavior<EntityMaid> {
                 }
             }
         } else {
-            brain.updateActivityFromSchedule(dayTime, level.getGameTime());
+            MaidActivitySchedule.updateActivity(brain, maid, dayTime, level.getGameTime());
         }
     }
 }

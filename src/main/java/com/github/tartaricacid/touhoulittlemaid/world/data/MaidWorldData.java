@@ -70,7 +70,7 @@ public class MaidWorldData extends SavedData {
                     UUID ownerId = infoTag.read("OwnerId", UUIDUtil.CODEC).orElseThrow();
                     UUID maidId = infoTag.read("MaidId", UUIDUtil.CODEC).orElseThrow();
                     long timestamp = infoTag.getLongOr("Timestamp", 0L);
-                    MutableComponent name = Component.Serializer.fromJson(infoTag.getString("Name"), provider);
+                    MutableComponent name = PortUtil.componentFromJson(infoTag.getStringOr("Name", ""), provider);
                     List<MaidInfo> maidInfos = data.infos.computeIfAbsent(ownerId, uuid -> Lists.newArrayList());
                     maidInfos.add(new MaidInfo(dimension, chunkPos, ownerId, maidId, timestamp, name));
                 }
@@ -90,7 +90,7 @@ public class MaidWorldData extends SavedData {
                     UUID ownerId = infoTag.read("OwnerId", UUIDUtil.CODEC).orElseThrow();
                     UUID tombstoneId = infoTag.read("TombstoneId", UUIDUtil.CODEC).orElseThrow();
                     long timestamp = infoTag.getLongOr("Timestamp", 0L);
-                    MutableComponent name = Component.Serializer.fromJson(infoTag.getString("Name"), provider);
+                    MutableComponent name = PortUtil.componentFromJson(infoTag.getStringOr("Name", ""), provider);
                     List<MaidInfo> tombstoneInfos = data.tombstones.computeIfAbsent(ownerId, uuid -> Lists.newArrayList());
                     tombstoneInfos.add(new MaidInfo(dimension, chunkPos, ownerId, tombstoneId, timestamp, name));
                 }
@@ -114,7 +114,7 @@ public class MaidWorldData extends SavedData {
                 infoTag.store("OwnerId", UUIDUtil.CODEC, info.getOwnerId());
                 infoTag.store("MaidId", UUIDUtil.CODEC, info.getEntityId());
                 infoTag.putLong("Timestamp", info.getTimestamp());
-                infoTag.putString("Name", Component.Serializer.toJson(info.getName(), provider));
+                infoTag.putString("Name", PortUtil.componentToJson(info.getName(), provider));
                 listTag.add(infoTag);
             });
             infosTag.put(id.toString(), listTag);
@@ -133,7 +133,7 @@ public class MaidWorldData extends SavedData {
                 infoTag.store("OwnerId", UUIDUtil.CODEC, info.getOwnerId());
                 infoTag.store("TombstoneId", UUIDUtil.CODEC, info.getEntityId());
                 infoTag.putLong("Timestamp", info.getTimestamp());
-                infoTag.putString("Name", Component.Serializer.toJson(info.getName(), provider));
+                infoTag.putString("Name", PortUtil.componentToJson(info.getName(), provider));
                 listTag.add(infoTag);
             });
             tombstonesTag.put(id.toString(), listTag);

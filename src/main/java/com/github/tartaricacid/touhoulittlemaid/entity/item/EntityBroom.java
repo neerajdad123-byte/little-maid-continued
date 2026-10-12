@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
+
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -47,7 +49,7 @@ public class EntityBroom extends AbstractEntityFromItem implements OwnableEntity
             .ridingOffset(0)
             .build("broom");
 
-    private static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(EntityBroom.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(EntityBroom.class, InitEntities.OPTIONAL_UUID);
 
     private final List<IBroomControl> broomControls;
     public boolean inPhysicalCheck = false;

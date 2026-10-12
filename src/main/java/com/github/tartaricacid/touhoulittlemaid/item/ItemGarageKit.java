@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity.TileEntityItemStackGarageKitRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.CustomPackLoader;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.pojo.MaidModelInfo;
@@ -74,7 +75,7 @@ public class ItemGarageKit extends BlockItem {
             if (YsmCompat.isInstalled()) {
                 YsmMaidInfo ysmMaidInfo = YsmCompat.getYsmMaidInfo(data.copyTag());
                 if (ysmMaidInfo.isYsmModel()) {
-                    MutableComponent name = Component.Serializer.fromJson(ysmMaidInfo.name(), Minecraft.getInstance().level.registryAccess());
+                    MutableComponent name = PortUtil.componentFromJson(ysmMaidInfo.name(), Minecraft.getInstance().level.registryAccess());
                     if (name == null || name.equals(Component.empty())) {
                         return prefix.append(ysmMaidInfo.modelId());
                     }

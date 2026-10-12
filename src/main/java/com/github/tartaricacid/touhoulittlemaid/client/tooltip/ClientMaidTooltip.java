@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.tooltip;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.CustomPackLoader;
@@ -53,7 +54,7 @@ public class ClientMaidTooltip implements ClientTooltipComponent {
             if (level == null) {
                 return Component.empty();
             }
-            MutableComponent name = Component.Serializer.fromJson(ysmMaidInfo.name(), level.registryAccess());
+            MutableComponent name = PortUtil.componentFromJson(ysmMaidInfo.name(), level.registryAccess());
             if (name == null || name.equals(Component.empty())) {
                 return Component.literal(ysmMaidInfo.modelId());
             }
@@ -91,7 +92,7 @@ public class ClientMaidTooltip implements ClientTooltipComponent {
 
         MutableComponent customNameComponent = null;
         if (StringUtils.isNotBlank(customName)) {
-            customNameComponent = Component.Serializer.fromJson(customName, access);
+            customNameComponent = PortUtil.componentFromJson(customName, access);
             if (customNameComponent != null) {
                 guiGraphics.text(font, customNameComponent.withStyle(ChatFormatting.GRAY), pX, pY + 2, 0xFFFFFFFF);
             }

@@ -93,7 +93,7 @@ public class TileEntityPicnicMat extends BlockEntity {
         CompoundTag pTag = new CompoundTag();
         try {
             getPersistentData().put(CENTER_POS_NAME, PortUtil.writeBlockPos(centerPos));
-            getPersistentData().put(STORAGE_ITEM, handler.serializeNBT(pRegistries));
+            getPersistentData().put(STORAGE_ITEM, PortUtil.serializeItems(handler, pRegistries));
             ListTag listTag = new ListTag();
             for (UUID uuid : sitIds) {
                 listTag.add(NbtUtils.createUUID(uuid));
@@ -111,7 +111,7 @@ public class TileEntityPicnicMat extends BlockEntity {
         CompoundTag pTag = PortUtil.readRoot(valueInput);
         super.loadAdditional(valueInput);
         NbtUtils.readBlockPos(getPersistentData(), CENTER_POS_NAME).ifPresent(pos -> centerPos = pos);
-        this.handler.deserializeNBT(pRegistries, getPersistentData().getCompound(STORAGE_ITEM));
+        PortUtil.deserializeItems(this.handler, pRegistries, getPersistentData().getCompoundOrEmpty(STORAGE_ITEM));
         ListTag sitIdsTag = getPersistentData().getListOrEmpty(SIT_IDS);
         int i = 0;
         for (Tag tag : sitIdsTag) {

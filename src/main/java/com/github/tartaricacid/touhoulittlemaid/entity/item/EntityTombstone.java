@@ -121,11 +121,11 @@ public class EntityTombstone extends Entity {
             this.ownerId = tag.read(OWNER_ID_TAG, UUIDUtil.CODEC).orElseThrow();
         }
         if (tag.contains(TOMBSTONE_ITEMS_TAG)) {
-            items.deserializeNBT(this.registryAccess(), tag.getCompound(TOMBSTONE_ITEMS_TAG));
+            PortUtil.deserializeItems(items, this.registryAccess(), tag.getCompoundOrEmpty(TOMBSTONE_ITEMS_TAG));
         }
         if (tag.contains(MAID_NAME_TAG)) {
             String nameJson = tag.getStringOr(MAID_NAME_TAG, "");
-            setMaidName(Component.Serializer.fromJson(nameJson, this.registryAccess()));
+            setMaidName(PortUtil.componentFromJson(nameJson, this.registryAccess()));
         }
     }
 
@@ -134,8 +134,8 @@ public class EntityTombstone extends Entity {
         CompoundTag tag = new CompoundTag();
         try {
             tag.store(OWNER_ID_TAG, UUIDUtil.CODEC, this.ownerId);
-            tag.put(TOMBSTONE_ITEMS_TAG, this.items.serializeNBT(this.registryAccess()));
-            tag.putString(MAID_NAME_TAG, Component.Serializer.toJson(this.getMaidName(), this.registryAccess()));
+            tag.put(TOMBSTONE_ITEMS_TAG, PortUtil.serializeItems(this.items, this.registryAccess()));
+            tag.putString(MAID_NAME_TAG, PortUtil.componentToJson(this.getMaidName(), this.registryAccess()));
         } finally {
             PortUtil.writeRoot(valueOutput, tag);
         }

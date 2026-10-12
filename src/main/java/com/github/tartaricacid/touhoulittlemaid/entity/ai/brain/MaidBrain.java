@@ -54,7 +54,6 @@ public final class MaidBrain {
     }
 
     public static void registerBrainGoals(Brain<EntityMaid> brain, EntityMaid maid) {
-        registerSchedule(brain, maid);
         registerCoreGoals(brain);
         registerPanicGoals(brain);
 
@@ -72,20 +71,6 @@ public final class MaidBrain {
         MaidUpdateActivityFromSchedule.updateActivityFromSchedule(maid, brain);
     }
 
-    private static void registerSchedule(Brain<EntityMaid> brain, EntityMaid maid) {
-        switch (maid.getSchedule()) {
-            case ALL:
-                brain.setSchedule(InitEntities.MAID_ALL_DAY_SCHEDULES.get());
-                break;
-            case NIGHT:
-                brain.setSchedule(InitEntities.MAID_NIGHT_SHIFT_SCHEDULES.get());
-                break;
-            case DAY:
-            default:
-                brain.setSchedule(InitEntities.MAID_DAY_SHIFT_SCHEDULES.get());
-                break;
-        }
-    }
 
     private static void registerCoreGoals(Brain<EntityMaid> brain) {
         Pair<Integer, BehaviorControl<? super EntityMaid>> swimJump = Pair.of(0, new MaidSwimJumpTask(0.8f));

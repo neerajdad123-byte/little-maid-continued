@@ -1,5 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.init;
 
+import java.util.UUID;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.nbt.CompoundTag;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.MaidSchedule;
 import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.sensor.MaidHostilesSensor;
@@ -23,8 +27,6 @@ import net.minecraft.world.entity.ai.behavior.PositionTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.entity.schedule.Schedule;
-import net.minecraft.world.entity.schedule.ScheduleBuilder;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -43,7 +45,6 @@ public final class InitEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, TouhouLittleMaid.MOD_ID);
     public static final DeferredRegister<MemoryModuleType<?>> MEMORY_MODULE_TYPES = DeferredRegister.create(Registries.MEMORY_MODULE_TYPE, TouhouLittleMaid.MOD_ID);
     public static final DeferredRegister<SensorType<?>> SENSOR_TYPES = DeferredRegister.create(Registries.SENSOR_TYPE, TouhouLittleMaid.MOD_ID);
-    public static final DeferredRegister<Schedule> SCHEDULES = DeferredRegister.create(Registries.SCHEDULE, TouhouLittleMaid.MOD_ID);
     public static final DeferredRegister<EntityDataSerializer<?>> DATA_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, TouhouLittleMaid.MOD_ID);
     public static final DeferredRegister<Activity> ACTIVITIES = DeferredRegister.create(Registries.ACTIVITY, TouhouLittleMaid.MOD_ID);
 
@@ -72,30 +73,11 @@ public final class InitEntities {
     public static Supplier<SensorType<MaidHostilesSensor>> MAID_HOSTILES_SENSOR = SENSOR_TYPES.register("maid_hostiles", () -> new SensorType<>(MaidHostilesSensor::new));
     public static Supplier<SensorType<MaidPickupEntitiesSensor>> MAID_PICKUP_ENTITIES_SENSOR = SENSOR_TYPES.register("maid_pickup_entities", () -> new SensorType<>(MaidPickupEntitiesSensor::new));
 
-    public static Supplier<Schedule> MAID_DAY_SHIFT_SCHEDULES = SCHEDULES.register("maid_day_shift_schedules",
-            () -> {
-                // 06:00 ~ 18:00 工作
-                // 18:00 ~ 22:00 娱乐
-                // 22:00 ~ 06:00 睡觉
-                return new ScheduleBuilder(new Schedule())
-                        .changeActivityAt(0, Activity.WORK)
-                        .changeActivityAt(12000, Activity.IDLE)
-                        .changeActivityAt(16000, Activity.REST)
-                        .build();
-            });
-    public static Supplier<Schedule> MAID_NIGHT_SHIFT_SCHEDULES = SCHEDULES.register("maid_night_shift_schedules",
-            () -> {
-                // 18:00 ~ 06:00 工作
-                // 06:00 ~ 14:00 睡觉
-                // 14:00 ~ 18:00 娱乐
-                return new ScheduleBuilder(new Schedule())
-                        .changeActivityAt(0, Activity.REST)
-                        .changeActivityAt(8000, Activity.IDLE)
-                        .changeActivityAt(12000, Activity.WORK)
-                        .build();
-            });
-    public static Supplier<Schedule> MAID_ALL_DAY_SCHEDULES = SCHEDULES.register("maid_all_day_schedules",
-            () -> new ScheduleBuilder(new Schedule()).changeActivityAt(0, Activity.WORK).build());
+    // Little Maid Continued: MC 26.x removed these vanilla serializers; the maid still syncs these values
+    public static final EntityDataSerializer<CompoundTag> COMPOUND_TAG = EntityDataSerializer.forValueType(ByteBufCodecs.COMPOUND_TAG);
+    public static final EntityDataSerializer<Optional<UUID>> OPTIONAL_UUID = EntityDataSerializer.forValueType(UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs::optional));
+    public static Supplier<EntityDataSerializer<?>> COMPOUND_TAG_DATA_SERIALIZERS = DATA_SERIALIZERS.register("compound_tag", () -> COMPOUND_TAG);
+    public static Supplier<EntityDataSerializer<?>> OPTIONAL_UUID_DATA_SERIALIZERS = DATA_SERIALIZERS.register("optional_uuid", () -> OPTIONAL_UUID);
 
     public static Supplier<EntityDataSerializer<?>> MAID_SCHEDULE_DATA_SERIALIZERS = DATA_SERIALIZERS.register("maid_schedule", () -> MaidSchedule.DATA);
     public static Supplier<EntityDataSerializer<?>> MAID_CHAT_BUBBLE_DATA_SERIALIZERS = DATA_SERIALIZERS.register("maid_chat_bubble", () -> ChatBubbleRegister.INSTANCE);
