@@ -2,10 +2,7 @@ package com.github.tartaricacid.touhoulittlemaid.util;
 
 import com.github.tartaricacid.touhoulittlemaid.crafting.AltarRecipe;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
-import com.github.tartaricacid.touhoulittlemaid.init.InitRecipes;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemEntityPlaceholder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.NonNullList;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -28,9 +25,8 @@ public final class JERIUtil {
     }
 
     private static void recipeMaker(AltarRecipeMaker maker, AltarRecipe altarRecipe) {
-        Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(InitRecipes.ALTAR_CRAFTING.get());
         Identifier recipeId = altarRecipe.getId();
-        ItemStack output = altarRecipe.getResultItem(Minecraft.getInstance().level.registryAccess());
+        ItemStack output = altarRecipe.getResult().copy();
         if (!altarRecipe.isItemCraft()) {
             output = InitItems.ENTITY_PLACEHOLDER.get().getDefaultInstance();
             ItemEntityPlaceholder.setRecipeId(output, altarRecipe.getRecipeString());
@@ -39,6 +35,6 @@ public final class JERIUtil {
     }
 
     public interface AltarRecipeMaker {
-        void accept(Identifier recipeId, NonNullList<Ingredient> inputs, ItemStack output, float powerCost, String langKey);
+        void accept(Identifier recipeId, List<Ingredient> inputs, ItemStack output, float powerCost, String langKey);
     }
 }

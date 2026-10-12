@@ -39,7 +39,7 @@ public class ItemGarageKit extends BlockItem {
     private static final CustomData DEFAULT_DATA = getDefaultData();
 
     public ItemGarageKit() {
-        super(InitBlocks.GARAGE_KIT.get(), (new Item.Properties()).stacksTo(1));
+        super(InitBlocks.GARAGE_KIT.get(), (new Item.Properties()).stacksTo(1).useBlockDescriptionPrefix());
     }
 
     public static CustomData getMaidData(ItemStack stack) {

@@ -46,7 +46,7 @@ public record ChairModelPackage(int id, Identifier modelId, float mountedHeight,
                 Entity entity = sender.level.getEntity(message.id);
                 boolean canChangeModel = ChairConfig.CHAIR_CHANGE_MODEL.get() || sender.isCreative();
 
-                if (entity instanceof EntityChair) {
+                if (entity instanceof EntityChair && sender.isWithinEntityInteractionRange(entity, 4)) {
                     if (canChangeModel) {
                         EntityChair chair = (EntityChair) entity;
                         chair.setModelId(message.modelId.toString());

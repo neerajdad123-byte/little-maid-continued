@@ -36,7 +36,8 @@ public record StorageAndTakePowerPackage(BlockPos pos, float powerNum,
             context.enqueueWork(() -> {
                 ServerPlayer sender = (ServerPlayer) context.player();
                 Level world = sender.level();
-                if (world.isLoaded(message.pos)) {
+                if (message.powerNum > 0 && Float.isFinite(message.powerNum)
+                    && world.isLoaded(message.pos) && sender.isWithinBlockInteractionRange(message.pos, 4)) {
                     BlockEntity te = world.getBlockEntity(message.pos);
                     if (te instanceof TileEntityMaidBeacon beacon) {
                         PowerAttachment power = sender.getData(InitDataAttachment.POWER_NUM);

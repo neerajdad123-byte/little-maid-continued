@@ -53,7 +53,7 @@ public class CacheScreen<T extends LivingEntity, E extends IModelInfo> extends S
         try {
             entity = (T) EntityCacheUtil.ENTITY_CACHE.get(entityType, () -> entityType.create(world, EntitySpawnReason.LOAD));
         } catch (ExecutionException | ClassCastException e) {
-            e.fillInStackTrace();
+            TouhouLittleMaid.LOGGER.error("Failed to create cached entity", e);
             return;
         }
         entityRender.render(graphics, posX, posY, modelInfo, scaleModified, entity);

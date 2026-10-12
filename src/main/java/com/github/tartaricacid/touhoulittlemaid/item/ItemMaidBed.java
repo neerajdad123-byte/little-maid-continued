@@ -19,7 +19,7 @@ public class ItemMaidBed extends BlockItem {
     private static final String COLOR_TAG = "BedColor";
 
     public ItemMaidBed() {
-        super(InitBlocks.MAID_BED.get(), (new Item.Properties()).stacksTo(1));
+        super(InitBlocks.MAID_BED.get(), (new Item.Properties()).stacksTo(1).useBlockDescriptionPrefix());
     }
 
     public static void setColor(DyeColor color, ItemStack bed) {

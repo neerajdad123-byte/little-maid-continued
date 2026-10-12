@@ -32,7 +32,7 @@ public class ItemModelSwitcher extends BlockItem {
     private static final String NEO_FORGE_DATA_TAG = "NeoForgeData";
 
     public ItemModelSwitcher() {
-        super(InitBlocks.MODEL_SWITCHER.get(), (new Item.Properties()).stacksTo(1));
+        super(InitBlocks.MODEL_SWITCHER.get(), (new Item.Properties()).stacksTo(1).useBlockDescriptionPrefix());
     }
 
     public static ItemStack tileEntityToItemStack(HolderLookup.Provider provider, TileEntityModelSwitcher switcher) {

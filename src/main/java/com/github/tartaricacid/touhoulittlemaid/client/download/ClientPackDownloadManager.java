@@ -86,7 +86,7 @@ public class ClientPackDownloadManager {
             try {
                 reloadPack(packFile);
             } catch (IOException e) {
-                e.fillInStackTrace();
+                TouhouLittleMaid.LOGGER.error("Unexpected IO error", e);
             }
         }).exceptionally(error -> {
             // 异常？那么清理相关内容，并打印提示

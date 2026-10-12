@@ -199,7 +199,7 @@ public class SettingEditScreen extends Screen {
                 return Objects.requireNonNullElseGet(e, () -> new EntityMaid(world));
             });
         } catch (ExecutionException | ClassCastException e) {
-            e.fillInStackTrace();
+            TouhouLittleMaid.LOGGER.error("Failed to create cached entity", e);
             return;
         }
 

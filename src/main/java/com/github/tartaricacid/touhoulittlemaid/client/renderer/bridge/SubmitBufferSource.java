@@ -49,7 +49,7 @@ public final class SubmitBufferSource implements MultiBufferSource, AutoCloseabl
 
     @Override
     public VertexConsumer getBuffer(RenderType renderType) {
-        return buffers.computeIfAbsent(renderType, type -> new RecordingVertexConsumer());
+        return buffers.computeIfAbsent(renderType, type -> RecordingVertexConsumer.obtain());
     }
 
     /**
@@ -59,7 +59,7 @@ public final class SubmitBufferSource implements MultiBufferSource, AutoCloseabl
         for (Map.Entry<RenderType, RecordingVertexConsumer> entry : buffers.entrySet()) {
             RecordingVertexConsumer recording = entry.getValue();
             if (!recording.isEmpty()) {
-                collector.submitCustomGeometry(IDENTITY, entry.getKey(), (pose, buffer) -> recording.replay(buffer));
+                collector.submitCustomGeometry(IDENTITY, entry.getKey(), (pose, buffer) -> recording.replayAndRecycle(buffer));  // shortcut: assumes the collector runs each callback once per frame; if geometry flickers or duplicates, drop the pool
             }
         }
         buffers.clear();

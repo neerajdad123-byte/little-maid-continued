@@ -7,8 +7,6 @@ import com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
 import com.github.tartaricacid.touhoulittlemaid.init.InitRecipes;
 import com.google.common.base.Suppliers;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -16,6 +14,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import com.github.tartaricacid.touhoulittlemaid.client.event.ClientAltarRecipes;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -62,11 +63,7 @@ public class ItemEntityPlaceholder extends Item {
 
     @OnlyIn(Dist.CLIENT)
     public static void fillItemCategory(CreativeModeTab.Output items) {
-        ClientLevel world = Minecraft.getInstance().level;
-        if (world == null) {
-            return;
-        }
-        world.getRecipeManager().getAllRecipesFor(InitRecipes.ALTAR_CRAFTING.get()).forEach(recipe -> {
+        ClientAltarRecipes.get().forEach(recipe -> {
             if (!recipe.value().isItemCraft()) {
                 items.accept(setRecipeId(new ItemStack(InitItems.ENTITY_PLACEHOLDER.get()), recipe.value().getRecipeString()));
             }
@@ -78,8 +75,8 @@ public class ItemEntityPlaceholder extends Item {
         if (context.getClickedFace() == Direction.UP) {
             Identifier id = getRecipeId(context.getItemInHand());
             Level world = context.getLevel();
-            if (id != null && world instanceof ServerLevel) {
-                Optional<RecipeHolder<?>> recipe = context.getLevel().getRecipeManager().byKey(id);
+            if (id != null && world instanceof ServerLevel serverLevel) {
+                Optional<RecipeHolder<?>> recipe = serverLevel.recipeAccess().byKey(ResourceKey.create(Registries.RECIPE, id));
                 if (recipe.isPresent() && recipe.get().value() instanceof AltarRecipe altarRecipe) {
                     altarRecipe.spawnOutputEntity((ServerLevel) world, context.getClickedPos().above(), null);
                     context.getItemInHand().shrink(1);

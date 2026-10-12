@@ -8,15 +8,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:dyes/white"
-    },
-    {
-      "tag": "c:dyes/red"
-    },
-    {
-      "item": "minecraft:book"
-    }
+    "#c:dyes/white",
+    "#c:dyes/red",
+    "minecraft:book"
   ],
   "result": {
     "components": {

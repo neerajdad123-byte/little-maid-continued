@@ -8,7 +8,10 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jspecify.annotations.Nullable;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
@@ -29,7 +32,7 @@ public final class FallbackIngredient implements ICustomIngredient {
     ).apply(instance, FallbackIngredient::new));
 
     private final List<FallbackEntry> fallbacks;
-    private final Ingredient resolvedIngredient;
+    private final @Nullable Ingredient resolvedIngredient;
 
     public FallbackIngredient(List<FallbackEntry> fallbacks) {
         this.fallbacks = List.copyOf(fallbacks);
@@ -42,17 +45,17 @@ public final class FallbackIngredient implements ICustomIngredient {
 
     @Override
     public boolean test(ItemStack stack) {
-        return this.resolvedIngredient.test(stack);
+        return this.resolvedIngredient != null && this.resolvedIngredient.test(stack);
     }
 
     @Override
-    public Stream<ItemStack> getItems() {
-        return Stream.of(this.resolvedIngredient.getItems());
+    public Stream<Holder<Item>> items() {
+        return this.resolvedIngredient == null ? Stream.empty() : this.resolvedIngredient.items();
     }
 
     @Override
     public boolean isSimple() {
-        return this.resolvedIngredient.isSimple();
+        return this.resolvedIngredient == null || this.resolvedIngredient.isSimple();
     }
 
     @Override
@@ -60,7 +63,7 @@ public final class FallbackIngredient implements ICustomIngredient {
         return InitRecipes.FALLBACK_INGREDIENT_TYPE.get();
     }
 
-    private static Ingredient resolveIngredient(List<FallbackEntry> fallbacks) {
+    private static @Nullable Ingredient resolveIngredient(List<FallbackEntry> fallbacks) {
         for (FallbackEntry entry : fallbacks) {
             if (!ModList.get().isLoaded(entry.modid())) {
                 continue;
@@ -71,7 +74,8 @@ public final class FallbackIngredient implements ICustomIngredient {
                 return parsed.get();
             }
         }
-        return Ingredient.EMPTY;
+        // no fallback mod loaded: matches nothing (26.x has no Ingredient.EMPTY)
+        return null;
     }
 
     public record FallbackEntry(String modid, JsonElement value) {

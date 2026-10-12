@@ -29,7 +29,7 @@ public record SetBeaconPotionPackage(BlockPos pos, int potionIndex) implements C
             context.enqueueWork(() -> {
                 ServerPlayer sender = (ServerPlayer) context.player();
                 Level world = sender.level();
-                if (world.isLoaded(message.pos)) {
+                if (world.isLoaded(message.pos) && sender.isWithinBlockInteractionRange(message.pos, 4)) {
                     BlockEntity te = world.getBlockEntity(message.pos);
                     if (te instanceof TileEntityMaidBeacon) {
                         ((TileEntityMaidBeacon) te).setPotionIndex(message.potionIndex);

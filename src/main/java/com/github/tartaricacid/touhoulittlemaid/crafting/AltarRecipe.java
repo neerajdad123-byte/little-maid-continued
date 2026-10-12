@@ -8,7 +8,6 @@ import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
 import com.github.tartaricacid.touhoulittlemaid.init.InitRecipes;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemFilm;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
@@ -19,22 +18,27 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.util.RecipeMatcher;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class AltarRecipe extends ShapelessRecipe {
+public class AltarRecipe implements Recipe<CraftingInput> {
     private final String group;
+    private final List<Ingredient> ingredients;
+    private @Nullable PlacementInfo placementInfo;
     private final CraftingBookCategory category;
     private final float power;
     private final ItemStack result;
     private final Identifier entityType;
     private final String langKey;
 
-    public AltarRecipe(String group, CraftingBookCategory category, NonNullList<Ingredient> ingredients, float power, ItemStack result, Identifier entityType, String langKey) {
-        super(group, category, result, ingredients);
+    public AltarRecipe(String group, CraftingBookCategory category, List<Ingredient> ingredients, float power, ItemStack result, Identifier entityType, String langKey) {
+        this.ingredients = ingredients;
         this.group = group;
         this.category = category;
         this.power = power;
@@ -87,7 +91,9 @@ public class AltarRecipe extends ShapelessRecipe {
         CustomData compoundData = itemFilm.get(InitDataComponent.MAID_INFO);
         if (compoundData != null) {
             CompoundTag maidCompound = compoundData.copyTag();
-            maid.readAdditionalSaveData(maidCompound);
+            // a copied film would otherwise spawn a second maid with the same UUID, which the level drops
+            maidCompound.remove("UUID");
+            PortUtil.loadEntity(maid, maidCompound);
         } else {
             maid.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_ITEM_USE, null);
         }
@@ -102,7 +108,7 @@ public class AltarRecipe extends ShapelessRecipe {
         EntityMaid maid = new EntityMaid(world);
         maid.setPos(pos.getX(), pos.getY(), pos.getZ());
         maid.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_ITEM_USE, null);
-        maid.startRiding(box, true);
+        maid.startRiding(box, true, true);
 
         world.tryAddFreshEntityWithPassengers(box);
     }
@@ -113,22 +119,63 @@ public class AltarRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public boolean matches(CraftingInput input, Level level) {
+        if (input.ingredientCount() != this.ingredients.size()) {
+            return false;
+        }
+        List<ItemStack> nonEmptyItems = input.items().stream().filter(stack -> !stack.isEmpty()).toList();
+        return RecipeMatcher.findMatches(nonEmptyItems, this.ingredients) != null;
+    }
+
+    @Override
+    public ItemStack assemble(CraftingInput input) {
+        return this.result.copy();
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
+    @Override
+    public boolean showNotification() {
+        return false;
+    }
+
+    @Override
+    public String group() {
+        return group;
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        if (this.placementInfo == null) {
+            this.placementInfo = PlacementInfo.create(this.ingredients);
+        }
+        return this.placementInfo;
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    @Override
+    public @NotNull RecipeType<AltarRecipe> getType() {
         return InitRecipes.ALTAR_CRAFTING.get();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<AltarRecipe> getSerializer() {
         return InitRecipes.ALTAR_RECIPE_SERIALIZER.get();
     }
 
     public float getPower() {
         return power;
-    }
-
-    @Override
-    public String getGroup() {
-        return group;
     }
 
     public CraftingBookCategory getCategory() {

@@ -27,6 +27,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.common.NeoForgeVersion;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -90,11 +91,11 @@ public class InfoGetManager {
 
         map.put("X-Minecraft-Username", user.getName());
         map.put("X-Minecraft-UUID", UndashedUuid.toString(user.getProfileId()));
-        map.put("X-Minecraft-Version", currentVersion.getName());
-        map.put("X-Minecraft-Version-ID", currentVersion.getId());
+        map.put("X-Minecraft-Version", currentVersion.name());
+        map.put("X-Minecraft-Version-ID", currentVersion.id());
         map.put("X-NeoForge-Version", NeoForgeVersion.getVersion());
         map.put("X-TLM-Version", ModList.get().getModFileById(TouhouLittleMaid.MOD_ID).versionString());
-        map.put("User-Agent", "Minecraft Java/" + currentVersion.getName());
+        map.put("User-Agent", "Minecraft Java/" + currentVersion.name());
 
         return map;
     }
@@ -105,7 +106,7 @@ public class InfoGetManager {
             try {
                 Files.createDirectories(ROOT_FOLDER);
             } catch (IOException ioe) {
-                ioe.fillInStackTrace();
+                TouhouLittleMaid.LOGGER.error("Unexpected IO error", ioe);
                 return;
             }
         }
@@ -115,7 +116,7 @@ public class InfoGetManager {
         try {
             downloadInfoJson(infoJsonFile);
         } catch (IOException e) {
-            e.fillInStackTrace();
+            TouhouLittleMaid.LOGGER.error("Unexpected IO error", e);
         }
     }
 
@@ -128,7 +129,7 @@ public class InfoGetManager {
         try (FileInputStream stream = new FileInputStream(file)) {
             md5 = DigestUtils.md5Hex(stream);
         } catch (IOException e) {
-            e.fillInStackTrace();
+            TouhouLittleMaid.LOGGER.error("Unexpected IO error", e);
         }
         return md5;
     }
@@ -206,7 +207,7 @@ public class InfoGetManager {
                 }
             });
         } catch (IOException e) {
-            e.fillInStackTrace();
+            TouhouLittleMaid.LOGGER.error("Unexpected IO error", e);
         }
     }
 
@@ -224,8 +225,8 @@ public class InfoGetManager {
             String rootUrl = USE_BACKUP_URL ? ROOT_URL_BACKUP : ROOT_URL;
             URL url = URI.create(rootUrl).resolve(info.getUrl()).toURL();
             // 文件先下载到缓存文件夹，然后才复制到模型文件夹中
-            File fileInTlmModel = CustomPackLoader.PACK_FOLDER.resolve(info.getFileName()).toFile();
-            File fileInCache = PACK_FOLDER.resolve(info.getFileName()).toFile();
+            File fileInTlmModel = CustomPackLoader.PACK_FOLDER.resolve(FilenameUtils.getName(info.getFileName())).toFile();
+            File fileInCache = PACK_FOLDER.resolve(FilenameUtils.getName(info.getFileName())).toFile();
             // 缓存文件不存在，或者需要更新
             if (!fileInCache.isFile() || FileUtils.checksumCRC32(fileInCache) != info.getChecksum()) {
                 downloadPack(info, fileInCache, url, proxy, fileInTlmModel);
@@ -235,7 +236,7 @@ public class InfoGetManager {
                 sendDownloadMessage(Component.translatable("gui.touhou_little_maid.resources_download.state.downloaded", info.getFileName(), 0.943));
             }
         } catch (IOException e) {
-            e.fillInStackTrace();
+            TouhouLittleMaid.LOGGER.error("Unexpected IO error", e);
         }
     }
 
@@ -254,7 +255,7 @@ public class InfoGetManager {
             try {
                 reloadPack(info, fileInCache, fileInTlmModel);
             } catch (IOException e) {
-                e.fillInStackTrace();
+                TouhouLittleMaid.LOGGER.error("Unexpected IO error", e);
             }
         }).exceptionally(error -> {
             // 异常？那么清理相关内容，并打印提示

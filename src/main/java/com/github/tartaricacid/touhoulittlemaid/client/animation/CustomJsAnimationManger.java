@@ -28,7 +28,7 @@ import java.util.zip.ZipFile;
 
 @OnlyIn(Dist.CLIENT)
 public class CustomJsAnimationManger {
-    public static final ScriptEngine NASHORN = new NashornScriptEngineFactory().getScriptEngine();
+    public static final ScriptEngine NASHORN = new NashornScriptEngineFactory().getScriptEngine(className -> false);
     private static final Map<Identifier, Object> CUSTOM_ANIMATION_MAP = Maps.newHashMap();
 
     @Nullable

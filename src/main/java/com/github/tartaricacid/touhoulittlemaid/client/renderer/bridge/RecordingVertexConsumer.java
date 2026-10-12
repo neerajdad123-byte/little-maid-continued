@@ -2,6 +2,7 @@ package com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
 
 /**
@@ -15,6 +16,10 @@ public final class RecordingVertexConsumer implements VertexConsumer {
     private static final int FLOATS = 9;
     // color, overlay, light
     private static final int INTS = 3;
+
+    // render-thread only; reusing recorders keeps many maids from allocating fresh arrays every frame
+    private static final ArrayDeque<RecordingVertexConsumer> POOL = new ArrayDeque<>();
+    private static final int POOL_LIMIT = 64;
 
     private float[] floats = new float[FLOATS * 256];
     private int[] ints = new int[INTS * 256];
@@ -97,6 +102,22 @@ public final class RecordingVertexConsumer implements VertexConsumer {
     /**
      * Replays every recorded vertex into the real buffer, unchanged.
      */
+    public static RecordingVertexConsumer obtain() {
+        RecordingVertexConsumer recorder = POOL.poll();
+        return recorder != null ? recorder : new RecordingVertexConsumer();
+    }
+
+    /**
+     * Replays into {@code out}, then returns this recorder to the pool. It must not be used afterwards.
+     */
+    public void replayAndRecycle(VertexConsumer out) {
+        replay(out);
+        count = 0;
+        if (POOL.size() < POOL_LIMIT) {
+            POOL.push(this);
+        }
+    }
+
     public void replay(VertexConsumer out) {
         for (int n = 0; n < count; n++) {
             int f = n * FLOATS;

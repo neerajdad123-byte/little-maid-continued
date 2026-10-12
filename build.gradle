@@ -223,6 +223,11 @@ dependencies {
     // YAML 库
     mcLib "org.yaml:snakeyaml:2.4"
 
+    // Little Maid Continued: NeoForge 26.x no longer ships Nashorn (custom pack JS animations); ASM comes from the game
+    mcLib("org.openjdk.nashorn:nashorn-core:15.6") {
+        exclude group: 'org.ow2.asm'
+    }
+
     // 单元测试
     testImplementation 'junit:junit:4.13.2'
 
@@ -252,7 +257,10 @@ shadowJar {
     exclude 'META-INF/LICENSE'
 
     mergeServiceFiles()
-    minimize()
+    minimize {
+        // Nashorn loads its classes reflectively
+        exclude(dependency('org.openjdk.nashorn:nashorn-core:.*'))
+    }
 }
 
 assemble {
