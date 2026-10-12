@@ -1,5 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -28,7 +32,7 @@ public class EntitySit extends Entity {
             .sized(0.5f, 0.1f)
             .clientTrackingRange(10)
             .ridingOffset(-0.25F)
-            .build("sit");
+            .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "sit")));
     private static final EntityDataAccessor<String> SIT_TYPE = SynchedEntityData.defineId(EntitySit.class, EntityDataSerializers.STRING);
     private int passengerTick = 0;
     private BlockPos associatedBlockPos = BlockPos.ZERO;
@@ -142,7 +146,7 @@ public class EntitySit extends Entity {
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource pSource, float pAmount) {
         return false;
     }
 

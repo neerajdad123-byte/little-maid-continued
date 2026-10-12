@@ -1,5 +1,10 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import org.jspecify.annotations.Nullable;
+import net.minecraft.world.damagesource.DamageSource;
+import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -33,7 +38,7 @@ public class EntityBox extends Entity {
     private static final EntityDataAccessor<Integer> OPEN_STAGE = SynchedEntityData.defineId(EntityBox.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> TEXTURE_INDEX = SynchedEntityData.defineId(EntityBox.class, EntityDataSerializers.INT);
     public static final EntityType<EntityBox> TYPE = EntityType.Builder.<EntityBox>of(EntityBox::new, MobCategory.MISC)
-            .sized(2.0f, 2.0f).clientTrackingRange(10).build("box");
+            .sized(2.0f, 2.0f).clientTrackingRange(10).build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "box")));
     private static final String STAGE_TAG = "OpenStage";
     private static final String TEXTURE_TAG = "TextureIndex";
 
@@ -70,7 +75,7 @@ public class EntityBox extends Entity {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         this.addStageChange();
         if (this.getOpenStage() == SECOND_STAGE) {
             this.playSound(InitSounds.BOX_OPEN.get(), 3.0f, 1.0f);
@@ -114,7 +119,7 @@ public class EntityBox extends Entity {
     }
 
     @Override
-    public boolean canBeCollidedWith() {
+    public boolean canBeCollidedWith(@Nullable Entity other) {
         return this.isAlive();
     }
 
@@ -146,13 +151,15 @@ public class EntityBox extends Entity {
     private void addStageChange() {
         this.setOpenStage(this.getOpenStage() + 1);
         if (this.getOpenStage() > THIRD_STAGE) {
-            this.kill();
+            if (this.level() instanceof ServerLevel killLevel) {
+            this.kill(killLevel);
+        }
         }
     }
 
     @Override
-    public void kill() {
-        if (this.level instanceof ServerLevel serverLevel) {
+    public void kill(ServerLevel serverLevel) {
+        {
             serverLevel.sendParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY() + 0.25, this.getZ(),
                     20, 1, 1, 1, 0.2);
             ResourceKey<LootTable> table = this.getType().getDefaultLootTable();
@@ -162,9 +169,9 @@ public class EntityBox extends Entity {
                     .withParameter(LootContextParams.ORIGIN, this.position())
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSources().genericKill());
             LootParams params = builder.create(LootContextParamSets.ENTITY);
-            lootTable.getRandomItems(params, 0, this::spawnAtLocation);
+            lootTable.getRandomItems(params, 0, stack -> this.spawnAtLocation((ServerLevel) this.level(), stack));
         }
-        super.kill();
+        super.kill(serverLevel);
     }
 
     private void applyInvisibilityEffect(TamableAnimal tameable) {
@@ -174,5 +181,10 @@ public class EntityBox extends Entity {
     @Override
     public Vec3 getPassengerRidingPosition(Entity pEntity) {
         return this.position().add(this.getPassengerAttachmentPoint(pEntity, this.getDimensions(Pose.STANDING), 1.0F)).subtract(0, 2, 0);
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount) {
+        return false;
     }
 }

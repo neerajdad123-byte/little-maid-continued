@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.projectile;
 
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -54,7 +57,7 @@ public class MaidFishingHook extends Projectile {
     public static final EntityType<MaidFishingHook> TYPE = EntityType.Builder.<MaidFishingHook>of(MaidFishingHook::new, MobCategory.MISC)
             .noSave().noSummon().sized(0.25F, 0.25F)
             .clientTrackingRange(4).updateInterval(5)
-            .build("fishing_hook");
+            .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "fishing_hook")));
     protected static final EntityDataAccessor<Boolean> DATA_BITING = SynchedEntityData.defineId(MaidFishingHook.class, EntityDataSerializers.BOOLEAN);
     protected static final int MAX_OUT_OF_WATER_TIME = 10;
     protected final RandomSource syncronizedRandom = RandomSource.create();
@@ -553,7 +556,9 @@ public class MaidFishingHook extends Projectile {
         if (this.getMaidOwner() == null) {
             int dataId = packet.getData();
             TouhouLittleMaid.LOGGER.error("Failed to recreate fishing hook on client. {} (id: {}) is not a valid owner.", this.level.getEntity(dataId), dataId);
-            this.kill();
+            if (this.level() instanceof ServerLevel killLevel) {
+            this.kill(killLevel);
+        }
         }
     }
 

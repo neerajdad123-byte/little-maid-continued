@@ -1,5 +1,10 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.HasCullingBox;
+
+import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.Registries;
 import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
 
 import net.minecraft.world.level.storage.ValueInput;
@@ -47,11 +52,11 @@ import java.util.UUID;
 
 import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.*;
 
-public class EntityChair extends AbstractEntityFromItem {
+public class EntityChair extends AbstractEntityFromItem implements HasCullingBox {
     public static final EntityType<EntityChair> TYPE = EntityType.Builder.<EntityChair>of(EntityChair::new, MobCategory.MISC)
             .sized(0.875f, 0.5f)
             .clientTrackingRange(10)
-            .build("chair");
+            .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "chair")));
 
     private static final EntityDataAccessor<String> MODEL_ID = SynchedEntityData.defineId(EntityChair.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> MOUNTED_HEIGHT = SynchedEntityData.defineId(EntityChair.class, EntityDataSerializers.FLOAT);
@@ -112,7 +117,7 @@ public class EntityChair extends AbstractEntityFromItem {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         if (player.isShiftKeyDown()) {
             if (player.getItemInHand(hand).interactLivingEntity(player, this, hand).consumesAction()) {
                 return InteractionResult.SUCCESS;
@@ -134,7 +139,7 @@ public class EntityChair extends AbstractEntityFromItem {
     public AABB getBoundingBoxForCulling() {
         BedrockModel<EntityChair> model = CustomPackLoader.CHAIR_MODELS.getModel(getModelId()).orElse(null);
         if (model == null) {
-            return super.getBoundingBoxForCulling();
+            return this.getBoundingBox();
         }
         return model.getRenderBoundingBox().move(position());
     }
@@ -176,7 +181,7 @@ public class EntityChair extends AbstractEntityFromItem {
             setTameableCanRide(compound.getBooleanOr(TAMEABLE_CAN_RIDE_TAG_NAME, false));
         }
         if (compound.contains(OWNER_UUID_TAG_NAME)) {
-            setOwnerUUID(NbtUtils.loadUUID(Objects.requireNonNull(compound.get(OWNER_UUID_TAG_NAME))));
+            setOwnerUUID(PortUtil.loadUUID(Objects.requireNonNull(compound.get(OWNER_UUID_TAG_NAME))));
         }
     }
 

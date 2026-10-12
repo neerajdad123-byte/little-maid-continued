@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.AABB;
 
 /**
  * Little Maid Continued: runs MC 1.21.1 style {@code render(entity, yaw, partialTicks, poseStack, buffer, light)}
@@ -50,6 +51,11 @@ public abstract class LegacyEntityRenderer<T extends Entity> extends EntityRende
      * MC 1.21.1 style rendering. Name tags and leashes are submitted by the base class afterwards.
      */
     public void render(T entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+    }
+
+    @Override
+    protected AABB getBoundingBoxForCulling(T entity) {
+        return entity instanceof HasCullingBox box ? box.getBoundingBoxForCulling() : super.getBoundingBoxForCulling(entity);
     }
 
     public Identifier getTextureLocation(T entity) {

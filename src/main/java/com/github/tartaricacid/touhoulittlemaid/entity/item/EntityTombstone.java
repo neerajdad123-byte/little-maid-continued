@@ -1,5 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -33,7 +37,7 @@ import static com.github.tartaricacid.touhoulittlemaid.util.ItemsUtil.canItemIns
 
 public class EntityTombstone extends Entity {
     public static final EntityType<EntityTombstone> TYPE = EntityType.Builder.<EntityTombstone>of(EntityTombstone::new, MobCategory.MISC)
-            .sized(0.8f, 1.2f).clientTrackingRange(10).build("tombstone");
+            .sized(0.8f, 1.2f).clientTrackingRange(10).build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "tombstone")));
     private static final String OWNER_ID_TAG = "OwnerId";
     private static final String TOMBSTONE_ITEMS_TAG = "TombstoneItems";
     private static final String MAID_NAME_TAG = "MaidName";
@@ -57,7 +61,7 @@ public class EntityTombstone extends Entity {
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         ItemStack itemInHand = player.getItemInHand(hand);
         Ingredient ntrItem = EntityMaid.getNtrItem();
 
@@ -101,12 +105,12 @@ public class EntityTombstone extends Entity {
 
         // 其他逻辑...
         if (!player.level.isClientSide()) {
-            ItemStack stack = Arrays.stream(ntrItem.getItems()).findFirst().orElse(ItemStack.EMPTY);
+            ItemStack stack = ntrItem.items().findFirst().map(ItemStack::new).orElse(ItemStack.EMPTY);
             Component displayName = stack.getDisplayName();
             player.sendSystemMessage(Component.translatable("message.touhou_little_maid.tombstone.not_yours.1"));
             player.sendSystemMessage(Component.translatable("message.touhou_little_maid.tombstone.not_yours.2").append(displayName));
         }
-        return super.interact(player, hand);
+        return super.interact(player, hand, location);
     }
 
     @Override
@@ -154,7 +158,7 @@ public class EntityTombstone extends Entity {
     }
 
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource pSource, float pAmount) {
         return false;
     }
 

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -51,10 +52,10 @@ public abstract class AbstractEntityFromItem extends LivingEntity {
     protected abstract ItemStack getKilledStack();
 
     @Override
-    public boolean hurt(@Nonnull DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount) {
         if (!this.level().isClientSide() && !this.dead && this.isAlive()) {
             // 如果实体是无敌的
-            if (this.isInvulnerableTo(source)) {
+            if (this.isInvulnerableTo(serverLevel, source)) {
                 return false;
             }
             // 应用打掉的逻辑
@@ -78,12 +79,12 @@ public abstract class AbstractEntityFromItem extends LivingEntity {
 
     private void killEntity() {
         this.discard();
-        if (this.level().getGameRules().getBoolean(GameRules.ENTITY_DROPS)) {
+        if (PortUtil.gameRule(this.level(), GameRules.ENTITY_DROPS)) {
             ItemStack itemstack = getKilledStack();
             if (this.hasCustomName()) {
                 itemstack.set(DataComponents.CUSTOM_NAME, this.getCustomName());
             }
-            this.spawnAtLocation(itemstack, 0.0F);
+            this.spawnAtLocation((ServerLevel) this.level(), itemstack, 0.0F);
             this.dropExtraItems();
         }
     }
@@ -108,7 +109,7 @@ public abstract class AbstractEntityFromItem extends LivingEntity {
     }
 
     @Override
-    public void kill() {
+    public void kill(ServerLevel serverLevel) {
         this.remove(Entity.RemovalReason.KILLED);
         this.gameEvent(GameEvent.ENTITY_DIE);
     }
@@ -133,13 +134,13 @@ public abstract class AbstractEntityFromItem extends LivingEntity {
     }
 
     @Override
-    public void knockback(double strength, double ratioX, double ratioZ) {
+    public void knockback(double strength, double ratioX, double ratioZ, DamageSource source, float damage) {
         // 不允许被击退效果影响
     }
 
     @Nonnull
     @Override
-    public ItemStack getPickedResult(HitResult target) {
+    public ItemStack getPickResult() {
         return getKilledStack();
     }
 
@@ -149,11 +150,6 @@ public abstract class AbstractEntityFromItem extends LivingEntity {
     }
 
     // ------------ EntityLivingBase 要求实现的几个抽象方法，因为全用不上，故返回默认值 ----------- //
-
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return Collections.emptyList();
-    }
 
     @Override
     public ItemStack getItemBySlot(EquipmentSlot slotIn) {

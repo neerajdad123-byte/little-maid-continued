@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.passive;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.HasCullingBox;
+
 import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.List;
@@ -186,7 +188,7 @@ import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.MO
 import static net.neoforged.neoforge.common.CommonHooks.onLivingDamagePost;
 import static net.neoforged.neoforge.common.CommonHooks.onLivingDamagePre;
 
-public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMaid {
+public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMaid, HasCullingBox {
     public static final EntityType<EntityMaid> TYPE = EntityType.Builder.<EntityMaid>of(EntityMaid::new, MobCategory.CREATURE)
             .sized(0.6f, 1.5f).clientTrackingRange(10)
             .build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "maid")));
@@ -1891,6 +1893,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
         return this.getTask().searchRadius(this);
     }
 
+    @Override
     @OnlyIn(Dist.CLIENT)
     public AABB getBoundingBoxForCulling() {
         BedrockModel<Mob> model = CustomPackLoader.MAID_MODELS.getModel(getModelId()).orElse(null);

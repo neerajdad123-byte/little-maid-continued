@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.monster;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -49,7 +51,7 @@ import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operati
 
 public class EntityFairy extends Monster implements RangedAttackMob, FlyingAnimal, IHasPowerPoint {
     public static final EntityType<EntityFairy> TYPE = EntityType.Builder.<EntityFairy>of(EntityFairy::new, MobCategory.MONSTER)
-            .sized(0.6f, 1.5f).clientTrackingRange(10).build("fairy");
+            .sized(0.6f, 1.5f).clientTrackingRange(10).build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "fairy")));
 
     private static final Identifier SPEED_MODIFIER_BABY_ID = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "baby");
     private static final AttributeModifier SPEED_MODIFIER_BABY = new AttributeModifier(SPEED_MODIFIER_BABY_ID, 0.2, ADD_MULTIPLIED_BASE);
@@ -135,7 +137,7 @@ public class EntityFairy extends Monster implements RangedAttackMob, FlyingAnima
     }
 
     @Override
-    public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
+    public boolean causeFallDamage(double distance, float damageMultiplier, DamageSource source) {
         return false;
     }
 

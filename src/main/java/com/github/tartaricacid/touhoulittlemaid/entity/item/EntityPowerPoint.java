@@ -1,5 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -39,7 +43,7 @@ import static com.github.tartaricacid.touhoulittlemaid.init.InitDataAttachment.P
 
 public class EntityPowerPoint extends Entity implements IEntityWithComplexSpawn {
     public static final EntityType<EntityPowerPoint> TYPE = EntityType.Builder.<EntityPowerPoint>of(EntityPowerPoint::new, MobCategory.MISC)
-            .sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(20).build("power_point");
+            .sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(20).build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "power_point")));
     private static final int MAX_AGE = 6000;
     public int tickCount;
     public int age;
@@ -217,11 +221,11 @@ public class EntityPowerPoint extends Entity implements IEntityWithComplexSpawn 
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount) {
         if (this.level.isClientSide() || !this.isAlive()) {
             return false;
         }
-        if (!this.isInvulnerableTo(source)) {
+        if (!this.isInvulnerableToBase(source)) {
             this.markHurt();
             this.health = (int) ((float) this.health - amount);
             if (this.health <= 0) {
@@ -246,9 +250,9 @@ public class EntityPowerPoint extends Entity implements IEntityWithComplexSpawn 
     @Override
     public void readAdditionalSaveData(ValueInput valueInput) {
         CompoundTag compound = PortUtil.readRoot(valueInput);
-        this.health = compound.getShort("Health");
-        this.age = compound.getShort("Age");
-        this.value = compound.getShort("Value");
+        this.health = compound.getShortOr("Health", (short) 0);
+        this.age = compound.getShortOr("Age", (short) 0);
+        this.value = compound.getShortOr("Value", (short) 0);
     }
 
     @Override
@@ -284,7 +288,7 @@ public class EntityPowerPoint extends Entity implements IEntityWithComplexSpawn 
 
     public void take(Entity player, int quantity) {
         if (this.isAlive() && !this.level.isClientSide()) {
-            ((ServerLevel) this.level).getChunkSource().broadcast(this, new ClientboundTakeItemEntityPacket(this.getId(), player.getId(), quantity));
+            ((ServerLevel) this.level).getChunkSource().sendToTrackingPlayers(this, new ClientboundTakeItemEntityPacket(this.getId(), player.getId(), quantity));
         }
     }
 

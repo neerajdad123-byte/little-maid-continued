@@ -1,5 +1,11 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.item;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -24,7 +30,7 @@ import java.util.List;
 
 public class EntityExtinguishingAgent extends Entity {
     public static final EntityType<EntityExtinguishingAgent> TYPE = EntityType.Builder.<EntityExtinguishingAgent>of(EntityExtinguishingAgent::new, MobCategory.MISC)
-            .sized(0.2f, 0.2f).clientTrackingRange(10).build("extinguishing_agent");
+            .sized(0.2f, 0.2f).clientTrackingRange(10).build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "extinguishing_agent")));
     private static final int MAX_AGE = 3 * 20;
     private static final int REMOVE_FIRE_AGE = 5;
     private List<Monster> cacheFireImmuneMonster = Lists.newArrayList();
@@ -62,7 +68,7 @@ public class EntityExtinguishingAgent extends Entity {
             double offsetX = 2 * random.nextDouble() - 1;
             double offsetY = random.nextDouble() / 2;
             double offsetZ = 2 * random.nextDouble() - 1;
-            level.addParticle(ParticleTypes.CLOUD, false,
+            level.addParticle(ParticleTypes.CLOUD,
                     this.getX() + offsetX, this.getY() + offsetY, this.getZ() + offsetZ,
                     0, 0.1, 0);
         }
@@ -118,5 +124,10 @@ public class EntityExtinguishingAgent extends Entity {
         } finally {
             PortUtil.writeRoot(valueOutput, compound);
         }
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount) {
+        return false;
     }
 }

@@ -3,6 +3,8 @@ package com.github.tartaricacid.touhoulittlemaid.util;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
 import java.util.Optional;
+import java.util.UUID;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -85,6 +87,13 @@ public final class PortUtil {
         if (!tag.isEmpty()) {
             output.store(ROOT, tag);
         }
+    }
+
+    /**
+     * Replacement for the removed {@code NbtUtils#loadUUID(Tag)} (int array form).
+     */
+    public static UUID loadUUID(Tag tag) {
+        return UUIDUtil.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
     }
 
     /**
