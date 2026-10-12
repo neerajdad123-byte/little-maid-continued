@@ -42,7 +42,7 @@ public class ItemSmartSlab extends AbstractStoreMaidItem {
     private final Type type;
 
     public ItemSmartSlab(Type type) {
-        super((new Properties()).stacksTo(1).rarity(Rarity.RARE));
+        super((new Properties()).stacksTo(1).rarity(Rarity.RARE).overrideDescription("item.touhou_little_maid.smart_slab"));
         this.type = type;
     }
 
@@ -59,11 +59,6 @@ public class ItemSmartSlab extends AbstractStoreMaidItem {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public String getDescriptionId() {
-        return "item.touhou_little_maid.smart_slab";
     }
 
     @Override

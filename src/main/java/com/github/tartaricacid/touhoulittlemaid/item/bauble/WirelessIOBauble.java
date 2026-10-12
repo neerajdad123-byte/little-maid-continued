@@ -104,8 +104,9 @@ public class WirelessIOBauble implements IMaidBauble {
                 if (openCount > 0) {
                     return;
                 }
-                IItemHandler chestInv = maid.level.getCapability(Capabilities.ItemHandler.BLOCK, te.getBlockPos(), null);
-                if (chestInv != null) {
+                var chestHandler = maid.level.getCapability(Capabilities.Item.BLOCK, te.getBlockPos(), null);
+                if (chestHandler != null) {
+                    IItemHandler chestInv = IItemHandler.of(chestHandler);
                     IItemHandler maidInv = maid.getAvailableInv(false);
                     boolean isMaidToChest = ItemWirelessIO.isMaidToChest(baubleItem);
                     boolean isBlacklist = ItemWirelessIO.isBlacklist(baubleItem);

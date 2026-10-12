@@ -36,11 +36,8 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        if (InvTweaksCompat.isInstalled() && FMLEnvironment.getDist() == Dist.CLIENT) {
-            return Lists.newArrayList("client.compat.InvTweaksMixin");
-        } else {
-            return null;
-        }
+        // Little Maid Continued: the Inventory Tweaks mixin returns with a 26.2 build of that mod (src/compat_disabled)
+        return null;
     }
 
     @Override

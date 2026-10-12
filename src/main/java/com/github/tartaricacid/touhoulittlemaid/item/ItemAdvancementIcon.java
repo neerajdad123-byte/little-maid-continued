@@ -13,12 +13,7 @@ import java.util.List;
 
 public class ItemAdvancementIcon extends Item {
     public ItemAdvancementIcon() {
-        super((new Properties()).stacksTo(1));
-    }
-
-    @Override
-    public String getDescriptionId() {
-        return "item.touhou_little_maid.advancement_icon";
+        super((new Properties()).stacksTo(1).overrideDescription("item.touhou_little_maid.advancement_icon"));
     }
 
     @Override

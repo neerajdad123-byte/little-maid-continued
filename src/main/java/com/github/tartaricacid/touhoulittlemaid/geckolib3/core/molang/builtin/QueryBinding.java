@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.geckolib3.core.molang.builtin;
 
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.core.molang.binding.ContextBinding;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.core.molang.builtin.query.*;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.util.MolangUtils;
@@ -37,23 +38,23 @@ public class QueryBinding extends ContextBinding {
         var("life_time", ctx -> ctx.geoInstance().getSeekTime() / 20.0);
         var("head_x_rotation", ctx -> ctx.data().netHeadYaw);
         var("head_y_rotation", ctx -> ctx.data().headPitch);
-        var("moon_phase", ctx -> ctx.level().getMoonPhase());
+        var("moon_phase", ctx -> ctx.level().environmentAttributes().getDimensionValue(EnvironmentAttributes.MOON_PHASE).index());
         var("time_of_day", ctx -> MolangUtils.normalizeTime(ctx.level().getOverworldClockTime()));
         var("time_stamp", ctx -> ctx.level().getOverworldClockTime());
 
         entityVar("yaw_speed", ctx -> getYawSpeed(ctx.entity()));
         entityVar("cardinal_facing_2d", ctx -> ctx.entity().getDirection().get3DDataValue());
-        entityVar("distance_from_camera", ctx -> ctx.mc().gameRenderer.mainCamera().getPosition().distanceTo(ctx.entity().position()));
+        entityVar("distance_from_camera", ctx -> ctx.mc().gameRenderer.mainCamera().position().distanceTo(ctx.entity().position()));
         entityVar("eye_target_x_rotation", ctx -> ctx.entity().getViewXRot(ctx.animationEvent().getPartialTick()));
         entityVar("eye_target_y_rotation", ctx -> ctx.entity().getViewYRot(ctx.animationEvent().getPartialTick()));
         entityVar("ground_speed", ctx -> getGroundSpeed(ctx.entity()));
-        entityVar("modified_distance_moved", ctx -> ctx.entity().walkDist);
+        entityVar("modified_distance_moved", ctx -> ctx.entity().moveDist);
         entityVar("vertical_speed", ctx -> getVerticalSpeed(ctx.entity()));
         entityVar("walk_distance", ctx -> ctx.entity().moveDist);
         entityVar("has_rider", ctx -> ctx.entity().isVehicle());
         entityVar("is_first_person", ctx -> ctx.mc().options.getCameraType() == CameraType.FIRST_PERSON);
         entityVar("is_in_water", ctx -> ctx.entity().isInWater());
-        entityVar("is_in_water_or_rain", ctx -> ctx.entity().isInWaterRainOrBubble());
+        entityVar("is_in_water_or_rain", ctx -> ctx.entity().isInWaterOrRain());
         entityVar("is_on_fire", ctx -> ctx.entity().isOnFire());
         entityVar("is_on_ground", ctx -> ctx.entity().onGround());
         entityVar("is_riding", ctx -> ctx.entity().isPassenger());

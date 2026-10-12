@@ -11,6 +11,10 @@ public interface ArrowAccessor {
     @Accessor("inGround")
     boolean tlmInGround();
 
+    // MC 26.x removed the public getter
+    @Accessor("baseDamage")
+    double tlmGetBaseDamage();
+
     @Invoker("getPickupItem")
     ItemStack getTlmPickupItem();
 }

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.debug.event;
 
+import net.minecraft.world.entity.EntityReference;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.event.InteractMaidEvent;
 import com.github.tartaricacid.touhoulittlemaid.debug.target.DebugMaidManager;
@@ -25,7 +26,7 @@ public class DebugStickClickEvent {
         EntityMaid maid = event.getMaid();
         if (player.getMainHandItem().is(Items.DEBUG_STICK) && TouhouLittleMaid.DEBUG) {
             if (player.isShiftKeyDown()) {
-                maid.setOwnerUUID(UUID.randomUUID());
+                maid.setOwnerReference(EntityReference.of(UUID.randomUUID()));
                 maid.level.broadcastEntityEvent(maid, EntityEvent.TAMING_SUCCEEDED);
                 if (!event.getWorld().isClientSide()) {
                     player.sendSystemMessage(Component.translatable("debug.touhou_little_maid.debug_stick.random_owner_uuid"));

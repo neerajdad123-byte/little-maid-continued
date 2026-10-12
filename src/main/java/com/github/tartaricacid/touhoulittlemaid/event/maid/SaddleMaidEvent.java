@@ -50,7 +50,7 @@ public class SaddleMaidEvent {
     public static void showTips() {
         Minecraft minecraft = Minecraft.getInstance();
         Component component = Component.translatable("message.touhou_little_maid.saddle.how_to_eject");
-        minecraft.gui.setOverlayMessage(component, false);
-        minecraft.getNarrator().sayNow(component);
+        minecraft.gui.hud.setOverlayMessage(component, false);
+        minecraft.getNarrator().saySystemNow(component);
     }
 }

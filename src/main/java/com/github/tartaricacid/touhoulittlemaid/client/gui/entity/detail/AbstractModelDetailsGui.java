@@ -29,7 +29,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.joml.Quaternionf;
 
-import javax.annotation.Nullable;
 
 public abstract class AbstractModelDetailsGui<T extends LivingEntity, E extends IModelInfo> extends Screen {
     private static final Identifier BUTTON_TEXTURE = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/skin_detail.png");
@@ -137,7 +136,7 @@ public abstract class AbstractModelDetailsGui<T extends LivingEntity, E extends 
     }
 
     private void renderViewBg(GuiGraphicsExtractor graphics) {
-        this.fillGradient(graphics, BACKGROUND_SIZE, 0xfe17191d, -999);
+        this.fillGradient(graphics, BACKGROUND_SIZE, 0xfe17191d);
         graphics.pose().pushMatrix();
         graphics.pose().translate(0, 0);
         graphics.text(font, Component.translatable("gui.touhou_little_maid.skin_details.left_mouse"), (int) SIDE_MENU_SIZE.w + 4, (int) TOP_STATUS_BAR_SIZE.h + 4, 0xffaaaaaa, false);

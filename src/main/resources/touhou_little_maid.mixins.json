@@ -32,7 +32,7 @@
   "client": [
     "client.ClientPacketListenerMixin",
     "client.HumanoidModelMixin",
-    "client.ItemPropertiesMixin",
+    "client.FishingRodCastMixin",
     "client.LanguageMixin"
   ],
   "injectors": {

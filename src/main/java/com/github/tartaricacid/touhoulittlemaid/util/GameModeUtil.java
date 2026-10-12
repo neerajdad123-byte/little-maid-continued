@@ -112,6 +112,6 @@ public class GameModeUtil {
         if (hostProfile == null) {
             return false;
         }
-        return hostProfile.getId() != null && hostProfile.getId().equals(player.getUUID());
+        return hostProfile.id() != null && hostProfile.id().equals(player.getUUID());
     }
 }

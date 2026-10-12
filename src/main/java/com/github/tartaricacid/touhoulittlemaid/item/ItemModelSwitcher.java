@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.core.UUIDUtil;
 import java.util.ArrayList;
@@ -46,7 +48,7 @@ public class ItemModelSwitcher extends BlockItem {
     public static void itemStackToTileEntity(HolderLookup.Provider provider, ItemStack stack, TileEntityModelSwitcher switcher) {
         CompoundTag tag = stack.get(STORAGE_DATA_TAG);
         if (tag != null && tag.contains(NEO_FORGE_DATA_TAG)) {
-            switcher.loadAdditional(tag, provider);
+            switcher.loadCustomOnly(TagValueInput.create(ProblemReporter.DISCARDING, provider, tag));
         }
     }
 

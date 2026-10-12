@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.task;
 
+import com.github.tartaricacid.touhoulittlemaid.mixin.accessor.ArrowAccessor;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.task.IRangedAttackTask;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MaidConfig;
@@ -193,7 +194,7 @@ public class TaskBowAttack implements IRangedAttackTask {
             attackValue = attackDamage.getBaseValue();
         }
         float multiplier = (float) (attackValue / 2.0f);
-        arrowEntity.setBaseDamage(arrowEntity.getBaseDamage() * multiplier);
+        arrowEntity.setBaseDamage(((ArrowAccessor) arrowEntity).tlmGetBaseDamage() * multiplier);
 
         return arrowEntity;
     }

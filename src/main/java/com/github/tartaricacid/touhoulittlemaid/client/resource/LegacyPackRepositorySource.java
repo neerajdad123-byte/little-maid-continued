@@ -1,6 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.resource;
 
 
+import net.neoforged.neoforge.resource.JarContentsPackResources;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -34,9 +35,9 @@ public class LegacyPackRepositorySource implements RepositorySource {
         this.legacyPack = new Pack(info, supplier, metadata, config);
     }
 
-    private PathPackResources.PathResourcesSupplier getLegacyPack() {
+    private Pack.ResourcesSupplier getLegacyPack() {
         IModFile file = ModList.get().getModFileById(TouhouLittleMaid.MOD_ID).getFile();
-        return new PathPackResources.PathResourcesSupplier(file.getSecureJar().getRootPath().resolve(LEGACY_PACK_DIR_NAME));
+        return new JarContentsPackResources.JarContentsResourcesSupplier(file.getContents(), LEGACY_PACK_DIR_NAME);
     }
 
     @Override

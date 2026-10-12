@@ -52,15 +52,18 @@ public final class SoundUtil {
         return fallback;
     }
 
+    // shortcut: overworld sea level for the height-adjusted temperature; pass the level's sea level if other dimensions sound wrong
+    private static final int SEA_LEVEL = 63;
+
     public static boolean isRainBiome(Biome biome, BlockPos pos) {
-        return biome.getPrecipitationAt(pos) == Biome.Precipitation.RAIN && !shouldSnowGolemBurn(biome, pos);
+        return biome.getPrecipitationAt(pos, SEA_LEVEL) == Biome.Precipitation.RAIN && !shouldSnowGolemBurn(biome, pos);
     }
 
     public static boolean isSnowyBiome(Biome biome, BlockPos pos) {
-        return biome.getPrecipitationAt(pos) == Biome.Precipitation.SNOW;
+        return biome.getPrecipitationAt(pos, SEA_LEVEL) == Biome.Precipitation.SNOW;
     }
 
     private static boolean shouldSnowGolemBurn(Biome biome, BlockPos pos) {
-        return biome.getTemperature(pos) > 1.0F;
+        return biome.getBaseTemperature() > 1.0F;
     }
 }

@@ -34,7 +34,7 @@ public class ItemPicnicBasket extends BlockItem implements MenuProvider {
     private static final int PICNIC_BASKET_SIZE = 9;
 
     public ItemPicnicBasket(Block block) {
-        super(block, (new Properties()).stacksTo(1));
+        super(block, (new Properties()).stacksTo(1).overrideDescription("item.touhou_little_maid.picnic_basket"));
     }
 
     public static ItemStackHandler getContainer(ItemStack stack) {
@@ -75,11 +75,6 @@ public class ItemPicnicBasket extends BlockItem implements MenuProvider {
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         ItemStackHandler container = getContainer(stack);
         return Optional.of(new ItemContainerTooltip(container));
-    }
-
-    @Override
-    public String getDescriptionId() {
-        return "item.touhou_little_maid.picnic_basket";
     }
 
     @Override

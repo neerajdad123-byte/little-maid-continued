@@ -166,8 +166,8 @@ public class CustomSoundLoader {
     }
 
     private static void reuseSounds(Map<Identifier, List<SoundData>> buffers, SoundEvent from, SoundEvent to) {
-        List<SoundData> fromBuffers = buffers.get(from.getIdentifier());
-        buffers.get(to.getIdentifier()).addAll(fromBuffers);
+        List<SoundData> fromBuffers = buffers.get(from.location());
+        buffers.get(to.location()).addAll(fromBuffers);
     }
 
     private static boolean checkFileName(String patterString, String rawString) {

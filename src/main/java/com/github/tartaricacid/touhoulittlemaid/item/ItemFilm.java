@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -68,7 +70,7 @@ public class ItemFilm extends AbstractStoreMaidItem {
             var event = new MaidAndItemTransformEvent.ToMaid(maid, film, data);
             NeoForge.EVENT_BUS.post(event);
 
-            maid.readAdditionalSaveData(data);
+            maid.readAdditionalSaveData(TagValueInput.create(ProblemReporter.DISCARDING, worldIn.registryAccess(), data));
             maid.setPos(pos.getX(), pos.getY(), pos.getZ());
             // 实体生成必须在服务端应用
             if (!worldIn.isClientSide()) {

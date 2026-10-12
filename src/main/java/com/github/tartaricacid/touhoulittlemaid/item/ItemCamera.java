@@ -1,5 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -69,7 +73,8 @@ public class ItemCamera extends Item {
     public static void spawnMaidPhoto(Level worldIn, CompoundTag data, Player playerIn) {
         ItemStack photo = InitItems.PHOTO.get().getDefaultInstance();
         CompoundTag maidTag = new CompoundTag();
-        Optional<Entity> optional = EntityType.create(data, worldIn);
+        Optional<Entity> optional = EntityType.create(TagValueInput.create(ProblemReporter.DISCARDING, worldIn.registryAccess(), data), worldIn,
+                new EntitySpawnRequest(EntitySpawnReason.LOAD, true));
         if (optional.isEmpty() || !(optional.get() instanceof EntityMaid maid)) {
             return;
         }

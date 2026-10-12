@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Mob;
 public class SwimAnimation implements ICustomAnimation<Mob> {
     @Override
     public void setupRotations(Mob mob, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks) {
-        boolean inSwimFluidType = mob.isInFluidType((type, height) -> mob.canSwimInFluidType(type));
+        boolean inSwimFluidType = mob.isInFluidType((entity, type, height) -> mob.canSwimInFluidType(type));
         boolean inSwim = mob.isInWater() || inSwimFluidType;
         float xRot = 90 + (inSwim ? mob.getXRot() : 0);
         float xRotLerp = Mth.lerp(mob.getSwimAmount(partialTicks), 0, -xRot);

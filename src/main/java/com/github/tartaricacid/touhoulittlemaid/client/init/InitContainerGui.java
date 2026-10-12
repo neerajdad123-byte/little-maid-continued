@@ -36,9 +36,6 @@ public final class InitContainerGui {
         event.register(InitContainer.DEFAULT_MAIK_TASK_CONFIG.get(), DefaultMaidTaskConfigGui::new);
         event.register(InitContainer.ATTACK_TASK_CONFIG.get(), AttackTaskConfigGui::new);
 
-        // Curios 兼容
-        if (ModList.get().isLoaded(CompatRegistry.CURIOS)) {
-            CuriosCompat.registerScreen(event);
-        }
+        // Little Maid Continued: Curios screens return with the Curios compat (src/compat_disabled)
     }
 }

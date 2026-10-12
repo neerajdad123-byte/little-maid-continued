@@ -23,7 +23,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import org.apache.commons.lang3.StringUtils;
 
 @VisibleForDebug
@@ -131,7 +131,7 @@ public final class MaidDebugCommand {
                         level.setBlockAndUpdate(pos.move(Direction.UP), Blocks.LILY_PAD.defaultBlockState());
                     } else {
                         // 放置农田和作物
-                        level.setBlockAndUpdate(pos, Blocks.FARMLAND.defaultBlockState().setValue(FarmBlock.MOISTURE, 7));
+                        level.setBlockAndUpdate(pos, Blocks.FARMLAND.defaultBlockState().setValue(FarmlandBlock.MOISTURE, 7));
                         level.setBlockAndUpdate(pos.move(Direction.UP), Blocks.WHEAT.defaultBlockState().setValue(CropBlock.AGE, 7));
                     }
                 }

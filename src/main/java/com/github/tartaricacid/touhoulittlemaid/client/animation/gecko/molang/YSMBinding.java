@@ -83,7 +83,7 @@ public class YSMBinding extends ContextBinding {
         livingEntityVar("swim_speed", ctx -> ctx.entity().getAttributeValue(NeoForgeMod.SWIM_SPEED));
         livingEntityVar("entity_gravity", ctx -> ctx.entity().getAttributeValue(Attributes.GRAVITY));
         livingEntityVar("step_height_addition", ctx -> ctx.entity().getAttributeValue(Attributes.STEP_HEIGHT) - 0.6);
-        livingEntityVar("nametag_distance", ctx -> ctx.entity().getAttributeValue(NeoForgeMod.NAMETAG_DISTANCE));
+        livingEntityVar("nametag_distance", ctx -> 64.0);
 
 
         // 女仆和 YSM 之间不一致的 molang，仅保留防止报错

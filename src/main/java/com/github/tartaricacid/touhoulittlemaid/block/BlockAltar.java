@@ -252,7 +252,7 @@ public class BlockAltar extends Block implements EntityBlock, LegacyRemovalBlock
             return;
         }
         serverLevel.recipeAccess().getRecipeFor(InitRecipes.ALTAR_CRAFTING.get(), craftingInput, serverLevel)
-                .ifPresent(recipe -> spawnResultEntity(world, playerIn, powerAttachment, recipe.id(), recipe.value(), arrayList, altar));
+                .ifPresent(recipe -> spawnResultEntity(world, playerIn, powerAttachment, recipe.id().identifier(), recipe.value(), arrayList, altar));
     }
 
     private Optional<TileEntityAltar> getAltar(BlockGetter world, BlockPos pos) {

@@ -69,7 +69,7 @@ public class STTChatKey {
     }
 
     private static boolean keyIsMatch(InputEvent.Key event) {
-        return STT_CHAT_KEY.isActiveAndMatches(InputConstants.getKey(event.getKeyEvent()));;
+        return STT_CHAT_KEY.isActiveAndMatches(InputConstants.getKey(event.getKeyEvent()));
     }
 
     private static void getNearestMaid(LocalPlayer player, Consumer<EntityMaid> consumer, boolean isStart) {

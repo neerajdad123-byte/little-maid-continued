@@ -45,7 +45,7 @@ public class DismountBroomKey {
     }
 
     private static boolean keyIsMatch(InputEvent.Key event) {
-        return DISMOUNT_KEY.isActiveAndMatches(InputConstants.getKey(event.getKeyEvent()));;
+        return DISMOUNT_KEY.isActiveAndMatches(InputConstants.getKey(event.getKeyEvent()));
     }
 
     private static boolean isInGame() {

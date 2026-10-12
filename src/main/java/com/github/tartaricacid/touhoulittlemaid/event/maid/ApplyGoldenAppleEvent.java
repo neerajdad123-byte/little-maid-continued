@@ -26,7 +26,7 @@ public final class ApplyGoldenAppleEvent {
         Player player = event.getPlayer();
 
         if (player.isDiscrete() && (food == Foods.GOLDEN_APPLE || food == Foods.ENCHANTED_GOLDEN_APPLE)) {
-            maid.eat(world, stack);
+            maid.eat(world, stack, food);
             if (food == Foods.ENCHANTED_GOLDEN_APPLE && player instanceof ServerPlayer serverPlayer) {
                 InitTrigger.MAID_EVENT.get().trigger(serverPlayer, TriggerType.EAT_ENCHANTED_GOLDEN_APPLE);
             }

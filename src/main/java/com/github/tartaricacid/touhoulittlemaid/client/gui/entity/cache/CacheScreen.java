@@ -10,6 +10,8 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Screenshot;
+import org.jspecify.annotations.Nullable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
@@ -32,6 +34,10 @@ public class CacheScreen<T extends LivingEntity, E extends IModelInfo> extends S
     protected final EntityRender<T, E> entityRender;
     protected final int totalCount;
     protected final StopWatch stopWatch;
+    /**
+     * Icon drawn last frame; MC 26.x draws the GUI after this method, so it is captured one frame later.
+     */
+    private @Nullable E drawn;
 
     public CacheScreen(Screen parent, EntityType<T> entityType, Queue<E> modelInfos, EntityRender<T, E> entityRender) {
         super(Component.literal("Cache Screen"));
@@ -63,7 +69,7 @@ public class CacheScreen<T extends LivingEntity, E extends IModelInfo> extends S
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
 
-        if (modelInfos.isEmpty()) {
+        if (modelInfos.isEmpty() && drawn == null) {
             stopWatch.stop();
             double timeCost = stopWatch.getTime(TimeUnit.MILLISECONDS) / 1000.0;
             TouhouLittleMaid.LOGGER.info("Cache icon time: {} seconds", timeCost);
@@ -71,16 +77,7 @@ public class CacheScreen<T extends LivingEntity, E extends IModelInfo> extends S
             return;
         }
 
-        // 每帧尝试缓存 5 个
-        graphics.pose().pushMatrix();
-        for (int i = 0; i < 5; i++) {
-            if (modelInfos.isEmpty()) {
-                return;
-            }
-            graphics.pose().translate(0, 0);
-            doCacheIcon(graphics);
-        }
-        graphics.pose().popMatrix();
+        doCacheIcon(graphics);
 
         int finishSize = totalCount - modelInfos.size();
         graphics.centeredText(font, Component.translatable("gui.touhou_little_maid.cache_screen.progress", finishSize, totalCount), this.width / 2, this.height - 42, 0xFFFFFFFF);
@@ -88,18 +85,22 @@ public class CacheScreen<T extends LivingEntity, E extends IModelInfo> extends S
     }
 
     protected void doCacheIcon(GuiGraphicsExtractor graphics) {
-        E modelInfo = modelInfos.poll();
-        if (modelInfo != null) {
+        E captured = this.drawn;
+        if (captured != null) {
+            // the main target still holds last frame, which shows the captured icon
+            Screenshot.takeScreenshot(Minecraft.getInstance().gameRenderer.mainRenderTarget(), full -> {
+                NativeImage nativeImage = IconCache.exportImage(full, 256, IconCache.BACKGROUND_COLOR_SHIFTED);
+                full.close();
+                CacheIconTexture cacheIconTexture = new CacheIconTexture(captured.getModelId(), nativeImage);
+                Minecraft.getInstance().getTextureManager().register(captured.getCacheIconId(), cacheIconTexture);
+            });
+        }
+        this.drawn = modelInfos.poll();
+        if (this.drawn != null) {
             double guiScale = Minecraft.getInstance().getWindow().getGuiScale();
             int scaleModified = (int) Math.ceil((256 / guiScale));
-
             graphics.fill(0, 0, scaleModified, scaleModified + 2, IconCache.BACKGROUND_COLOR);
-            this.drawEntity(graphics, 0, 0, modelInfo, scaleModified);
-            NativeImage nativeImage = IconCache.exportImageFromScreenshot(256, IconCache.BACKGROUND_COLOR_SHIFTED);
-
-            Identifier modelId = modelInfo.getModelId();
-            CacheIconTexture cacheIconTexture = new CacheIconTexture(modelId, nativeImage);
-            Minecraft.getInstance().getTextureManager().register(modelInfo.getCacheIconId(), cacheIconTexture);
+            this.drawEntity(graphics, 0, 0, this.drawn, scaleModified);
         }
     }
 

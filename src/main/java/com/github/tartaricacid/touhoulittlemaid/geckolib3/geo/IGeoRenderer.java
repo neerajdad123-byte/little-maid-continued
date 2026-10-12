@@ -110,7 +110,7 @@ public interface IGeoRenderer<T> {
 
             int faces = mesh.faces(i);
             boolean mirrored = (faces & 0b1000000) != 0;
-            if (RenderSystem.getModelViewMatrix().m32() != 0) {
+            if (RenderSystem.getModelViewStack().m32() != 0) {
                 Matrix3f normal = poseStack.last().normal();
                 mesh.dx(i).cross(mesh.dy(i), nz);
                 mesh.dy(i).cross(mesh.dz(i), nx);
