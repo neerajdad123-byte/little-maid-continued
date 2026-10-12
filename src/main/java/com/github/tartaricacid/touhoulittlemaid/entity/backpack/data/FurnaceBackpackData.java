@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.backpack.data;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.backpack.IBackpackData;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import net.minecraft.core.RegistryAccess;
@@ -173,7 +174,7 @@ public class FurnaceBackpackData extends SimpleContainer implements IBackpackDat
         if (fuel.isEmpty()) {
             return 0;
         } else {
-            return fuel.getBurnTime(RecipeType.SMELTING);
+            return fuel.getBurnTime(RecipeType.SMELTING, PortUtil.fuelValues());
         }
     }
 

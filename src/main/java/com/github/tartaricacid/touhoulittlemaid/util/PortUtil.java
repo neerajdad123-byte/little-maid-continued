@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -95,6 +97,17 @@ public final class PortUtil {
         if (!tag.isEmpty()) {
             output.store(ROOT, tag);
         }
+    }
+
+    /**
+     * Fuel burn times live in the level in MC 26.x; works on both sides once a world is loaded.
+     */
+    public static FuelValues fuelValues() {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server != null) {
+            return server.fuelValues();
+        }
+        return FMLEnvironment.getDist().isClient() ? ClientPortUtil.fuelValues() : FuelValues.vanillaBurnTimes(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY), FeatureFlags.VANILLA_SET);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.inventory.container.backpack;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.entity.backpack.data.FurnaceBackpackData;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.inventory.container.MaidMainContainer;
@@ -51,7 +52,7 @@ public class FurnaceBackpackContainer extends MaidMainContainer {
     }
 
     private boolean isFuel(ItemStack stack) {
-        return stack.getBurnTime(RecipeType.SMELTING) > 0;
+        return stack.getBurnTime(RecipeType.SMELTING, PortUtil.fuelValues()) > 0;
     }
 
     public int getBurnProgress() {

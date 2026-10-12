@@ -5,7 +5,6 @@ import com.github.tartaricacid.touhoulittlemaid.api.backpack.ITriggerSlotChange;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidBackpackChangeEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitCapabilities;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -53,15 +52,15 @@ public abstract class MaidMainContainer extends AbstractMaidContainer {
         addSlot(new SlotItemHandler(handler, 0, 87, 77) {
             @Override
             @OnlyIn(Dist.CLIENT)
-            public Pair<Identifier, Identifier> getNoItemIcon() {
-                return Pair.of(BLOCK_ATLAS, EMPTY_MAINHAND_SLOT);
+            public Identifier getNoItemIcon() {
+                return EMPTY_MAINHAND_SLOT;
             }
         });
         addSlot(new SlotItemHandler(handler, 1, 121, 77) {
             @Override
             @OnlyIn(Dist.CLIENT)
-            public Pair<Identifier, Identifier> getNoItemIcon() {
-                return Pair.of(BLOCK_ATLAS, EMPTY_ARMOR_SLOT_SHIELD);
+            public Identifier getNoItemIcon() {
+                return EMPTY_ARMOR_SLOT_SHIELD;
             }
         });
     }
@@ -93,8 +92,8 @@ public abstract class MaidMainContainer extends AbstractMaidContainer {
 
                         @Override
                         @OnlyIn(Dist.CLIENT)
-                        public Pair<Identifier, Identifier> getNoItemIcon() {
-                            return Pair.of(BLOCK_ATLAS, TEXTURE_EMPTY_SLOTS[equipmentSlot.getIndex()]);
+                        public Identifier getNoItemIcon() {
+                            return TEXTURE_EMPTY_SLOTS[equipmentSlot.getIndex()];
                         }
                     });
                 }
@@ -110,8 +109,8 @@ public abstract class MaidMainContainer extends AbstractMaidContainer {
             if (i == 5) {
                 addSlot(new BackpackSlot(maid, i, 143 + 18 * i, 37) {
                     @Override
-                    public Pair<Identifier, Identifier> getNoItemIcon() {
-                        return Pair.of(BLOCK_ATLAS, EMPTY_BACK_SHOW_SLOT);
+                    public Identifier getNoItemIcon() {
+                        return EMPTY_BACK_SHOW_SLOT;
                     }
                 });
             }
@@ -155,13 +154,11 @@ public abstract class MaidMainContainer extends AbstractMaidContainer {
             // 用来修正护甲值不变化的问题
             if (PLAYER_INVENTORY_SIZE <= index && index < PLAYER_INVENTORY_SIZE + 4) {
                 EquipmentSlot equipmentSlot = SLOT_IDS[index - PLAYER_INVENTORY_SIZE];
-                maid.setLastArmorItem(equipmentSlot, stack1);
             }
             // 还有主副手
             if (PLAYER_INVENTORY_SIZE + 4 <= index && index < PLAYER_INVENTORY_SIZE + 6) {
                 int slotIndex = index - PLAYER_INVENTORY_SIZE - 4;
                 EquipmentSlot equipmentSlot = slotIndex == 0 ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
-                maid.setLastHandItem(equipmentSlot, stack1);
             }
         }
         return stack1;
