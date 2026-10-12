@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
@@ -37,7 +36,7 @@ public class SetInitMaidOwnerFunction extends LootItemConditionalFunction {
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
         if (stack.is(InitItems.SMART_SLAB_INIT.get())) {
-            Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
+            Entity entity = context.getOptionalParameter(LootContextParams.THIS_ENTITY);
             if (entity instanceof Player player) {
                 UUID uuid = player.getUUID();
                 ItemSmartSlab.setInitMaidOwner(stack, uuid);
@@ -47,8 +46,8 @@ public class SetInitMaidOwnerFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
-        return InitLootModifier.SET_INIT_MAID_OWNER_FUNCTION.get();
+    public MapCodec<SetInitMaidOwnerFunction> codec() {
+        return CODEC;
     }
 
     public static class Builder extends LootItemConditionalFunction.Builder<SetInitMaidOwnerFunction.Builder> {

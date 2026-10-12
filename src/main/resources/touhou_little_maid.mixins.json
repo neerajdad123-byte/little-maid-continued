@@ -33,8 +33,7 @@
     "client.ClientPacketListenerMixin",
     "client.HumanoidModelMixin",
     "client.ItemPropertiesMixin",
-    "client.LanguageMixin",
-    "client.LivingEntityRendererMixin"
+    "client.LanguageMixin"
   ],
   "injectors": {
     "defaultRequire": 1

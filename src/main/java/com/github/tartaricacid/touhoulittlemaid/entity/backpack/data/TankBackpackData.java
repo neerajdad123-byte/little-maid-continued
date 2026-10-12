@@ -3,6 +3,7 @@ package com.github.tartaricacid.touhoulittlemaid.entity.backpack.data;
 import com.github.tartaricacid.touhoulittlemaid.api.backpack.IBackpackData;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.util.MaidFluidUtil;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -78,13 +79,13 @@ public class TankBackpackData extends SimpleContainer implements IBackpackData {
     @Override
     public void load(CompoundTag tag, EntityMaid maid) {
         this.loadTank(tag.getCompoundOrEmpty("Tanks"), maid);
-        this.fromTag(tag.getListOrEmpty("Items"), this.maid.registryAccess());
+        PortUtil.containerFromTag(this, tag.getListOrEmpty("Items"), this.maid.registryAccess());
     }
 
     @Override
     public void save(CompoundTag tag, EntityMaid maid) {
-        tag.put("Tanks", tank.writeToNBT(maid.registryAccess(), new CompoundTag()));
-        tag.put("Items", this.createTag(maid.registryAccess()));
+        tag.put("Tanks", PortUtil.serializeItems(tank, maid.registryAccess()));
+        tag.put("Items", PortUtil.containerToTag(this, maid.registryAccess()));
     }
 
     @Override
@@ -96,7 +97,7 @@ public class TankBackpackData extends SimpleContainer implements IBackpackData {
     }
 
     public void loadTank(CompoundTag nbt, EntityMaid maid) {
-        tank.readFromNBT(this.maid.registryAccess(), nbt);
+        PortUtil.deserializeItems(tank, this.maid.registryAccess(), nbt);
         this.tankFluidCount = tank.getFluidAmount();
         Identifier key = BuiltInRegistries.FLUID.getKey(tank.getFluid().getFluid());
         maid.setBackpackFluid(key.toString());

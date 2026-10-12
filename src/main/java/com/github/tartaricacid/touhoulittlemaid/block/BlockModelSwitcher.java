@@ -74,8 +74,8 @@ public class BlockModelSwitcher extends BaseEntityBlock implements LegacyRemoval
             return;
         }
         Direction direction = pState.getValue(FACING);
-        boolean leftSignal = pLevel.getSignal(pPos.offset(direction.getCounterClockWise().getNormal()), direction.getCounterClockWise()) > 0;
-        boolean rightSignal = pLevel.getSignal(pPos.offset(direction.getClockWise().getNormal()), direction.getClockWise()) > 0;
+        boolean leftSignal = pLevel.getSignal(pPos.offset(direction.getCounterClockWise().getUnitVec3i()), direction.getCounterClockWise()) > 0;
+        boolean rightSignal = pLevel.getSignal(pPos.offset(direction.getClockWise().getUnitVec3i()), direction.getClockWise()) > 0;
         boolean hasSignal = leftSignal || rightSignal;
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (blockEntity instanceof TileEntityModelSwitcher switcher && pLevel instanceof ServerLevel) {

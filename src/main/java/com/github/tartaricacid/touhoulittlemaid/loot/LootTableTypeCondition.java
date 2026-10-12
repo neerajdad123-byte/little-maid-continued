@@ -10,7 +10,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -34,7 +33,7 @@ public record LootTableTypeCondition(Identifier lootTableType,
 
     private boolean typeAreEquals(LootContext context) {
         ResourceKey<LootTable> currentLootTable = ResourceKey.create(Registries.LOOT_TABLE, context.getQueriedLootTableId());
-        return context.getResolver().get(Registries.LOOT_TABLE, currentLootTable).map(lootTable ->
+        return context.getResolver().get(currentLootTable).map(lootTable ->
                         Objects.equals(lootTable.value().getParamSet(), LootContextParamSets.REGISTRY.get(lootTableType)))
                 .orElse(false);
     }
@@ -47,7 +46,7 @@ public record LootTableTypeCondition(Identifier lootTableType,
     }
 
     @Override
-    public LootItemConditionType getType() {
-        return InitLootModifier.LOOT_TABLE_TYPE.get();
+    public MapCodec<LootTableTypeCondition> codec() {
+        return CODEC;
     }
 }

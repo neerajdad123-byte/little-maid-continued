@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
+import net.minecraft.nbt.NbtOps;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -27,12 +29,7 @@ import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.TA
 public class ItemTankBackpack extends ItemMaidBackpack {
     public static ItemStack getTankBackpack(HolderLookup.Provider provider, TankBackpackData data) {
         ItemStack backpack = InitItems.TANK_BACKPACK.get().getDefaultInstance();
-        CompoundTag tags = backpack.get(TANK_BACKPACK_TAG);
-        if (tags == null) {
-            tags = new CompoundTag();
-            backpack.set(InitDataComponent.TANK_BACKPACK_TAG, tags);
-        }
-        data.getTank().writeToNBT(provider, tags);
+        backpack.set(InitDataComponent.TANK_BACKPACK_TAG, PortUtil.serializeItems(data.getTank(), provider));
         return backpack;
     }
 
@@ -61,7 +58,7 @@ public class ItemTankBackpack extends ItemMaidBackpack {
                 }
 
                 MutableComponent fluidInfo;
-                Optional<FluidStack> fluid = FluidStack.parse(registries, compound);
+                Optional<FluidStack> fluid = FluidStack.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), compound).result();
                 if (fluid.isEmpty()) {
                     return;
                 }

@@ -22,8 +22,7 @@ final class ClientPortUtil {
                 : mc.level.fuelValues();
     }
 
-    @Nullable
-    static HolderLookup.Provider registries() {
+    static HolderLookup.@Nullable Provider registries() {
         Minecraft mc = Minecraft.getInstance();
         return mc.level == null ? null : mc.level.registryAccess();
     }

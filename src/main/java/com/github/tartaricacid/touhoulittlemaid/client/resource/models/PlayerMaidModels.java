@@ -13,13 +13,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.block.entity.SkullBlockEntity;
+import net.minecraft.util.Util;
+import net.minecraft.world.entity.player.PlayerModelType;
+import org.jspecify.annotations.Nullable;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @OnlyIn(Dist.CLIENT)
@@ -36,7 +38,7 @@ public final class PlayerMaidModels {
             Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "animation/maid/default/arm/swing.js"),
             Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "animation/maid/player/sit/default.js")
     );
-    private static final Identifier TEXTURE_ALEX = Identifier.withDefaultNamespace("textures/entity/alex.png");
+    private static final Identifier TEXTURE_ALEX = Identifier.withDefaultNamespace("textures/entity/player/slim/alex.png");
     private static final List<Object> PLAYER_MAID_ANIMATIONS = Lists.newArrayList();
     private static MaidModelInfo playerMaidInfo;
     private static Identifier playerSkin;
@@ -55,28 +57,8 @@ public final class PlayerMaidModels {
     }
 
     public static BedrockModel<Mob> getPlayerMaidModel(String name) {
-        GameProfile newProfile = null;
-        Minecraft minecraft = Minecraft.getInstance();
-
-        try {
-            newProfile = GAME_PROFILE_CACHE.get(name, () -> {
-                SkullBlockEntity.fetchGameProfile(name).thenApply(gameProfile -> {
-                    GameProfile profile = gameProfile.orElse(EMPTY_GAME_PROFILE);
-                    GAME_PROFILE_CACHE.put(name, profile);
-                    return profile;
-                });
-                return EMPTY_GAME_PROFILE;
-            });
-        } catch (ExecutionException ignore) {
-        }
-
-        if (newProfile != null) {
-            PlayerSkin skin = minecraft.getSkinManager().getInsecureSkin(newProfile);
-            if (skin.model() == PlayerSkin.Model.SLIM) {
-                return PLAYER_MAID_MODEL_SLIM;
-            }
-        }
-        return PLAYER_MAID_MODEL;
+        PlayerSkin skin = getSkin(name);
+        return skin != null && skin.model() == PlayerModelType.SLIM ? PLAYER_MAID_MODEL_SLIM : PLAYER_MAID_MODEL;
     }
 
     public static List<Object> getPlayerMaidAnimations() {
@@ -89,26 +71,21 @@ public final class PlayerMaidModels {
     }
 
     public static Identifier getPlayerSkin(String name) {
-        GameProfile newProfile = null;
-        Minecraft minecraft = Minecraft.getInstance();
+        PlayerSkin skin = getSkin(name);
+        return skin != null ? skin.body().texturePath() : TEXTURE_ALEX;
+    }
 
-        try {
-            newProfile = GAME_PROFILE_CACHE.get(name, () -> {
-                SkullBlockEntity.fetchGameProfile(name).thenApply(gameProfile -> {
-                    GameProfile profile = gameProfile.orElse(EMPTY_GAME_PROFILE);
-                    GAME_PROFILE_CACHE.put(name, profile);
-                    return profile;
-                });
-                return EMPTY_GAME_PROFILE;
-            });
-        } catch (ExecutionException ignore) {
+    /**
+     * The skin of the named player, or null while the profile is still being looked up (that happens off-thread).
+     */
+    private static @Nullable PlayerSkin getSkin(String name) {
+        GameProfile profile = GAME_PROFILE_CACHE.getIfPresent(name);
+        if (profile == null) {
+            GAME_PROFILE_CACHE.put(name, EMPTY_GAME_PROFILE);
+            CompletableFuture.supplyAsync(() -> Minecraft.getInstance().services().profileResolver().fetchByName(name), Util.backgroundExecutor())
+                    .thenAccept(result -> GAME_PROFILE_CACHE.put(name, result.orElse(EMPTY_GAME_PROFILE)));
+            return null;
         }
-
-        if (newProfile != null) {
-            PlayerSkin skin = minecraft.getSkinManager().getInsecureSkin(newProfile);
-            return skin.texture();
-        }
-
-        return TEXTURE_ALEX;
+        return Minecraft.getInstance().getSkinManager().createLookup(profile, false).get();
     }
 }

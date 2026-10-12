@@ -5,7 +5,6 @@ import com.github.tartaricacid.touhoulittlemaid.geckolib3.core.AnimatableEntity;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.core.event.predicate.AnimationEvent;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.core.molang.context.AnimationContext;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.core.util.Color;
-import com.github.tartaricacid.touhoulittlemaid.geckolib3.extended.LivingEntityRendererAccessor;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.geo.animated.AnimatedGeoModel;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.model.provider.data.EntityModelData;
 import com.github.tartaricacid.touhoulittlemaid.geckolib3.util.EModelRenderCycle;
@@ -21,6 +20,7 @@ import net.minecraft.util.LightCoordsUtil;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyEntityModel;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.LegacyLivingEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -43,7 +43,7 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extends AnimatableEntity<T>> extends LegacyLivingEntityRenderer<T, HumanoidModel<T>> implements IGeoRenderer<T> {
+public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extends AnimatableEntity<T>> extends LegacyLivingEntityRenderer<T, LegacyEntityModel<T>> implements IGeoRenderer<T> {
     protected final List<GeoLayerRenderer> layerRenderers = new ObjectArrayList<>();
     protected AnimatableEntity<T> currentAnimatable;
     protected float widthScale = 1;
@@ -54,7 +54,16 @@ public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extend
     private IRenderCycle currentModelRenderCycle = EModelRenderCycle.INITIAL;
 
     public GeoReplacedEntityRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new HumanoidModel<>(renderManager.bakeLayer(ModelLayers.PLAYER)), 0.5f);
+        // the geo model draws itself; the base class model is only a placeholder
+        super(renderManager, new LegacyEntityModel<>() {
+            @Override
+            public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+            }
+
+            @Override
+            public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
+            }
+        }, 0.5f);
     }
 
     public static int getPackedOverlay(LivingEntity entity, float u) {
@@ -68,25 +77,6 @@ public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extend
             case EAST -> 180;
             default -> 0;
         };
-    }
-
-    private static void renderLeashPiece(VertexConsumer buffer, Matrix4f positionMatrix, float xDif, float yDif,
-                                         float zDif, int entityBlockLight, int holderBlockLight, int entitySkyLight,
-                                         int holderSkyLight, float width, float yOffset, float xOffset, float zOffset, int segment, boolean isLeashKnot) {
-        float piecePosPercent = segment / 24f;
-        int lerpBlockLight = (int) Mth.lerp(piecePosPercent, entityBlockLight, holderBlockLight);
-        int lerpSkyLight = (int) Mth.lerp(piecePosPercent, entitySkyLight, holderSkyLight);
-        int packedLight = LightCoordsUtil.pack(lerpBlockLight, lerpSkyLight);
-        float knotColourMod = segment % 2 == (isLeashKnot ? 1 : 0) ? 0.7f : 1f;
-        float red = 0.5f * knotColourMod;
-        float green = 0.4f * knotColourMod;
-        float blue = 0.3f * knotColourMod;
-        float x = xDif * piecePosPercent;
-        float y = yDif > 0.0f ? yDif * piecePosPercent * piecePosPercent : yDif - yDif * (1.0f - piecePosPercent) * (1.0f - piecePosPercent);
-        float z = zDif * piecePosPercent;
-
-        buffer.addVertex(positionMatrix, x - xOffset, y + yOffset, z + zOffset).setColor(red, green, blue, 1).setLight(packedLight);
-        buffer.addVertex(positionMatrix, x + xOffset, y + width - yOffset, z - zOffset).setColor(red, green, blue, 1).setLight(packedLight);
     }
 
     @Override
@@ -133,18 +123,7 @@ public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extend
 
         setCurrentModelRenderCycle(EModelRenderCycle.INITIAL);
 
-        if (NeoForge.EVENT_BUS.post(new RenderLivingEvent.Pre<>(entity, this, partialTick, poseStack, bufferSource, packedLight)).isCanceled()) {
-            return;
-        }
-
         poseStack.pushPose();
-        if (entity instanceof Mob mob) {
-            Entity leashHolder = mob.getLeashHolder();
-            if (leashHolder != null) {
-                renderLeash(entity, partialTick, poseStack, bufferSource, leashHolder);
-            }
-        }
-
         EntityModelData entityModelData = new EntityModelData();
         entityModelData.isSitting = shouldSit;
         entityModelData.isChild = entity.isBaby();
@@ -217,8 +196,6 @@ public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extend
         }
         poseStack.popPose();
 
-        ((LivingEntityRendererAccessor) this).tlm$renderNameTag(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-        NeoForge.EVENT_BUS.post(new RenderLivingEvent.Post<>(entity, this, partialTick, poseStack, bufferSource, packedLight));
     }
 
     protected float getOverlayProgress(LivingEntity entity, float partialTicks) {
@@ -251,16 +228,6 @@ public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extend
         return 90;
     }
 
-    @Override
-    public boolean shouldShowName(T entity) {
-        double nameRenderDistance = entity.isDiscrete() ? 32d : 64d;
-        if (this.entityRenderDispatcher.distanceToSqr(entity) >= nameRenderDistance * nameRenderDistance) {
-            return false;
-        }
-        return entity.shouldShowName() || (entity == this.entityRenderDispatcher.crosshairPickEntity && entity.hasCustomName())
-                                          && Minecraft.renderNames();
-    }
-
     protected float getSwingProgress(LivingEntity entity, float partialTick) {
         return entity.getAttackAnim(partialTick);
     }
@@ -274,44 +241,6 @@ public abstract class GeoReplacedEntityRenderer<T extends LivingEntity, E extend
     }
 
     public abstract E getAnimatableEntity(T entity);
-
-    public <E extends Entity> void renderLeash(T entity, float partialTick, PoseStack poseStack,
-                                               MultiBufferSource bufferSource, E leashHolder) {
-        double lerpBodyAngle = (Mth.lerp(partialTick, entity.yBodyRot, entity.yBodyRotO) * Mth.DEG_TO_RAD) + Mth.HALF_PI;
-        Vec3 leashOffset = entity.getLeashOffset(1.0f);
-        double xAngleOffset = Math.cos(lerpBodyAngle) * leashOffset.z + Math.sin(lerpBodyAngle) * leashOffset.x;
-        double zAngleOffset = Math.sin(lerpBodyAngle) * leashOffset.z - Math.cos(lerpBodyAngle) * leashOffset.x;
-        double lerpOriginX = Mth.lerp(partialTick, entity.xo, entity.getX()) + xAngleOffset;
-        double lerpOriginY = Mth.lerp(partialTick, entity.yo, entity.getY()) + leashOffset.y;
-        double lerpOriginZ = Mth.lerp(partialTick, entity.zo, entity.getZ()) + zAngleOffset;
-        Vec3 ropeGripPosition = leashHolder.getRopeHoldPosition(partialTick);
-        float xDif = (float) (ropeGripPosition.x - lerpOriginX);
-        float yDif = (float) (ropeGripPosition.y - lerpOriginY);
-        float zDif = (float) (ropeGripPosition.z - lerpOriginZ);
-        float offsetMod = (float) Mth.fastInvSqrt(xDif * xDif + zDif * zDif) * 0.025f / 2f;
-        float xOffset = zDif * offsetMod;
-        float zOffset = xDif * offsetMod;
-        VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderTypes.leash());
-        BlockPos entityEyePos = BlockPos.containing(entity.getEyePosition(partialTick));
-        BlockPos holderEyePos = BlockPos.containing(leashHolder.getEyePosition(partialTick));
-        int entityBlockLight = getBlockLightLevel(entity, entityEyePos);
-        int holderBlockLight = leashHolder.isOnFire() ? 15 : leashHolder.level().getBrightness(LightLayer.BLOCK, holderEyePos);
-        int entitySkyLight = entity.level().getBrightness(LightLayer.SKY, entityEyePos);
-        int holderSkyLight = entity.level().getBrightness(LightLayer.SKY, holderEyePos);
-
-        poseStack.pushPose();
-        poseStack.translate(xAngleOffset, leashOffset.y, zAngleOffset);
-        Matrix4f posMatrix = poseStack.last().pose();
-        for (int segment = 0; segment <= 24; ++segment) {
-            renderLeashPiece(vertexConsumer, posMatrix, xDif, yDif, zDif, entityBlockLight, holderBlockLight,
-                    entitySkyLight, holderSkyLight, 0.025f, 0.025f, xOffset, zOffset, segment, false);
-        }
-        for (int segment = 24; segment >= 0; --segment) {
-            renderLeashPiece(vertexConsumer, posMatrix, xDif, yDif, zDif, entityBlockLight, holderBlockLight,
-                    entitySkyLight, holderSkyLight, 0.025f, 0.0f, xOffset, zOffset, segment, true);
-        }
-        poseStack.popPose();
-    }
 
     @Override
     public MultiBufferSource getCurrentRTB() {

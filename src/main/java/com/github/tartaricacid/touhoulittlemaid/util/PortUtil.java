@@ -26,6 +26,9 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.MinecraftServer;
@@ -40,7 +43,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gamerules.GameRule;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
@@ -169,7 +172,7 @@ public final class PortUtil {
     /**
      * Replacement for MC 1.21.1 {@code ItemStackHandler#serializeNBT(Provider)}; same NBT layout ("Items", "Size").
      */
-    public static CompoundTag serializeItems(ItemStackHandler handler, HolderLookup.Provider provider) {
+    public static CompoundTag serializeItems(ValueIOSerializable handler, HolderLookup.Provider provider) {
         TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, provider);
         handler.serialize(output);
         return output.buildResult();
@@ -178,7 +181,7 @@ public final class PortUtil {
     /**
      * Replacement for MC 1.21.1 {@code ItemStackHandler#deserializeNBT(Provider, CompoundTag)}.
      */
-    public static void deserializeItems(ItemStackHandler handler, HolderLookup.Provider provider, CompoundTag tag) {
+    public static void deserializeItems(ValueIOSerializable handler, HolderLookup.Provider provider, CompoundTag tag) {
         handler.deserialize(TagValueInput.create(ProblemReporter.DISCARDING, provider, tag));
     }
 
@@ -224,5 +227,41 @@ public final class PortUtil {
             }
         }
         return RegistryAccess.EMPTY;
+    }
+
+    /**
+     * Replaces the removed {@code SimpleContainer#createTag}. Unlike it, stacks keep their slot number.
+     */
+    public static ListTag containerToTag(SimpleContainer container, HolderLookup.Provider provider) {
+        RegistryOps<Tag> ops = provider.createSerializationContext(NbtOps.INSTANCE);
+        ListTag list = new ListTag();
+        for (int slot = 0; slot < container.getContainerSize(); slot++) {
+            ItemStack stack = container.getItem(slot);
+            if (!stack.isEmpty() && ItemStack.CODEC.encodeStart(ops, stack).getOrThrow() instanceof CompoundTag tag) {
+                tag.putByte("Slot", (byte) slot);
+                list.add(tag);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Reads {@link #containerToTag}; entries without a slot (MC 1.21.1 saves) go to the first free slot as before.
+     */
+    public static void containerFromTag(SimpleContainer container, ListTag list, HolderLookup.Provider provider) {
+        RegistryOps<Tag> ops = provider.createSerializationContext(NbtOps.INSTANCE);
+        container.clearContent();
+        for (Tag entry : list) {
+            Optional<ItemStack> stack = ItemStack.CODEC.parse(ops, entry).result();
+            if (stack.isEmpty()) {
+                continue;
+            }
+            int slot = entry instanceof CompoundTag tag ? tag.getByteOr("Slot", (byte) -1) & 0xFF : 0xFF;
+            if (slot < container.getContainerSize()) {
+                container.setItem(slot, stack.get());
+            } else {
+                container.addItem(stack.get());
+            }
+        }
     }
 }

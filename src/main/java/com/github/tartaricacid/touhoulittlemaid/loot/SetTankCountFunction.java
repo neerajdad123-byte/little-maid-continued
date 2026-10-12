@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.loot;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.entity.backpack.data.TankBackpackData;
 import com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent;
 import com.github.tartaricacid.touhoulittlemaid.init.InitLootModifier;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -42,21 +42,15 @@ public class SetTankCountFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
-        return InitLootModifier.SET_TANK_COUNT_FUNCTION.get();
+    public MapCodec<SetTankCountFunction> codec() {
+        return CODEC;
     }
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        CompoundTag tags = stack.get(TANK_BACKPACK_TAG);
-        if (tags == null) {
-            tags = new CompoundTag();
-        }
         FluidTank tank = new FluidTank(TankBackpackData.CAPACITY);
-        FluidStack fluidStack = new FluidStack(BuiltInRegistries.FLUID.get(this.fluidId), count);
-        tank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
-        tank.writeToNBT(context.getLevel().registryAccess(), tags);
-        stack.set(InitDataComponent.TANK_BACKPACK_TAG, tags);
+        tank.fill(new FluidStack(BuiltInRegistries.FLUID.getValue(this.fluidId), count), IFluidHandler.FluidAction.EXECUTE);
+        stack.set(InitDataComponent.TANK_BACKPACK_TAG, PortUtil.serializeItems(tank, context.getLevel().registryAccess()));
         return stack;
     }
 

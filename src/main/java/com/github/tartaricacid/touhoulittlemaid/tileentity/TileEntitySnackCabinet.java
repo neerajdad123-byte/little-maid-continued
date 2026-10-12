@@ -2,20 +2,18 @@ package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.block.BlockSnackCabinet;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Vec3i;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
@@ -26,10 +24,10 @@ import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.List;
+
 public class TileEntitySnackCabinet extends RandomizableContainerBlockEntity {
-    public static final BlockEntityType<TileEntitySnackCabinet> TYPE = BlockEntityType.Builder
-            .of(TileEntitySnackCabinet::new, InitBlocks.SNACK_CABINET.get())
-            .build(null);
+    public static final BlockEntityType<TileEntitySnackCabinet> TYPE = new BlockEntityType<>(TileEntitySnackCabinet::new, InitBlocks.SNACK_CABINET.get());
 
     private static final int SLOT_COUNT = 27;
 
@@ -51,7 +49,7 @@ public class TileEntitySnackCabinet extends RandomizableContainerBlockEntity {
         }
 
         @Override
-        protected boolean isOwnContainer(Player player) {
+        public boolean isOwnContainer(Player player) {
             if (player.containerMenu instanceof ChestMenu menu) {
                 return menu.getContainer() == TileEntitySnackCabinet.this;
             } else {
@@ -65,27 +63,19 @@ public class TileEntitySnackCabinet extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput valueOutput) {
-        HolderLookup.Provider registries = PortUtil.registries();
-        CompoundTag tag = new CompoundTag();
-        try {
-            super.saveAdditional(valueOutput);
-            if (!this.trySaveLootTable(tag)) {
-                ContainerHelper.saveAllItems(tag, this.items, registries);
-            }
-        } finally {
-            PortUtil.writeRoot(valueOutput, tag);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        if (!this.trySaveLootTable(output)) {
+            ContainerHelper.saveAllItems(output, this.items);
         }
     }
 
     @Override
-    protected void loadAdditional(ValueInput valueInput) {
-        HolderLookup.Provider registries = valueInput.lookup();
-        CompoundTag tag = PortUtil.readRoot(valueInput);
-        super.loadAdditional(valueInput);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(tag)) {
-            ContainerHelper.loadAllItems(tag, this.items, registries);
+        if (!this.tryLoadLootTable(input)) {
+            ContainerHelper.loadAllItems(input, this.items);
         }
     }
 
@@ -115,17 +105,22 @@ public class TileEntitySnackCabinet extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    public void startOpen(Player player) {
-        if (!this.remove && !player.isSpectator() && this.level != null) {
-            this.openersCounter.incrementOpeners(player, this.level, this.getBlockPos(), this.getBlockState());
+    public void startOpen(ContainerUser user) {
+        if (!this.remove && !user.getLivingEntity().isSpectator() && this.level != null) {
+            this.openersCounter.incrementOpeners(user.getLivingEntity(), this.level, this.getBlockPos(), this.getBlockState(), user.getContainerInteractionRange());
         }
     }
 
     @Override
-    public void stopOpen(Player player) {
-        if (!this.remove && !player.isSpectator() && this.level != null) {
-            this.openersCounter.decrementOpeners(player, this.level, this.getBlockPos(), this.getBlockState());
+    public void stopOpen(ContainerUser user) {
+        if (!this.remove && !user.getLivingEntity().isSpectator() && this.level != null) {
+            this.openersCounter.decrementOpeners(user.getLivingEntity(), this.level, this.getBlockPos(), this.getBlockState());
         }
+    }
+
+    @Override
+    public List<ContainerUser> getEntitiesWithContainerOpen() {
+        return this.openersCounter.getEntitiesWithContainerOpen(this.getLevel(), this.getBlockPos());
     }
 
     public void recheckOpen() {
@@ -136,7 +131,7 @@ public class TileEntitySnackCabinet extends RandomizableContainerBlockEntity {
 
     void playSound(BlockState state, SoundEvent sound) {
         if (this.level != null) {
-            Vec3i facing = state.getValue(BlockSnackCabinet.FACING).getNormal();
+            Vec3i facing = state.getValue(BlockSnackCabinet.FACING).getUnitVec3i();
             double x = this.worldPosition.getX() + 0.5 + facing.getX() / 2.0;
             double y = this.worldPosition.getY() + 0.5 + facing.getY() / 2.0;
             double z = this.worldPosition.getZ() + 0.5 + facing.getZ() / 2.0;

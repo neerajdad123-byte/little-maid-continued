@@ -1,5 +1,10 @@
 package com.github.tartaricacid.touhoulittlemaid.world.backups;
 
+import org.apache.commons.io.FilenameUtils;
+import java.util.Objects;
+import net.minecraft.world.level.storage.LevelResource;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.config.ServerConfig;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -112,7 +117,7 @@ public final class MaidBackupsManager {
             LOGGER.error("Cannot access overworld for maid index retrieval: {}", ownerId);
             return new CompoundTag();
         }
-        Path ownerFolder = overWorld.getDataStorage().dataFolder.toPath()
+        Path ownerFolder = dataFolder(overWorld)
                 .resolve(BACKUPS_FOLDER_NAME)
                 .resolve(ownerId.toString());
         File indexFile = ownerFolder.resolve(INDEX_FILE_NAME).toFile();
@@ -128,8 +133,9 @@ public final class MaidBackupsManager {
             Path saveFolder = buildBackupFolderPath(maid, overWorld, ownerId);
             String saveFileName = generateBackupFileName();
 
-            CompoundTag entityData = new CompoundTag();
-            boolean saveResult = maid.saveAsPassenger(entityData);
+            TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, maid.registryAccess());
+            boolean saveResult = maid.saveAsPassenger(output);
+            CompoundTag entityData = output.buildResult();
 
             if (!saveResult) {
                 LOGGER.warn("Failed to serialize maid data for backup: {}", maid.getStringUUID());
@@ -175,7 +181,7 @@ public final class MaidBackupsManager {
 
     public static List<String> getMaidBackupFiles(ServerPlayer player, UUID maidUuid) {
         List<String> backupFiles = Lists.newArrayList();
-        Path folderPath = player.level().getDataStorage().dataFolder.toPath()
+        Path folderPath = dataFolder(player.level())
                 .resolve(BACKUPS_FOLDER_NAME)
                 .resolve(player.getUUID().toString())
                 .resolve(maidUuid.toString());
@@ -194,11 +200,11 @@ public final class MaidBackupsManager {
     }
 
     public static CompoundTag getMaidBackFile(ServerPlayer player, UUID maidUuid, String fileName) {
-        Path filePath = player.level().getDataStorage().dataFolder.toPath()
+        Path filePath = dataFolder(player.level())
                 .resolve(BACKUPS_FOLDER_NAME)
                 .resolve(player.getUUID().toString())
                 .resolve(maidUuid.toString())
-                .resolve(fileName);
+                .resolve(FilenameUtils.getName(fileName));  // command argument: no "../" out of the backup folder
         File file = filePath.toFile();
         if (!file.exists() || !file.isFile()) {
             return new CompoundTag();
@@ -344,7 +350,7 @@ public final class MaidBackupsManager {
      */
     @NotNull
     private static Path buildBackupFolderPath(@NotNull EntityMaid maid, @NotNull ServerLevel level, @NotNull UUID ownerId) {
-        return level.getDataStorage().dataFolder.toPath()
+        return dataFolder(level)
                 .resolve(BACKUPS_FOLDER_NAME)
                 .resolve(ownerId.toString())
                 .resolve(maid.getStringUUID());
@@ -374,5 +380,12 @@ public final class MaidBackupsManager {
             CompoundTag entityData,
             CompoundTag indexData,
             String maidUuid) {
+    }
+
+    /**
+     * World-wide {@code data} folder (the MC 1.21.1 overworld data folder), so existing backups stay where they were.
+     */
+    private static Path dataFolder(Level level) {
+        return Objects.requireNonNull(level.getServer()).getWorldPath(LevelResource.DATA);
     }
 }
