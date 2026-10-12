@@ -23,7 +23,11 @@ RULES = {
                                           (r"\b(\w+)\.is\(", r"\1.builtInRegistryHolder().is(")],
     "variable Serializer": [(r"Component\.Serializer\.toJson\(", "PortUtil.componentToJson("),
                             (r"Component\.Serializer\.fromJson\(", "PortUtil.componentFromJson(")],
-    "method serializeNBT(":[(r"\b([\w.]+(?:\(\))?)\.serializeNBT\(([^()]*(?:\(\))?)\)", r"PortUtil.serializeItems(\1, \2)")],
+    # SoundEvent#getLocation -> location(); SoundInstance#getLocation -> getIdentifier()
+    "method getLocation()": [(r"(\.get\(\)|[Ss]ound\w*|[Ee]vent\w*|\.value\(\))\.getLocation\(\)", r"\1.location()"),
+                             (r"\.getLocation\(\)", ".getIdentifier()")],
+    "variable location": [(r"(?<![\w.])(this\.)?location\b", r"\1identifier")],
+    "method serializeNBT(": [(r"\b([\w.]+(?:\(\))?)\.serializeNBT\(([^()]*(?:\(\))?)\)", r"PortUtil.serializeItems(\1, \2)")],
     "method deserializeNBT(": [(r"\b([\w.]+(?:\(\))?)\.deserializeNBT\(([^,]+), (.+)\);", r"PortUtil.deserializeItems(\1, \2, \3);")],
 }
 
