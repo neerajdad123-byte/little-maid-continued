@@ -1,5 +1,9 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.detail;
 
+import org.jspecify.annotations.Nullable;
+import net.minecraft.world.entity.Entity;
+import org.joml.Vector3f;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.input.MouseButtonEvent;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.TouhouImageButton;
@@ -82,7 +86,17 @@ public abstract class AbstractModelDetailsGui<T extends LivingEntity, E extends 
      * @param matrix   PoseStack
      * @param bufferIn MultiBufferSource
      */
-    abstract protected void renderExtraEntity(EntityRenderDispatcher manager, PoseStack matrix, MultiBufferSource.BufferSource bufferIn);
+    /**
+     * Second entity drawn in the preview (vehicle or passenger), or null.
+     */
+    @Nullable
+    protected Entity extraEntity() {
+        return null;
+    }
+
+    protected float extraEntityYOffset() {
+        return 0;
+    }
 
     @Override
     protected void init() {
@@ -194,45 +208,29 @@ public abstract class AbstractModelDetailsGui<T extends LivingEntity, E extends 
 
 
     private void renderEntity(int middleWidth, int middleHeight, GuiGraphicsExtractor graphics) {
-        graphics.enableScissor(132, 15, this.width, this.height - 16);
-
-        PoseStack viewStack = graphics.pose();
-        viewStack.pushPose();
-        viewStack.translate(0, 0, 1050.0D);
-        viewStack.scale(1.0F, 1.0F, -1.0F);
-        RenderSystem.applyModelViewMatrix();
-
-        PoseStack poseStack = new PoseStack();
-        poseStack.translate(posX + middleWidth, posY + middleHeight, 1000.0D);
-        poseStack.scale(scale, scale, -scale);
-
-        Quaternionf zp = Axis.ZP.rotationDegrees(-180.0F);
-        Quaternionf yp = Axis.YP.rotationDegrees(yaw);
-        Quaternionf xp = Axis.XP.rotationDegrees(-pitch);
-        yp.mul(xp);
-        zp.mul(yp);
-        poseStack.mulPose(zp);
-
-        Lighting.setupForEntityInInventory();
+        // Little Maid Continued: MC 26.x draws GUI entities as picture-in-picture render states
+        // TODO: the debug floor is not drawn yet
+        int x0 = 132;
+        int y0 = 15;
+        int x1 = this.width;
+        int y1 = this.height - 16;
+        int offsetX = (int) posX + middleWidth - (x0 + x1) / 2;
+        int offsetY = (int) posY + middleHeight - (y0 + y1) / 2;
+        Quaternionf rotation = Axis.ZP.rotationDegrees(180.0F).mul(Axis.YP.rotationDegrees(yaw)).mul(Axis.XP.rotationDegrees(-pitch));
+        Quaternionf camera = Axis.XP.rotationDegrees(-pitch).conjugate();
+        float partialTick = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
-        xp.conjugate();
-        manager.overrideCameraOrientation(xp);
-        manager.setRenderShadow(false);
-        MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderSystem.runAsFancy(() -> {
-            manager.render(guiEntity, 0, 0, 0, 0, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false), poseStack, buffer, 0xf000f0);
-            poseStack.translate(0, 0.5, 0);
-            if (showFloor) {
-                this.floorModel.renderToBuffer(poseStack, buffer.getBuffer(this.floorModel.renderType(FLOOR_TEXTURE)), 0xf000f0, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-            }
-            this.renderExtraEntity(manager, poseStack, buffer);
-        });
-        buffer.endBatch();
-        manager.setRenderShadow(true);
-
-        viewStack.popPose();
-        RenderSystem.applyModelViewMatrix();
-        Lighting.setupFor3DItems();
+        graphics.enableScissor(x0, y0, x1, y1);
+        EntityRenderState state = manager.extractEntity(guiEntity, partialTick);
+        state.shadowPieces.clear();
+        graphics.entity(state, scale, new Vector3f(0, 0, 0), rotation, camera, x0 + offsetX, y0 + offsetY, x1 + offsetX, y1 + offsetY);
+        Entity extra = this.extraEntity();
+        if (extra != null) {
+            EntityRenderState extraState = manager.extractEntity(extra, partialTick);
+            extraState.shadowPieces.clear();
+            graphics.entity(extraState, scale, new Vector3f(0, this.extraEntityYOffset(), 0), rotation, camera,
+                    x0 + offsetX, y0 + offsetY, x1 + offsetX, y1 + offsetY);
+        }
         graphics.disableScissor();
     }
 
@@ -245,7 +243,4 @@ public abstract class AbstractModelDetailsGui<T extends LivingEntity, E extends 
         graphics.fillGradient((int) vec4d.x, (int) vec4d.y, (int) vec4d.w, (int) vec4d.h, color, color);
     }
 
-    private void fillGradient(GuiGraphicsExtractor graphics, Rectangle vec4d, int color, int zLevel) {
-        graphics.fillGradient((int) vec4d.x, (int) vec4d.y, (int) vec4d.w, (int) vec4d.h, zLevel, color, color);
-    }
 }

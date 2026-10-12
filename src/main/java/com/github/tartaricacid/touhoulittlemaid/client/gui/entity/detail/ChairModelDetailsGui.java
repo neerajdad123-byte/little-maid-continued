@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.detail;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.cache.CacheIconManager;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.ModelDetailsButton;
@@ -20,7 +21,7 @@ public class ChairModelDetailsGui extends AbstractModelDetailsGui<EntityChair, C
         super(sourceEntity, InitEntities.CHAIR.get().create(sourceEntity.level(), EntitySpawnReason.LOAD), modelInfo);
         guiEntity.setModelId(modelInfo.getModelId().toString());
         if (Minecraft.getInstance().level != null) {
-            this.maid = InitEntities.MAID.get().create(Minecraft.getInstance().level);
+            this.maid = InitEntities.MAID.get().create(Minecraft.getInstance().level, EntitySpawnReason.LOAD);
             if (this.maid != null) {
                 this.maid.setModelId("authors_and_credits:wine_fox_maid");
             }
@@ -48,16 +49,19 @@ public class ChairModelDetailsGui extends AbstractModelDetailsGui<EntityChair, C
     }
 
     @Override
-    protected void renderExtraEntity(EntityRenderDispatcher manager, PoseStack matrix, MultiBufferSource.BufferSource bufferIn) {
-        if (showPassenger) {
-            manager.render(maid, 0, -0.375 + modelInfo.getMountedYOffset(), 0, 0, 1, matrix, bufferIn, 0xf000f0);
-        }
+    protected Entity extraEntity() {
+        return showPassenger ? maid : null;
+    }
+
+    @Override
+    protected float extraEntityYOffset() {
+        return -0.375F + modelInfo.getMountedYOffset();
     }
 
     private void applyShowPassengerLogic(boolean isStateTriggered) {
         this.showPassenger = isStateTriggered;
         if (isStateTriggered && maid != null) {
-            maid.startRiding(guiEntity, true);
+            maid.startRiding(guiEntity, true, false);
         } else {
             guiEntity.ejectPassengers();
         }

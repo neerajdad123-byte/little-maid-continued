@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
 
 public class BeaconEffectButton extends TouhouStateSwitchButton {
     private static final Identifier BG = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/maid_beacon.png");
-    private final TextureAtlasSprite sprite;
+    private final Identifier sprite;
     private final Component tooltips;
     private final int potionIndex;
     private final BlockPos pos;
@@ -28,7 +29,7 @@ public class BeaconEffectButton extends TouhouStateSwitchButton {
     public BeaconEffectButton(TileEntityMaidBeacon.BeaconEffect effect, int xIn, int yIn, int potionIndex, TileEntityMaidBeacon beacon, Consumer<Boolean> onClick) {
         super(xIn, yIn, 22, 22, potionIndex == effect.ordinal());
         this.initTextureValues(0, 111, 22, 22, BG);
-        this.sprite = Minecraft.getInstance().getMobEffectTextures().get(effect.getEffect());
+        this.sprite = Hud.getMobEffectSprite(effect.getEffect());
         this.tooltips = effect.getEffect().value().getDisplayName();
         this.potionIndex = effect.ordinal();
         this.pos = beacon.getBlockPos();
@@ -45,9 +46,9 @@ public class BeaconEffectButton extends TouhouStateSwitchButton {
     }
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractContents(graphics, mouseX, mouseY, partialTicks);
-        graphics.blit(this.getX() + 2, this.getY() + 2, 0, 18, 18, this.sprite);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX() + 2, this.getY() + 2, 18, 18);
     }
 
     public void renderToolTip(GuiGraphicsExtractor graphics, Screen screen, int pMouseX, int pMouseY) {

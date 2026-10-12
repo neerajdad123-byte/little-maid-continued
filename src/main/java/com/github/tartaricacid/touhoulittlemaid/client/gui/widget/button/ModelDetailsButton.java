@@ -23,8 +23,8 @@ public class ModelDetailsButton extends TouhouStateSwitchButton {
     }
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractContents(graphics, mouseX, mouseY, partialTicks);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
         graphics.text(Minecraft.getInstance().font, name, this.getX() + 14, this.getY() + 2, 0xffffffff, false);
     }
 

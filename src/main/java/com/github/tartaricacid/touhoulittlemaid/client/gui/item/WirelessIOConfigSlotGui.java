@@ -98,8 +98,7 @@ public class WirelessIOConfigSlotGui extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        this.extractBackground(graphics, mouseY, partialTicks, mouseX);
-        for (Renderable renderable : this.renderables) {
+                for (Renderable renderable : this.renderables) {
             renderable.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         }
     }

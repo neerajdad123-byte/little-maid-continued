@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.entity.detail;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.entity.cache.CacheIconManager;
 import com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button.ModelDetailsButton;
@@ -33,7 +34,7 @@ public class MaidModelDetailsGui extends AbstractModelDetailsGui<EntityMaid, Mai
 
     private void initChair() {
         if (Minecraft.getInstance().level != null) {
-            this.chair = InitEntities.CHAIR.get().create(Minecraft.getInstance().level);
+            this.chair = InitEntities.CHAIR.get().create(Minecraft.getInstance().level, EntitySpawnReason.LOAD);
             if (this.chair != null) {
                 this.chair.setModelId("touhou_little_maid:low_stool");
             }
@@ -86,19 +87,22 @@ public class MaidModelDetailsGui extends AbstractModelDetailsGui<EntityMaid, Mai
         // For entity walk
         // Update walk speed
         float speed = isEnableWalk ? 0.5f : 0;
-        guiEntity.walkAnimation.update(speed, 0.4f);
+        guiEntity.walkAnimation.update(speed, 0.4f, 1.0f);
     }
 
     @Override
-    protected void renderExtraEntity(EntityRenderDispatcher manager, PoseStack matrix, MultiBufferSource.BufferSource bufferIn) {
-        if (guiEntity.isPassenger() && chair != null) {
-            manager.render(chair, 0, -0.95, 0, 0, 1, matrix, bufferIn, 0xf000f0);
-        }
+    protected Entity extraEntity() {
+        return guiEntity.isPassenger() ? chair : null;
+    }
+
+    @Override
+    protected float extraEntityYOffset() {
+        return -0.95F;
     }
 
     private void applyRideButtonLogic(boolean isStateTriggered) {
         if (isStateTriggered && chair != null) {
-            guiEntity.startRiding(chair, true);
+            guiEntity.startRiding(chair, true, false);
         } else {
             guiEntity.removeVehicle();
         }

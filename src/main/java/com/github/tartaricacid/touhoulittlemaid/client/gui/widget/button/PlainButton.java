@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.widget.button;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -24,6 +26,13 @@ public class PlainButton extends Button {
     @Override
     protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         this.extractDefaultSprite(graphics);
+        this.renderString(graphics, Minecraft.getInstance().font, this.getFGColor());
+    }
+
+    /**
+     * MC 1.21.1 label hook, kept so subclasses can still draw their own label.
+     */
+    public void renderString(GuiGraphicsExtractor graphics, Font font, int color) {
         this.extractDefaultLabel(graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
     }
 }

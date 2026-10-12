@@ -127,7 +127,7 @@ public class MaidBeaconGui extends Screen {
         int keyCode = event.key();
         int scanCode = event.scancode();
         int modifiers = event.modifiers();
-        InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
+        InputConstants.Key mouseKey = InputConstants.getKey(event);
         if (this.minecraft != null && this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
             this.onClose();
             return true;

@@ -52,7 +52,7 @@ public class MaidConfigButton extends PlainButton {
     }
 
     @Override
-    protected boolean clicked(double mouseX, double mouseY) {
+    public boolean isMouseOver(double mouseX, double mouseY) {
         if (!this.active || !this.visible) {
             return false;
         }

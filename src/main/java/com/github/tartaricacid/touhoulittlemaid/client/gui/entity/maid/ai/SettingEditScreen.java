@@ -79,10 +79,9 @@ public class SettingEditScreen extends Screen {
         this.ownerName.setMaxLength(128);
         this.ownerName.setResponder(s -> manager.ownerName = s);
 
-        this.customSetting = this.addRenderableWidget(new MultiLineEditBox(font,
-                posX, 70, boxWidth, this.height - 100,
-                Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.edit_custom_setting.edit"),
-                Component.literal("Custom Setting Box")));
+        this.customSetting = this.addRenderableWidget(MultiLineEditBox.builder().setX(posX).setY(70)
+                .setPlaceholder(Component.translatable("gui.touhou_little_maid.button.maid_ai_chat_config.edit_custom_setting.edit"))
+                .build(font, boxWidth, this.height - 100, Component.literal("Custom Setting Box")));
         this.customSetting.setValue(manager.customSetting);
         this.customSetting.setCharacterLimit(4096);
         this.customSetting.setValueListener(s -> manager.customSetting = s);

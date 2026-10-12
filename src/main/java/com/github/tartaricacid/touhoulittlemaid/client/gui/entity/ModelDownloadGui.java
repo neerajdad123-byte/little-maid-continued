@@ -292,7 +292,7 @@ public class ModelDownloadGui extends Screen {
         int keyCode = event.key();
         int scanCode = event.scancode();
         int modifiers = event.modifiers();
-        boolean hasKeyCode = InputConstants.getKey(keyCode, scanCode).getNumericKeyValue().isPresent();
+        boolean hasKeyCode = InputConstants.getKey(event).getNumericKeyValue().isPresent();
         String preText = this.textField.getValue();
         if (hasKeyCode) {
             return true;

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.mod;
 
+import net.minecraft.client.gui.TextAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
@@ -49,7 +50,7 @@ public class OptifineScreen extends Screen {
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.centeredText(this.font, this.title, this.width / 2, 30, 0xFFFFFFFF);
-        this.message.renderCentered(graphics, this.width / 2, 70);
+        this.message.visitLines(TextAlignment.CENTER, this.width / 2, 70, 9, graphics.textRenderer());
         for (Renderable renderable : this.renderables) {
             renderable.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         }

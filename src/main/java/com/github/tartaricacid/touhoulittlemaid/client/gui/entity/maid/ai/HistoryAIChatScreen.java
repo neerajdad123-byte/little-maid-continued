@@ -187,7 +187,7 @@ public class HistoryAIChatScreen extends Screen {
         } else {
             graphics.enableScissor(posX - 128, this.historyTop, posX + 128, this.historyBottom);
             graphics.pose().pushMatrix();
-            graphics.pose().translate(0, scroll);
+            graphics.pose().translate(0, (float) scroll);
             for (Renderable renderable : this.historyWidgets) {
                 renderable.extractRenderState(graphics, mouseX, mouseY, partialTicks);
             }
@@ -394,6 +394,6 @@ public class HistoryAIChatScreen extends Screen {
         if (player == null) {
             return DefaultPlayerSkin.getDefaultTexture();
         }
-        return mc.getSkinManager().getInsecureSkin(player.getGameProfile()).texture();
+        return mc.getSkinManager().createLookup(player.getGameProfile(), false).get().body().texturePath();
     }
 }

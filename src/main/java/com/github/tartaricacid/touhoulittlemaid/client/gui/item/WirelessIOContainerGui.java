@@ -35,14 +35,14 @@ public class WirelessIOContainerGui extends AbstractContainerScreen<WirelessIOCo
                 (x, y) -> {
                     isMaidToChest = !isMaidToChest;
                     ClientPacketDistributor.sendToServer(new WirelessIOGuiPackage(isMaidToChest, isBlacklist));
-                }, (m, x, y) -> m.renderTooltip(font, Component.translatable("gui.touhou_little_maid.wireless_io.io_mode"), x, y));
+                }, (m, x, y) -> m.setTooltipForNextFrame(font, Component.translatable("gui.touhou_little_maid.wireless_io.io_mode"), x, y));
 
         ioModeToggle.initTextureValues(194, 32, -18, 18, MAIN);
         WirelessIOButton filterModeToggle = new WirelessIOButton(leftPos + 136, topPos + 26, 16, 16, isBlacklist,
                 (x, y) -> {
                     isBlacklist = !isBlacklist;
                     ClientPacketDistributor.sendToServer(new WirelessIOGuiPackage(isMaidToChest, isBlacklist));
-                }, (m, x, y) -> m.renderTooltip(font, Component.translatable("gui.touhou_little_maid.wireless_io.filter_mode"), x, y));
+                }, (m, x, y) -> m.setTooltipForNextFrame(font, Component.translatable("gui.touhou_little_maid.wireless_io.filter_mode"), x, y));
         filterModeToggle.initTextureValues(176, 0, 16, 16, MAIN);
 
         TouhouImageButton configButton = new TouhouImageButton(leftPos + 136, topPos + 44, 16, 16, 208, 0, 16,

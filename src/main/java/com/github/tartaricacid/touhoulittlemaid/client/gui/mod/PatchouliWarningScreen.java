@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.gui.mod;
 
+import net.minecraft.client.gui.TextAlignment;
 import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -39,7 +40,7 @@ public class PatchouliWarningScreen extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.message.renderCentered(graphics, this.width / 2, 80);
+        this.message.visitLines(TextAlignment.CENTER, this.width / 2, 80, 9, graphics.textRenderer());
         super.extractRenderState(graphics, pMouseX, pMouseY, pPartialTick);
     }
 

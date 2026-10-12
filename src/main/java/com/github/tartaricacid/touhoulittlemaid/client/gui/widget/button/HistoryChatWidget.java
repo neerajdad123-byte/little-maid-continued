@@ -67,7 +67,6 @@ public class HistoryChatWidget extends AbstractWidget {
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        graphics.setColor(1, 1, 1, this.alpha);
         if (this.isTool) {
             // 工具消息只渲染文本
             this.renderToolText(graphics, Minecraft.getInstance().font);
@@ -104,7 +103,7 @@ public class HistoryChatWidget extends AbstractWidget {
         if (isLeft) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.getX() + xOffset, this.getHeightMiddle(size), 0, 16, size, size, 128, 128);
         } else {
-            PlayerFaceExtractor.extractRenderState(graphics, this.playerSkin, this.getX() + xOffset, this.getHeightMiddle(size), size);
+            PlayerFaceExtractor.extractRenderState(graphics, this.playerSkin, this.getX() + xOffset, this.getHeightMiddle(size), size, true, false, -1);
         }
     }
 
@@ -121,7 +120,6 @@ public class HistoryChatWidget extends AbstractWidget {
 
     public void renderString(GuiGraphicsExtractor graphics, Font font) {
         Component message = this.getMessage();
-        graphics.setColor(1, 1, 1, 1);
         if (isLeft) {
             graphics.textWithWordWrap(font, message, this.getX() + 5, this.getY() + 5, this.getWidth() - 10, 0x555555);
         } else {
