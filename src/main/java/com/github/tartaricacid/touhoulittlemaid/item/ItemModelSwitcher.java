@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
@@ -73,11 +76,16 @@ public class ItemModelSwitcher extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Item.TooltipContext pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        if (hasMaidInfo(pStack)) {
-            pTooltip.add(Component.translatable("tooltips.touhou_little_maid.model_switcher.bounded").withStyle(ChatFormatting.GRAY));
-        } else {
-            pTooltip.add(Component.translatable("gui.touhou_little_maid.model_switcher.uuid.empty").withStyle(ChatFormatting.DARK_RED));
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pLevel, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag pFlag) {
+        List<Component> pTooltip = new ArrayList<>();
+        try {
+            if (hasMaidInfo(pStack)) {
+                pTooltip.add(Component.translatable("tooltips.touhou_little_maid.model_switcher.bounded").withStyle(ChatFormatting.GRAY));
+            } else {
+                pTooltip.add(Component.translatable("gui.touhou_little_maid.model_switcher.uuid.empty").withStyle(ChatFormatting.DARK_RED));
+            }
+        } finally {
+            pTooltip.forEach(tooltipAdder);
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.github.tartaricacid.touhoulittlemaid.advancements.maid.TriggerType;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitTrigger;
@@ -79,8 +82,13 @@ public class ItemTrumpet extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.trumpet.desc.usage").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.trumpet.desc.note").withStyle(ChatFormatting.DARK_RED));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flagIn) {
+        List<Component> tooltip = new ArrayList<>();
+        try {
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.trumpet.desc.usage").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.trumpet.desc.note").withStyle(ChatFormatting.DARK_RED));
+        } finally {
+            tooltip.forEach(tooltipAdder);
+        }
     }
 }

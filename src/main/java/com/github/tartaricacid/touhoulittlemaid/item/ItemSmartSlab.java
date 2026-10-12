@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.github.tartaricacid.touhoulittlemaid.data.MaidNumAttachment;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent;
@@ -141,12 +144,17 @@ public class ItemSmartSlab extends AbstractStoreMaidItem {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        if (this.type == Type.INIT) {
-            MutableComponent text = Component.translatable("tooltips.touhou_little_maid.smart_slab.maid_name", I18n.get("tooltips.touhou_little_maid.smart_slab.maid_name.unknown"));
-            tooltip.add(text.withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flagIn) {
+        List<Component> tooltip = new ArrayList<>();
+        try {
+            if (this.type == Type.INIT) {
+                MutableComponent text = Component.translatable("tooltips.touhou_little_maid.smart_slab.maid_name", I18n.get("tooltips.touhou_little_maid.smart_slab.maid_name.unknown"));
+                tooltip.add(text.withStyle(ChatFormatting.GRAY));
+            }
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.smart_slab.desc").withStyle(ChatFormatting.GRAY));
+        } finally {
+            tooltip.forEach(tooltipAdder);
         }
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.smart_slab.desc").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

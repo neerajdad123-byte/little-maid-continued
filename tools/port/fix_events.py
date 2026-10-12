@@ -100,7 +100,7 @@ def process(t, is_button):
         return ("%spublic void appendHoverText(ItemStack %s, %s %s, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag %s) {\n"
                 "%s    List<Component> %s = new ArrayList<>();\n%s    try {"
                 % (indent, m.group("s"), m.group("ct"), m.group("c"), m.group("f"), indent, m.group("l"), indent))
-    pat = re.compile(r"(?P<indent>[ \t]*)public void appendHoverText\(ItemStack (?P<s>\w+), (?P<ct>(?:Item\.)?TooltipContext) (?P<c>\w+), List<Component> (?P<l>\w+), TooltipFlag (?P<f>\w+)\)\s*\{")
+    pat = re.compile(r"(?P<indent>[ \t]*)public void appendHoverText\((?:@\w+ )?ItemStack (?P<s>\w+), (?:@\w+ )?(?P<ct>(?:Item\.)?TooltipContext) (?P<c>\w+), (?:@\w+ )?List<Component> (?P<l>\w+), (?:@\w+ )?TooltipFlag (?P<f>\w+)\)\s*\{")
     while True:
         m = pat.search(t)
         if not m:

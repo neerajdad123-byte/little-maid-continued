@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.LevelReader;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -61,8 +63,7 @@ public class BlockSnackCabinet extends BaseEntityBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
-                                  LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTicks, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         // 判断上方方块的 AABB 的 Y 最大值
         if (direction == Direction.UP) {
             if (neighborState.is(TagBlock.SNACK_CABINET_HALF)) {
@@ -72,7 +73,7 @@ public class BlockSnackCabinet extends BaseEntityBlock {
                 return state.setValue(TYPE, TYPE_FULL);
             }
         }
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+        return super.updateShape(state, level, scheduledTicks, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override
@@ -97,12 +98,6 @@ public class BlockSnackCabinet extends BaseEntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        Containers.dropContentsOnDestroy(state, newState, level, pos);
-        super.onRemove(state, level, pos, newState, isMoving);
-    }
-
-    @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof TileEntitySnackCabinet cabinet) {
@@ -116,7 +111,7 @@ public class BlockSnackCabinet extends BaseEntityBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
+    protected int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos, Direction direction) {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
     }
 
@@ -147,7 +142,7 @@ public class BlockSnackCabinet extends BaseEntityBlock {
     }
 
 
-    @Override
+    // TODO(Little Maid Continued): Block#appendHoverText is gone in MC 26.x; move to the block item
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
         List<Component> tooltip = new ArrayList<>();
         try {

@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.bauble.IChestType;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
@@ -149,28 +152,33 @@ public class ItemWirelessIO extends Item implements MenuProvider {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        boolean maidToChest = isMaidToChest(stack);
-        boolean isBlacklist = isBlacklist(stack);
-        BlockPos pos = getBindingPos(stack);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flagIn) {
+        List<Component> tooltip = new ArrayList<>();
+        try {
+            boolean maidToChest = isMaidToChest(stack);
+            boolean isBlacklist = isBlacklist(stack);
+            BlockPos pos = getBindingPos(stack);
 
-        String ioModeText = maidToChest ?
-                I18n.get("tooltips.touhou_little_maid.wireless_io.io_mode.input") :
-                I18n.get("tooltips.touhou_little_maid.wireless_io.io_mode.output");
-        String filterModeText = isBlacklist ?
-                I18n.get("tooltips.touhou_little_maid.wireless_io.filter_mode.blacklist") :
-                I18n.get("tooltips.touhou_little_maid.wireless_io.filter_mode.whitelist");
-        String hasPos = (pos != null) ?
-                I18n.get("tooltips.touhou_little_maid.wireless_io.binding_pos.has",
-                        pos.getX(), pos.getY(), pos.getZ()) :
-                I18n.get("tooltips.touhou_little_maid.wireless_io.binding_pos.none");
+            String ioModeText = maidToChest ?
+                    I18n.get("tooltips.touhou_little_maid.wireless_io.io_mode.input") :
+                    I18n.get("tooltips.touhou_little_maid.wireless_io.io_mode.output");
+            String filterModeText = isBlacklist ?
+                    I18n.get("tooltips.touhou_little_maid.wireless_io.filter_mode.blacklist") :
+                    I18n.get("tooltips.touhou_little_maid.wireless_io.filter_mode.whitelist");
+            String hasPos = (pos != null) ?
+                    I18n.get("tooltips.touhou_little_maid.wireless_io.binding_pos.has",
+                            pos.getX(), pos.getY(), pos.getZ()) :
+                    I18n.get("tooltips.touhou_little_maid.wireless_io.binding_pos.none");
 
-        tooltip.add(Component.literal(TOOLTIPS_PREFIX + ioModeText));
-        tooltip.add(Component.literal(TOOLTIPS_PREFIX + filterModeText));
-        tooltip.add(Component.literal(TOOLTIPS_PREFIX + hasPos));
-        tooltip.add(Component.literal(" "));
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.wireless_io.usage.1").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.wireless_io.usage.2").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.literal(TOOLTIPS_PREFIX + ioModeText));
+            tooltip.add(Component.literal(TOOLTIPS_PREFIX + filterModeText));
+            tooltip.add(Component.literal(TOOLTIPS_PREFIX + hasPos));
+            tooltip.add(Component.literal(" "));
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.wireless_io.usage.1").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.wireless_io.usage.2").withStyle(ChatFormatting.GRAY));
+        } finally {
+            tooltip.forEach(tooltipAdder);
+        }
     }
 
     @Override

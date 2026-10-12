@@ -107,7 +107,7 @@ public class BlockStatue extends Block implements EntityBlock {
     }
 
     @Override
-    public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
+    public void onBlockExploded(BlockState state, ServerLevel world, BlockPos pos, Explosion explosion) {
         if (!world.isClientSide()) {
             this.getStatue(world, pos).ifPresent(statue -> this.restoreClayBlock(world, pos, statue));
         }

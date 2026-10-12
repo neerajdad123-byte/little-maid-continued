@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.world.level.block.Blocks;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntitySit;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.tileentity.TileEntityJoy;
@@ -25,7 +26,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class BlockJoy extends BaseEntityBlock {
+public abstract class BlockJoy extends BaseEntityBlock implements LegacyRemovalBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     protected BlockJoy(BlockBehaviour.Properties properties) {
@@ -82,7 +83,10 @@ public abstract class BlockJoy extends BaseEntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemoveLegacy(BlockState state, Level worldIn, BlockPos pos) {
+        // only called when the block itself is replaced, never when moved by a piston
+        BlockState newState = Blocks.AIR.defaultBlockState();
+        boolean isMoving = false;
         if (!state.is(newState.getBlock())) {
             BlockEntity blockEntity = worldIn.getBlockEntity(pos);
             if (blockEntity instanceof TileEntityJoy joy && worldIn instanceof ServerLevel serverLevel) {
@@ -92,7 +96,6 @@ public abstract class BlockJoy extends BaseEntityBlock {
                 }
             }
         }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override

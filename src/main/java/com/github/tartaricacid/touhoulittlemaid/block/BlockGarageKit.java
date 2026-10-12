@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.CustomPackLoader;
@@ -52,7 +53,7 @@ import java.util.Optional;
 
 import static com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent.MODEL_ID_TAG_NAME;
 
-public class BlockGarageKit extends Block implements EntityBlock {
+public class BlockGarageKit extends Block implements EntityBlock, LegacyRemovalBlock {
     public static final VoxelShape BLOCK_AABB = Block.box(4, 0, 4, 12, 16, 12);
     public static final IClientBlockExtensions CLIENT_BLOCK_EXTENSIONS = FMLEnvironment.getDist() == Dist.CLIENT ? new IClientBlockExtensions() {
         @Override
@@ -135,11 +136,13 @@ public class BlockGarageKit extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemoveLegacy(BlockState state, Level worldIn, BlockPos pos) {
+        // only called when the block itself is replaced, never when moved by a piston
+        BlockState newState = Blocks.AIR.defaultBlockState();
+        boolean isMoving = false;
         if (!state.is(newState.getBlock()) && !isMoving) {
             popResource(worldIn, pos, getGarageKitFromWorld(worldIn, pos));
         }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
@@ -154,7 +157,7 @@ public class BlockGarageKit extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(@NotNull BlockState state, @NotNull HitResult target, @NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
+    public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData, Player player) {
         return getGarageKitFromWorld(world, pos);
     }
 

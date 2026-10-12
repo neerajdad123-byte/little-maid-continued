@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.LevelReader;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -58,7 +61,7 @@ public class BlockScarecrow extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTicks, BlockPos currentPos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         DoubleBlockHalf currentHalf = state.getValue(HALF);
         boolean isLower = currentHalf == DoubleBlockHalf.LOWER && direction == Direction.UP;
         boolean isUpper = currentHalf == DoubleBlockHalf.UPPER && direction == Direction.DOWN;
@@ -68,7 +71,7 @@ public class BlockScarecrow extends HorizontalDirectionalBlock {
             }
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+        return super.updateShape(state, level, scheduledTicks, currentPos, direction, neighborPos, neighborState, random);
     }
 
     @Override
@@ -135,7 +138,7 @@ public class BlockScarecrow extends HorizontalDirectionalBlock {
         }
     }
 
-    @Override
+    // TODO(Little Maid Continued): Block#appendHoverText is gone in MC 26.x; move to the block item
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
         List<Component> tooltip = new ArrayList<>();
         try {

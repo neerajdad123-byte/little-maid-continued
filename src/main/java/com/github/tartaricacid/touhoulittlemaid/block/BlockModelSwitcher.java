@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.level.block.Blocks;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemModelSwitcher;
 import com.github.tartaricacid.touhoulittlemaid.network.message.OpenSwitcherGuiPackage;
@@ -33,7 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class BlockModelSwitcher extends BaseEntityBlock {
+public class BlockModelSwitcher extends BaseEntityBlock implements LegacyRemovalBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public BlockModelSwitcher() {
@@ -67,7 +69,7 @@ public class BlockModelSwitcher extends BaseEntityBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
+    protected void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, @Nullable Orientation orientation, boolean pIsMoving) {
         if (pLevel.isClientSide()) {
             return;
         }
@@ -154,14 +156,16 @@ public class BlockModelSwitcher extends BaseEntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemoveLegacy(BlockState state, Level worldIn, BlockPos pos) {
+        // only called when the block itself is replaced, never when moved by a piston
+        BlockState newState = Blocks.AIR.defaultBlockState();
+        boolean isMoving = false;
         if (!state.is(newState.getBlock()) && !isMoving) {
             BlockEntity te = worldIn.getBlockEntity(pos);
             if (te instanceof TileEntityModelSwitcher) {
                 popResource(worldIn, pos, ItemModelSwitcher.tileEntityToItemStack(worldIn.registryAccess(), (TileEntityModelSwitcher) te));
             }
         }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override

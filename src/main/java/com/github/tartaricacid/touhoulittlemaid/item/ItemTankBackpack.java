@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.github.tartaricacid.touhoulittlemaid.entity.backpack.data.TankBackpackData;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitDataComponent;
@@ -43,31 +46,36 @@ public class ItemTankBackpack extends ItemMaidBackpack {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        CompoundTag nbt = stack.get(TANK_BACKPACK_TAG);
-        if (nbt != null) {
-            CompoundTag compound = nbt.getCompoundOrEmpty("Fluid");
-            if (compound.isEmpty() || worldIn == null) {
-                return;
-            }
-            HolderLookup.Provider registries = worldIn.registries();
-            if (registries == null) {
-                return;
-            }
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flagIn) {
+        List<Component> tooltip = new ArrayList<>();
+        try {
+            CompoundTag nbt = stack.get(TANK_BACKPACK_TAG);
+            if (nbt != null) {
+                CompoundTag compound = nbt.getCompoundOrEmpty("Fluid");
+                if (compound.isEmpty() || worldIn == null) {
+                    return;
+                }
+                HolderLookup.Provider registries = worldIn.registries();
+                if (registries == null) {
+                    return;
+                }
 
-            MutableComponent fluidInfo;
-            Optional<FluidStack> fluid = FluidStack.parse(registries, compound);
-            if (fluid.isEmpty()) {
-                return;
+                MutableComponent fluidInfo;
+                Optional<FluidStack> fluid = FluidStack.parse(registries, compound);
+                if (fluid.isEmpty()) {
+                    return;
+                }
+                FluidStack fluidStack = fluid.get();
+                if (fluidStack.getFluid() == Fluids.EMPTY || fluidStack.getAmount() == 0) {
+                    fluidInfo = Component.translatable("tooltips.touhou_little_maid.tank_backpack.empty_fluid").withStyle(ChatFormatting.GRAY);
+                } else {
+                    fluidInfo = Component.translatable("tooltips.touhou_little_maid.tank_backpack.fluid",
+                            fluidStack.getFluid().getFluidType().getDescription(), fluidStack.getAmount()).withStyle(ChatFormatting.GRAY);
+                }
+                tooltip.add(fluidInfo);
             }
-            FluidStack fluidStack = fluid.get();
-            if (fluidStack.getFluid() == Fluids.EMPTY || fluidStack.getAmount() == 0) {
-                fluidInfo = Component.translatable("tooltips.touhou_little_maid.tank_backpack.empty_fluid").withStyle(ChatFormatting.GRAY);
-            } else {
-                fluidInfo = Component.translatable("tooltips.touhou_little_maid.tank_backpack.fluid",
-                        fluidStack.getFluid().getFluidType().getDescription(), fluidStack.getAmount()).withStyle(ChatFormatting.GRAY);
-            }
-            tooltip.add(fluidInfo);
+        } finally {
+            tooltip.forEach(tooltipAdder);
         }
     }
 }

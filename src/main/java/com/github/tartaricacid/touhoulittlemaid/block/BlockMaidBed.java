@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemMaidBed;
 import com.github.tartaricacid.touhoulittlemaid.tileentity.TileEntityMaidBed;
@@ -101,11 +103,11 @@ public class BlockMaidBed extends HorizontalDirectionalBlock implements EntityBl
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader worldIn, ScheduledTickAccess scheduledTicks, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random) {
         if (facing == getNeighbourDirection(stateIn.getValue(PART), stateIn.getValue(FACING))) {
             return facingState.is(this) && facingState.getValue(PART) != stateIn.getValue(PART) ? stateIn.setValue(OCCUPIED, facingState.getValue(OCCUPIED)) : Blocks.AIR.defaultBlockState();
         } else {
-            return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+            return super.updateShape(stateIn, worldIn, scheduledTicks, currentPos, facing, facingPos, facingState, random);
         }
     }
 
@@ -154,11 +156,11 @@ public class BlockMaidBed extends HorizontalDirectionalBlock implements EntityBl
     }
 
     @Override
-    public void fallOn(Level worldIn, BlockState blockState, BlockPos pos, Entity entityIn, float fallDistance) {
+    public void fallOn(Level worldIn, BlockState blockState, BlockPos pos, Entity entityIn, double fallDistance) {
         super.fallOn(worldIn, blockState, pos, entityIn, fallDistance * 0.5f);
     }
 
-    @Override
+    // TODO(Little Maid Continued): no longer a Block hook in MC 26.x (bed bounce)
     public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entity) {
         if (entity.isSuppressingBounce()) {
             super.updateEntityAfterFallOn(worldIn, entity);
@@ -235,8 +237,8 @@ public class BlockMaidBed extends HorizontalDirectionalBlock implements EntityBl
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
-        ItemStack stack = super.getCloneItemStack(level, pos, state);
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state, includeData, player);
 
         // 获取床的颜色信息
         BlockEntity blockEntity = level.getBlockEntity(pos);

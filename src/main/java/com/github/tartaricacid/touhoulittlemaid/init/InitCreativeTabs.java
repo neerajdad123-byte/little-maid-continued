@@ -17,7 +17,6 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import vazkii.patchouli.common.item.ItemModBook;
 
 import java.util.Optional;
 
@@ -30,9 +29,6 @@ public class InitCreativeTabs {
             .title(Component.translatable("item_group.touhou_little_maid.main"))
             .icon(() -> InitItems.HAKUREI_GOHEI.get().getDefaultInstance())
             .displayItems((par, output) -> {
-                if (ModList.get().isLoaded("patchouli")) {
-                    output.accept(ItemModBook.forBook(MEMORIZABLE_GENSOKYO_LOCATION));
-                }
                 output.accept(MAID_SPAWN_EGG.get());
                 output.accept(FAIRY_SPAWN_EGG.get());
                 output.accept(HAKUREI_GOHEI.get());

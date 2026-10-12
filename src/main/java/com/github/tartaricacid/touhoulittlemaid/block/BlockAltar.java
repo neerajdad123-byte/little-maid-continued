@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.world.level.block.Blocks;
 import com.github.tartaricacid.touhoulittlemaid.crafting.AltarRecipe;
 import com.github.tartaricacid.touhoulittlemaid.data.PowerAttachment;
 import com.github.tartaricacid.touhoulittlemaid.init.InitDataAttachment;
@@ -57,7 +58,7 @@ import java.util.Optional;
 import static com.github.tartaricacid.touhoulittlemaid.api.bauble.IMaidBauble.RANDOM;
 
 
-public class BlockAltar extends Block implements EntityBlock {
+public class BlockAltar extends Block implements EntityBlock, LegacyRemovalBlock {
     public static final IClientBlockExtensions CLIENT_BLOCK_EXTENSIONS = FMLEnvironment.getDist() == Dist.CLIENT ? new IClientBlockExtensions() {
         @Override
         public boolean addHitEffects(BlockState state, Level world, HitResult target, ParticleEngine manager) {
@@ -140,7 +141,10 @@ public class BlockAltar extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemoveLegacy(BlockState state, Level worldIn, BlockPos pos) {
+        // only called when the block itself is replaced, never when moved by a piston
+        BlockState newState = Blocks.AIR.defaultBlockState();
+        boolean isMoving = false;
         if (!worldIn.isClientSide() && !state.is(newState.getBlock()) && !isMoving) {
             this.getAltar(worldIn, pos).ifPresent(altar -> {
                 ItemStack stack = altar.handler.getStackInSlot(0);
@@ -149,11 +153,10 @@ public class BlockAltar extends Block implements EntityBlock {
                 }
             });
         }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
+    public void onBlockExploded(BlockState state, ServerLevel world, BlockPos pos, Explosion explosion) {
         if (!world.isClientSide()) {
             this.getAltar(world, pos).ifPresent(altar -> this.restoreStorageBlock(world, pos, altar.getBlockPosList()));
         }
@@ -175,10 +178,10 @@ public class BlockAltar extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(@NotNull BlockState state, @NotNull HitResult target, @NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
+    public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData, Player player) {
         return this.getAltar(world, pos)
                 .map(altar -> new ItemStack(altar.getStorageState().getBlock()))
-                .orElse(super.getCloneItemStack(state, target, world, pos, player));
+                .orElse(super.getCloneItemStack(world, pos, state, includeData, player));
     }
 
     @Override

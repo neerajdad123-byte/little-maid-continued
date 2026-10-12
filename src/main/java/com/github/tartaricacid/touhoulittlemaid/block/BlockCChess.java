@@ -160,7 +160,7 @@ public class BlockCChess extends BlockJoy implements IBoardGameBlock {
     }
 
     @Override
-    public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
+    public void onBlockExploded(BlockState state, ServerLevel world, BlockPos pos, Explosion explosion) {
         handleCChessRemove(world, pos, state);
         super.onBlockExploded(state, world, pos, explosion);
     }

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.block.LegacyRemovalBlock;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -140,5 +141,11 @@ public class TileEntityAltar extends BlockEntity {
 
     public Direction getDirection() {
         return direction;
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        LegacyRemovalBlock.notify(this.level, pos, state);
     }
 }

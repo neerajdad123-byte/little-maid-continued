@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.block.LegacyRemovalBlock;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -76,5 +77,11 @@ public abstract class TileEntityJoy extends BlockEntity {
 
     public void setSitId(UUID sitId) {
         this.sitId = sitId;
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        LegacyRemovalBlock.notify(this.level, pos, state);
     }
 }

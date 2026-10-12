@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Blocks;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemMaidBeacon;
 import com.github.tartaricacid.touhoulittlemaid.network.message.OpenBeaconGuiPackage;
@@ -38,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Locale;
 
-public class BlockMaidBeacon extends BaseEntityBlock {
+public class BlockMaidBeacon extends BaseEntityBlock implements LegacyRemovalBlock {
     public static final EnumProperty<Position> POSITION = EnumProperty.create("position", Position.class);
     private static final VoxelShape UP_AABB = Block.box(3, 1, 3, 13, 16, 13);
     private static final VoxelShape DOWN_AABB = Block.box(6.5, 0, 6.5, 9.5, 26, 9.5);
@@ -92,7 +95,7 @@ public class BlockMaidBeacon extends BaseEntityBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    protected BlockState updateShape(BlockState stateIn, LevelReader worldIn, ScheduledTickAccess scheduledTicks, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random) {
         if (facing.getAxis() == Direction.Axis.Y) {
             Position position = stateIn.getValue(POSITION);
             if (position == Position.DOWN && facing == Direction.UP) {
@@ -106,7 +109,7 @@ public class BlockMaidBeacon extends BaseEntityBlock {
                 }
             }
         }
-        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updateShape(stateIn, worldIn, scheduledTicks, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override
@@ -126,14 +129,16 @@ public class BlockMaidBeacon extends BaseEntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemoveLegacy(BlockState state, Level worldIn, BlockPos pos) {
+        // only called when the block itself is replaced, never when moved by a piston
+        BlockState newState = Blocks.AIR.defaultBlockState();
+        boolean isMoving = false;
         if (!state.is(newState.getBlock()) && !isMoving) {
             BlockEntity te = worldIn.getBlockEntity(pos);
             if (te instanceof TileEntityMaidBeacon) {
                 popResource(worldIn, pos, ItemMaidBeacon.tileEntityToItemStack(worldIn.registryAccess(), (TileEntityMaidBeacon) te));
             }
         }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
@@ -142,7 +147,7 @@ public class BlockMaidBeacon extends BaseEntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(@NotNull BlockState state, @NotNull HitResult target, @NotNull LevelReader world, @NotNull BlockPos pos, @NotNull Player player) {
+    public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData, Player player) {
         return new ItemStack(InitItems.MAID_BEACON.get());
     }
 

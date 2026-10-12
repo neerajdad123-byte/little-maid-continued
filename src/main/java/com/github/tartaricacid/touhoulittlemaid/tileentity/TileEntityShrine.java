@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import com.github.tartaricacid.touhoulittlemaid.block.LegacyRemovalBlock;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
@@ -104,5 +105,11 @@ public class TileEntityShrine extends BlockEntity {
 
     public boolean canInsert(ItemStack stack) {
         return handler.isItemValid(0, stack);
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        LegacyRemovalBlock.notify(this.level, pos, state);
     }
 }

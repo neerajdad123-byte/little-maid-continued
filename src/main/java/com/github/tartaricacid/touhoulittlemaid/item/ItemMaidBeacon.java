@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.github.tartaricacid.touhoulittlemaid.init.InitBlocks;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
 import com.github.tartaricacid.touhoulittlemaid.tileentity.TileEntityMaidBeacon;
@@ -55,15 +58,20 @@ public class ItemMaidBeacon extends DoubleHighBlockItem {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        float numPower = 0f;
-        CompoundTag tag = stack.get(STORAGE_DATA_TAG);
-        if (tag != null && tag.contains(NEO_FORGE_DATA_TAG)) {
-            CompoundTag forgeTag = tag.getCompoundOrEmpty(NEO_FORGE_DATA_TAG);
-            if (forgeTag.contains(TileEntityMaidBeacon.STORAGE_POWER_TAG)) {
-                numPower = forgeTag.getFloatOr(TileEntityMaidBeacon.STORAGE_POWER_TAG, 0F);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flagIn) {
+        List<Component> tooltip = new ArrayList<>();
+        try {
+            float numPower = 0f;
+            CompoundTag tag = stack.get(STORAGE_DATA_TAG);
+            if (tag != null && tag.contains(NEO_FORGE_DATA_TAG)) {
+                CompoundTag forgeTag = tag.getCompoundOrEmpty(NEO_FORGE_DATA_TAG);
+                if (forgeTag.contains(TileEntityMaidBeacon.STORAGE_POWER_TAG)) {
+                    numPower = forgeTag.getFloatOr(TileEntityMaidBeacon.STORAGE_POWER_TAG, 0F);
+                }
             }
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.maid_beacon.desc", DECIMAL_FORMAT.format(numPower)).withStyle(ChatFormatting.GRAY));
+        } finally {
+            tooltip.forEach(tooltipAdder);
         }
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.maid_beacon.desc", DECIMAL_FORMAT.format(numPower)).withStyle(ChatFormatting.GRAY));
     }
 }

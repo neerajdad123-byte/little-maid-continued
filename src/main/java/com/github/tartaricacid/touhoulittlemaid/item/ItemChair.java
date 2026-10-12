@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.tileentity.TileEntityItemStackChairRenderer;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.CustomPackLoader;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityChair;
@@ -138,17 +141,22 @@ public class ItemChair extends Item {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.chair.place.desc").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.chair.destroy.desc").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tooltips.touhou_little_maid.chair.gui.desc").withStyle(ChatFormatting.GRAY));
-        // 调试模式，不加国际化
-        if (flagIn.isAdvanced() && Minecraft.getInstance().hasShiftDown()) {
-            Data data = Data.deserialization(stack);
-            tooltip.add(Component.literal("Model Id: " + data.modelId()).withStyle(ChatFormatting.GRAY));
-            tooltip.add(Component.literal("Mounted Height: " + data.height()).withStyle(ChatFormatting.GRAY));
-            tooltip.add(Component.literal("Tameable Can Ride: " + data.canRide()).withStyle(ChatFormatting.GRAY));
-            tooltip.add(Component.literal("Is No Gravity: " + data.isNoGravity()).withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flagIn) {
+        List<Component> tooltip = new ArrayList<>();
+        try {
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.chair.place.desc").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.chair.destroy.desc").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("tooltips.touhou_little_maid.chair.gui.desc").withStyle(ChatFormatting.GRAY));
+            // 调试模式，不加国际化
+            if (flagIn.isAdvanced() && Minecraft.getInstance().hasShiftDown()) {
+                Data data = Data.deserialization(stack);
+                tooltip.add(Component.literal("Model Id: " + data.modelId()).withStyle(ChatFormatting.GRAY));
+                tooltip.add(Component.literal("Mounted Height: " + data.height()).withStyle(ChatFormatting.GRAY));
+                tooltip.add(Component.literal("Tameable Can Ride: " + data.canRide()).withStyle(ChatFormatting.GRAY));
+                tooltip.add(Component.literal("Is No Gravity: " + data.isNoGravity()).withStyle(ChatFormatting.GRAY));
+            }
+        } finally {
+            tooltip.forEach(tooltipAdder);
         }
     }
 

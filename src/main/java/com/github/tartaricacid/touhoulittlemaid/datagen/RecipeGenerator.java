@@ -16,8 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import vazkii.patchouli.common.item.PatchouliDataComponents;
-import vazkii.patchouli.common.item.PatchouliItems;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -362,9 +360,7 @@ public class RecipeGenerator extends RecipeProvider {
                 .unlockedBy(getHasName(Items.DIAMOND), has(Tags.Items.GEMS_DIAMOND))
                 .save(recipeOutput);
 
-        ModLoadedCondition modLoadedCondition = new ModLoadedCondition(CompatRegistry.PATCHOULI);
-        ItemStack patchouliBook = new ItemStack(PatchouliItems.BOOK);
-        patchouliBook.set(PatchouliDataComponents.BOOK, InitItems.MEMORIZABLE_GENSOKYO_LOCATION);
+        // Little Maid Continued: Patchouli guide book recipe removed until Patchouli has a 26.x build
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, patchouliBook)
                 .requires(Tags.Items.DYES_WHITE)
                 .requires(Tags.Items.DYES_RED)

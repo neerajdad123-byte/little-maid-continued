@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.entity.EntitySpawnReason;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidAndItemTransformEvent;
@@ -60,9 +63,14 @@ public class ItemPhoto extends AbstractStoreMaidItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        if (stack.get(InitDataComponent.MAID_INFO) == null) {
-            tooltip.add(Component.translatable("tooltips.touhou_little_maid.photo.no_data.desc").withStyle(ChatFormatting.DARK_RED));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flagIn) {
+        List<Component> tooltip = new ArrayList<>();
+        try {
+            if (stack.get(InitDataComponent.MAID_INFO) == null) {
+                tooltip.add(Component.translatable("tooltips.touhou_little_maid.photo.no_data.desc").withStyle(ChatFormatting.DARK_RED));
+            }
+        } finally {
+            tooltip.forEach(tooltipAdder);
         }
     }
 }
