@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.command.subcommand;
 
+import net.neoforged.fml.loading.FMLEnvironment;
 import com.github.tartaricacid.touhoulittlemaid.client.event.ReloadResourceEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.info.ServerCustomPackLoader;
 import com.mojang.brigadier.Command;
@@ -24,7 +25,7 @@ public final class PackCommand {
 
     private static int reloadAllPack(CommandContext<CommandSourceStack> context) {
         context.getSource().sendSuccess(() -> Component.translatable("commands.touhou_little_maid.pack.reload.start"), true);
-        if (FMLLoader.getDist() == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             ReloadResourceEvent.asyncReloadAllPack();
         }
         ServerCustomPackLoader.reloadPacks();

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.init.registry;
 
+import net.minecraft.util.random.Weighted;
 import net.minecraft.world.entity.EntityTypes;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MiscConfig;
 import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
@@ -18,7 +19,7 @@ import static com.github.tartaricacid.touhoulittlemaid.config.subconfig.MiscConf
 
 @EventBusSubscriber
 public final class MobSpawnInfoRegistry {
-    private static MobSpawnSettings.SpawnerData SPAWNER_DATA;
+    private static Weighted<MobSpawnSettings.SpawnerData> SPAWNER_DATA;
 
     @SubscribeEvent
     public static void addMobSpawnInfo(LevelEvent.PotentialSpawns event) {
@@ -30,10 +31,10 @@ public final class MobSpawnInfoRegistry {
             }
             Identifier dimension = level.dimension().identifier();
             if (event.getMobCategory() == MobCategory.MONSTER && dimensionIsOkay(dimension)) {
-                List<MobSpawnSettings.SpawnerData> spawnerData = event.getSpawnerDataList();
-                boolean canZombieSpawn = spawnerData.stream().anyMatch(data -> data.type.equals(EntityTypes.ZOMBIE));
-                if (SPAWNER_DATA == null || SPAWNER_DATA.getWeight().asInt() != spawnProbability) {
-                    SPAWNER_DATA = new MobSpawnSettings.SpawnerData(InitEntities.FAIRY.get(), spawnProbability, 2, 4);
+                List<Weighted<MobSpawnSettings.SpawnerData>> spawnerData = event.getSpawnerDataList();
+                boolean canZombieSpawn = spawnerData.stream().anyMatch(data -> data.value().type().equals(EntityTypes.ZOMBIE));
+                if (SPAWNER_DATA == null || SPAWNER_DATA.weight() != spawnProbability) {
+                    SPAWNER_DATA = new Weighted<>(new MobSpawnSettings.SpawnerData(InitEntities.FAIRY.get(), 2, 4), spawnProbability);
                 }
                 if (canZombieSpawn) {
                     event.addSpawnerData(SPAWNER_DATA);

@@ -56,7 +56,7 @@ public class ClientBoardStateTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    public int getHeight() {
+    public int getHeight(Font font) {
         if (boardGameData == null) {
             return 0;
         }
@@ -82,7 +82,7 @@ public class ClientBoardStateTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font font, int pX, int pY, GuiGraphicsExtractor graphics) {
+    public void extractImage(Font font, int pX, int pY, int width, int height, GuiGraphicsExtractor graphics) {
         if (boardGameData == null) {
             return;
         }

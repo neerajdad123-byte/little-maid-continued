@@ -8,7 +8,7 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 
 public class MaidNumAttachment {
     public static final AttachmentType<MaidNumAttachment> TYPE = AttachmentType.builder(() -> new MaidNumAttachment(0))
-            .serialize(RecordCodecBuilder.create(ins -> ins.group(Codec.INT.fieldOf("num")
+            .serialize(RecordCodecBuilder.<MaidNumAttachment>mapCodec(ins -> ins.group(Codec.INT.fieldOf("num")
                     .forGetter(o -> o.num)).apply(ins, MaidNumAttachment::new))).build();
     private int num;
 

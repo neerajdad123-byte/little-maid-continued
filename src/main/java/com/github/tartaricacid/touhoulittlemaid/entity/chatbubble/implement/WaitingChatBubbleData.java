@@ -87,10 +87,10 @@ public class WaitingChatBubbleData implements IChatBubbleData {
         public IChatBubbleData readFromBuff(FriendlyByteBuf buf) {
             // 往客户端同步的数据里，不需要同步 existTick 和 priority，这两个数据仅在服务端有效
             Identifier bg = buf.readIdentifier();
-            Component text = buf.readJsonWithCodec(ComponentSerialization.CODEC);
+            Component text = buf.readLenientJsonWithCodec(ComponentSerialization.CODEC);
             Component secondaryText = null;
             if (buf.readBoolean()) {
-                secondaryText = buf.readJsonWithCodec(ComponentSerialization.CODEC);
+                secondaryText = buf.readLenientJsonWithCodec(ComponentSerialization.CODEC);
             }
             return new WaitingChatBubbleData(DEFAULT_EXIST_TICK, bg, DEFAULT_PRIORITY, text, secondaryText, buf.readIdentifier());
         }

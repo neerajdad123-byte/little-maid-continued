@@ -69,7 +69,7 @@ public class ClientMaidTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    public int getHeight() {
+    public int getHeight(Font font) {
         return 70;
     }
 
@@ -79,7 +79,7 @@ public class ClientMaidTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font font, int pX, int pY, GuiGraphicsExtractor guiGraphics) {
+    public void extractImage(Font font, int pX, int pY, int width, int height, GuiGraphicsExtractor guiGraphics) {
         if (info == null) {
             return;
         }
@@ -100,13 +100,8 @@ public class ClientMaidTooltip implements ClientTooltipComponent {
             guiGraphics.text(font, name.withStyle(ChatFormatting.GRAY), pX, pY + 2, 0xFFFFFFFF);
         }
 
-        int width = this.getWidth(font);
-        int posX = pX + width / 2;
         int posY = pY + 64;
         double rot = ((System.currentTimeMillis() / 25.0) % 360);
-        Quaternionf pose = (new Quaternionf()).rotateZ((float) Math.PI);
-        Quaternionf rotation = (new Quaternionf()).rotateY((float) Math.toRadians(rot));
-        pose.mul(rotation);
         EntityMaid maid;
         try {
             maid = (EntityMaid) EntityCacheUtil.ENTITY_CACHE.get(EntityMaid.TYPE, () -> {
@@ -136,7 +131,8 @@ public class ClientMaidTooltip implements ClientTooltipComponent {
         }
 
         guiGraphics.enableScissor(pX, posY - 50, pX + width, posY);
-        InventoryScreen.renderEntityInInventory(guiGraphics, posX, posY, (int) (25 * info.getRenderItemScale()), new Vector3f(), pose, null, maid);
+        // spin: the helper turns the body by xAngle * 20 degrees
+        InventoryScreen.renderEntityInInventoryFollowsAngle(guiGraphics, pX, pY + 10, pX + width, posY, (int) (25 * info.getRenderItemScale()), 0.0625F, (float) rot / 20F, 0, maid);
         guiGraphics.disableScissor();
     }
 }

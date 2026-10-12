@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
+import net.minecraft.server.permissions.Permissions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +36,7 @@ public class GameModeUtil {
         } else if (GameModeUtil.isLanHost(player)) {
             // 如果是局域网联机，且玩家是房主
             return true;
-        } else if (GameModeUtil.isDedicatedServer(player) && player.hasPermissions(2)) {
+        } else if (GameModeUtil.isDedicatedServer(player) && player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
             // 如果是服务器玩家，且拥有 OP2 权限
             return true;
         }

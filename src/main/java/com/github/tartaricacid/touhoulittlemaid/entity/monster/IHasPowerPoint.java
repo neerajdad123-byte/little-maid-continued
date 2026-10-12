@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.monster;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityPowerPoint;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.gamerules.GameRules;
@@ -19,7 +20,7 @@ public interface IHasPowerPoint {
      */
     default void dropPowerPoint(LivingEntity entity) {
         // 需要考虑 doMobLoot 规则
-        if (!entity.level.getGameRules().getBoolean(GameRules.MOB_DROPS)) {
+        if (!PortUtil.gameRule(entity.level(), GameRules.MOB_DROPS)) {
             return;
         }
         int dropTime = 20;

@@ -67,7 +67,7 @@ public class BlockGarageKit extends Block implements EntityBlock, LegacyRemovalB
 
         @Override
         public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
-            Minecraft.getInstance().particleEngine.destroy(pos, Blocks.CLAY.defaultBlockState());
+            world.addDestroyBlockEffect(pos, Blocks.CLAY.defaultBlockState());
             return true;
         }
 
@@ -183,9 +183,10 @@ public class BlockGarageKit extends Block implements EntityBlock, LegacyRemovalB
 
         Entity entity = type.create(worldIn, EntitySpawnReason.LOAD);
         if (entity instanceof Mob mobEntity) {
-            mobEntity.finalizeSpawn((ServerLevel) worldIn, worldIn.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_EGG, null);
-            CustomData.of(data).loadInto(mobEntity);
-            mobEntity.addAdditionalSaveData(data);
+            ServerLevel serverLevel = (ServerLevel) worldIn;
+            mobEntity.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWN_ITEM_USE, null);
+            data.merge(PortUtil.saveEntity(mobEntity));
+            data.putString("id", id);
         }
 
         garageKit.setData(garageKit.getFacing(), data);

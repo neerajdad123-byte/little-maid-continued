@@ -8,7 +8,7 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 
 public class ChatTokensAttachment {
     public static final AttachmentType<ChatTokensAttachment> TYPE = AttachmentType.builder(() -> new ChatTokensAttachment(0))
-            .serialize(RecordCodecBuilder.create(ins -> ins.group(Codec.INT.fieldOf("num")
+            .serialize(RecordCodecBuilder.<ChatTokensAttachment>mapCodec(ins -> ins.group(Codec.INT.fieldOf("num")
                     .forGetter(o -> o.num)).apply(ins, ChatTokensAttachment::new))).build();
     private int num;
 

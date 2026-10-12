@@ -1,5 +1,16 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
+import net.minecraft.util.GsonHelper;
+import java.lang.reflect.Type;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonDeserializer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.OwnableEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
 import java.util.ArrayList;
@@ -262,6 +273,29 @@ public final class PortUtil {
             } else {
                 container.addItem(stack.get());
             }
+        }
+    }
+
+    /**
+     * Replaces the removed {@code OwnableEntity#getOwnerUUID()}.
+     */
+    public static @Nullable UUID ownerUUID(OwnableEntity entity) {
+        EntityReference<LivingEntity> owner = entity.getOwnerReference();
+        return owner == null ? null : owner.getUUID();
+    }
+
+    /**
+     * Gson adapter for {@link Identifier}; MC 26.x dropped {@code Identifier.Serializer}.
+     */
+    public static final class IdentifierAdapter implements JsonDeserializer<Identifier>, JsonSerializer<Identifier> {
+        @Override
+        public Identifier deserialize(JsonElement json, Type type, JsonDeserializationContext context) {
+            return Identifier.parse(GsonHelper.convertToString(json, "location"));
+        }
+
+        @Override
+        public JsonElement serialize(Identifier id, Type type, JsonSerializationContext context) {
+            return new JsonPrimitive(id.toString());
         }
     }
 }

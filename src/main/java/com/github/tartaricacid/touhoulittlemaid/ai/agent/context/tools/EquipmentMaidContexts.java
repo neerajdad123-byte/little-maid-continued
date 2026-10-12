@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.ai.agent.context.tools;
 
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import com.github.tartaricacid.touhoulittlemaid.ai.agent.context.AbstractMaidContext;
 import com.github.tartaricacid.touhoulittlemaid.ai.agent.context.GameContextRegister;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -81,7 +82,7 @@ public final class EquipmentMaidContexts {
         @Override
         public String getValue(EntityMaid maid) {
             List<String> names = Lists.newArrayList();
-            maid.getArmorSlots().forEach(stack -> {
+            EquipmentSlotGroup.ARMOR.slots().stream().map(maid::getItemBySlot).forEach(stack -> {
                 if (!stack.isEmpty()) {
                     String itemName = stack.getDisplayName().getString();
                     int count = stack.getCount();

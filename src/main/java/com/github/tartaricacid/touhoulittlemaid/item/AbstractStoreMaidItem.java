@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import net.minecraft.core.UUIDUtil;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidAndItemTransformEvent;
 import com.github.tartaricacid.touhoulittlemaid.compat.ysm.YsmCompat;
@@ -43,8 +44,7 @@ public abstract class AbstractStoreMaidItem extends Item {
     public static void storeMaidData(ItemStack stack, EntityMaid maid) {
         CustomData compoundData = stack.get(InitDataComponent.MAID_INFO);
         if (compoundData == null) {
-            CompoundTag tag = new CompoundTag();
-            maid.saveWithoutId(tag);
+            CompoundTag tag = PortUtil.saveEntity(maid);
 
             var event = new MaidAndItemTransformEvent.ToItem(maid, stack, tag);
             NeoForge.EVENT_BUS.post(event);
@@ -77,11 +77,11 @@ public abstract class AbstractStoreMaidItem extends Item {
         if (maidInfo == null) {
             return Optional.empty();
         }
-        Optional<String> modelId = maidInfo.read(Codec.STRING.fieldOf(MODEL_ID_TAG_NAME)).result();
+        Optional<String> modelId = maidInfo.copyTag().getString(MODEL_ID_TAG_NAME);
         if (modelId.isEmpty()) {
             return Optional.empty();
         }
-        String customName = maidInfo.read(Codec.STRING.fieldOf(CUSTOM_NAME)).result().orElse(StringUtils.EMPTY);
+        String customName = maidInfo.copyTag().getString(CUSTOM_NAME).orElse(StringUtils.EMPTY);
         // YSM 渲染相关数据
         YsmMaidInfo ysmMaidInfo = YsmCompat.getYsmMaidInfo(maidInfo.copyTag());
         return Optional.of(new ItemMaidTooltip(modelId.get(), customName, ysmMaidInfo));
@@ -104,8 +104,8 @@ public abstract class AbstractStoreMaidItem extends Item {
             var event = new MaidAndItemTransformEvent.ToMaid(maid, stack, maidCompound);
             NeoForge.EVENT_BUS.post(event);
 
-            maid.load(maidCompound);
-            maid.moveTo(context.getClickedPos().above(), 0, 0);
+            PortUtil.loadEntity(maid, maidCompound);
+            maid.snapTo(context.getClickedPos().above(), 0, 0);
             if (worldIn instanceof ServerLevel) {
                 worldIn.addFreshEntity(maid);
             }

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.simplebedrockmodel.client.bedrock;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.pojo.CubesItem;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.pojo.FaceItem;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.pojo.FaceUVsItem;
@@ -12,7 +13,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public final class BedrockModelUtil {
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(Identifier.class, new Identifier.Serializer())
+            .registerTypeAdapter(Identifier.class, new PortUtil.IdentifierAdapter())
             .registerTypeAdapter(CubesItem.class, new CubesItem.Deserializer())
             .create();
 

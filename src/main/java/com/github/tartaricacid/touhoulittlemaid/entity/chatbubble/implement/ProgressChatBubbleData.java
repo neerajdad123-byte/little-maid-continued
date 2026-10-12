@@ -78,7 +78,7 @@ public class ProgressChatBubbleData implements IChatBubbleData {
         @Override
         public IChatBubbleData readFromBuff(FriendlyByteBuf buf) {
             // 往客户端同步的数据里，不需要同步 existTick 和 priority，这两个数据仅在服务端有效
-            return new ProgressChatBubbleData(DEFAULT_EXIST_TICK, buf.readIdentifier(), DEFAULT_PRIORITY, buf.readJsonWithCodec(ComponentSerialization.CODEC),
+            return new ProgressChatBubbleData(DEFAULT_EXIST_TICK, buf.readIdentifier(), DEFAULT_PRIORITY, buf.readLenientJsonWithCodec(ComponentSerialization.CODEC),
                     buf.readInt(), buf.readInt(), buf.readDouble(), buf.readBoolean());
         }
 

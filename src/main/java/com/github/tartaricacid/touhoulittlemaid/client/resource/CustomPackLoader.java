@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.resource;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.pojo.BedrockModelPOJO;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.pojo.BedrockVersion;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.pojo.CubesItem;
@@ -55,7 +56,7 @@ import static com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid.LOGGER;
 @OnlyIn(Dist.CLIENT)
 public class CustomPackLoader {
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(Identifier.class, new Identifier.Serializer())
+            .registerTypeAdapter(Identifier.class, new PortUtil.IdentifierAdapter())
             .registerTypeAdapter(CubesItem.class, new CubesItem.Deserializer())
             .create();
     public static final MaidModels MAID_MODELS = MaidModels.getInstance();

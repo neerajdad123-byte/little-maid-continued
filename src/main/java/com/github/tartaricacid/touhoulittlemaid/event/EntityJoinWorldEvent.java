@@ -36,7 +36,7 @@ public class EntityJoinWorldEvent {
             var goals = List.copyOf(animal.goalSelector.getAvailableGoals());
             goals.stream().filter(goal -> goal.getGoal() instanceof TemptGoal).findFirst().ifPresent(g -> {
                 if (g.getGoal() instanceof TemptGoal temptGoal) {
-                    MaidTemptGoal maidTemptGoal = new MaidTemptGoal(temptGoal.mob, temptGoal.speedModifier, temptGoal.items, temptGoal.canScare);
+                    MaidTemptGoal maidTemptGoal = new MaidTemptGoal(animal, temptGoal.speedModifier, temptGoal.items, temptGoal.canScare);
                     animal.goalSelector.addGoal(g.getPriority(), maidTemptGoal);
                 }
             });

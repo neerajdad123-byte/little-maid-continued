@@ -71,7 +71,7 @@ public class BlockAltar extends Block implements EntityBlock, LegacyRemovalBlock
 
         @Override
         public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
-            this.getAltar(world, pos).ifPresent(altar -> Minecraft.getInstance().particleEngine.destroy(pos, altar.getStorageState()));
+            this.getAltar(world, pos).ifPresent(altar -> world.addDestroyBlockEffect(pos, altar.getStorageState()));
             return true;
         }
 
@@ -129,7 +129,7 @@ public class BlockAltar extends Block implements EntityBlock, LegacyRemovalBlock
 
     @Override
     public InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        return this.getAltar(worldIn, pos).filter(altar -> handIn == InteractionHand.MAIN_HAND).map(altar -> {
+        return this.getAltar(worldIn, pos).filter(altar -> handIn == InteractionHand.MAIN_HAND).<InteractionResult>map(altar -> {
             if (player.isShiftKeyDown() || player.getMainHandItem().isEmpty()) {
                 takeOutItem(worldIn, altar, player);
             } else {
@@ -248,7 +248,10 @@ public class BlockAltar extends Block implements EntityBlock, LegacyRemovalBlock
         }
         CraftingInput craftingInput = CraftingInput.of(6, 1, arrayList);
         PowerAttachment powerAttachment = playerIn.getData(InitDataAttachment.POWER_NUM);
-        world.getRecipeManager().getRecipeFor(InitRecipes.ALTAR_CRAFTING.get(), craftingInput, world)
+        if (!(world instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        serverLevel.recipeAccess().getRecipeFor(InitRecipes.ALTAR_CRAFTING.get(), craftingInput, serverLevel)
                 .ifPresent(recipe -> spawnResultEntity(world, playerIn, powerAttachment, recipe.id(), recipe.value(), arrayList, altar));
     }
 

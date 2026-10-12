@@ -35,7 +35,7 @@ public final class ApplyPotionEffectEvent {
         }
 
         if (player.isDiscrete() && stack.getItem() == Items.MILK_BUCKET) {
-            maid.removeEffectsCuredBy(EffectCures.MILK);
+            maid.removeAllEffects();
             if (!player.isCreative()) {
                 stack.shrink(1);
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(Items.BUCKET));

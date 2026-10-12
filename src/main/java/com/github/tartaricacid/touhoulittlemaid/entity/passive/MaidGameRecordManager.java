@@ -68,7 +68,7 @@ public class MaidGameRecordManager {
     public void increaseGomokuWinCount() {
         CompoundTag gameSkill = this.getGameSkill();
         if (gameSkill.contains(GOMOKU)) {
-            gameSkill.putInt(GOMOKU, gameSkill.getInt(GOMOKU) + 1);
+            gameSkill.putInt(GOMOKU, gameSkill.getIntOr(GOMOKU, 0) + 1);
         } else {
             gameSkill.putInt(GOMOKU, 1);
         }

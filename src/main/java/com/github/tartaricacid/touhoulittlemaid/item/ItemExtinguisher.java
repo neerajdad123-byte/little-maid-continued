@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 
 public class ItemExtinguisher extends Item {
     public ItemExtinguisher() {
-        super((new Properties()).durability(128).setNoRepair());
+        super((new Properties()).durability(128));
     }
 
     @Override

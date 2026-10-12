@@ -34,7 +34,7 @@ public class ItemTrumpet extends Item {
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
+    public boolean releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof Player player && timeLeft >= MIN_USE_DURATION) {
             if (worldIn instanceof ServerLevel serverLevel) {
                 serverLevel.getEntities(EntityMaid.TYPE, Entity::isAlive).stream()
@@ -51,8 +51,10 @@ public class ItemTrumpet extends Item {
             if (player instanceof ServerPlayer serverPlayer) {
                 InitTrigger.MAID_EVENT.get().trigger(serverPlayer, TriggerType.USE_TRUMPET);
             }
-            player.getCooldowns().addCooldown(this, 200);
+            player.getCooldowns().addCooldown(this.getDefaultInstance(), 200);
+            return true;
         }
+        return false;
     }
 
     private void teleportToOwner(EntityMaid maid, Player player) {

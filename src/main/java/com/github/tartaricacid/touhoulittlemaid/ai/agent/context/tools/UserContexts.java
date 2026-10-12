@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.ai.agent.context.tools;
 
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import com.github.tartaricacid.touhoulittlemaid.ai.agent.context.AbstractMaidContext;
 import com.github.tartaricacid.touhoulittlemaid.ai.agent.context.GameContextRegister;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -88,7 +89,7 @@ public final class UserContexts {
                 return EMPTY;
             }
             java.util.List<String> names = com.google.common.collect.Lists.newArrayList();
-            owner.getArmorSlots().forEach(stack -> {
+            EquipmentSlotGroup.ARMOR.slots().stream().map(owner::getItemBySlot).forEach(stack -> {
                 if (!stack.isEmpty()) {
                     names.add(ITEM_AND_COUNT_FORMAT.formatted(stack.getDisplayName().getString(), stack.getCount()));
                 }

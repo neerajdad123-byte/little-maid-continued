@@ -8,7 +8,7 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 public class PowerAttachment {
     public static final float MAX_POWER = 5.0f;
     public static final AttachmentType<PowerAttachment> TYPE = AttachmentType.builder(() -> new PowerAttachment(0))
-            .serialize(RecordCodecBuilder.create(ins -> ins.group(Codec.FLOAT.fieldOf("power").forGetter(o -> o.power))
+            .serialize(RecordCodecBuilder.<PowerAttachment>mapCodec(ins -> ins.group(Codec.FLOAT.fieldOf("power").forGetter(o -> o.power))
                     .apply(ins, PowerAttachment::new))).build();
     private float power;
 

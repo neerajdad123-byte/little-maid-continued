@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.core.UUIDUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -58,7 +60,7 @@ public class ItemModelSwitcher extends BlockItem {
             } else {
                 forgeData = new CompoundTag();
             }
-            forgeData.put(TileEntityModelSwitcher.ENTITY_UUID, NbtUtils.createUUID(maid.getUUID()));
+            forgeData.put(TileEntityModelSwitcher.ENTITY_UUID, UUIDUtil.CODEC.encodeStart(NbtOps.INSTANCE, maid.getUUID()).getOrThrow());
             tag.put(NEO_FORGE_DATA_TAG, forgeData);
             stack.set(STORAGE_DATA_TAG, tag);
             return InteractionResult.SUCCESS;

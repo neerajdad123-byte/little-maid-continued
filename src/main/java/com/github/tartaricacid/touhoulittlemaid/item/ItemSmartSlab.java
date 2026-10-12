@@ -96,7 +96,7 @@ public class ItemSmartSlab extends AbstractStoreMaidItem {
             if (this.type == Type.HAS_MAID) {
                 return spawnFromStore(context, player, worldIn, maid, () -> {
                     player.setItemInHand(context.getHand(), InitItems.SMART_SLAB_EMPTY.get().getDefaultInstance());
-                    player.getCooldowns().addCooldown(InitItems.SMART_SLAB_EMPTY.get(), 20);
+                    player.getCooldowns().addCooldown(InitItems.SMART_SLAB_EMPTY.get().getDefaultInstance(), 20);
                 });
             }
         } else {
@@ -115,14 +115,14 @@ public class ItemSmartSlab extends AbstractStoreMaidItem {
             }
             maid.tame(player);
             if (worldIn instanceof ServerLevel) {
-                maid.finalizeSpawn((ServerLevel) worldIn, worldIn.getCurrentDifficultyAt(context.getClickedPos()), EntitySpawnReason.SPAWN_ITEM_USE, null);
-                maid.moveTo(context.getClickedPos().above(), 0, 0);
+                maid.finalizeSpawn((ServerLevel) worldIn, ((ServerLevel) worldIn).getCurrentDifficultyAt(context.getClickedPos()), EntitySpawnReason.SPAWN_ITEM_USE, null);
+                maid.snapTo(context.getClickedPos().above(), 0, 0);
                 worldIn.addFreshEntity(maid);
             }
             maid.spawnExplosionParticle();
             maid.playSound(SoundEvents.PLAYER_SPLASH, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
             player.setItemInHand(context.getHand(), InitItems.SMART_SLAB_EMPTY.get().getDefaultInstance());
-            player.getCooldowns().addCooldown(InitItems.SMART_SLAB_EMPTY.get(), 20);
+            player.getCooldowns().addCooldown(InitItems.SMART_SLAB_EMPTY.get().getDefaultInstance(), 20);
             return InteractionResult.SUCCESS;
         } else {
             if (worldIn.isClientSide()) {

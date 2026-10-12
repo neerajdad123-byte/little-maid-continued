@@ -78,6 +78,6 @@ public class EnchantmentKeys {
     }
 
     public static Holder<Enchantment> getEnchantmentHolder(RegistryAccess access, ResourceKey<Enchantment> enchantmentResourceKey) {
-        return access.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(enchantmentResourceKey);
+        return access.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(enchantmentResourceKey);
     }
 }

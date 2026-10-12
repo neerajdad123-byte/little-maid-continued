@@ -119,7 +119,7 @@ public class ItemChair extends Item {
         chair.setNoGravity(data.isNoGravity());
         chair.setOwner(player);
         float yaw = (float) Mth.floor((Mth.wrapDegrees(rotation - 180) + 22.5F) / 45.0F) * 45.0F;
-        chair.moveTo(chair.getX(), chair.getY(), chair.getZ(), yaw, 0.0F);
+        chair.snapTo(chair.getX(), chair.getY(), chair.getZ(), yaw, 0.0F);
         chair.setYBodyRot(yaw);
         chair.setYHeadRot(yaw);
     }

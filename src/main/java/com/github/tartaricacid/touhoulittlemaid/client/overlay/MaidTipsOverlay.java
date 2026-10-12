@@ -32,7 +32,7 @@ import java.util.Map;
 
 import static com.github.tartaricacid.touhoulittlemaid.config.subconfig.RenderConfig.*;
 
-public class MaidTipsOverlay implements GuiLayer.Layer {
+public class MaidTipsOverlay implements GuiLayer {
     private static final Identifier ICON = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/maid_tips_icon.png");
 
     private static Map<Item, MutableComponent> TIPS = Maps.newHashMap();

@@ -8,6 +8,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -23,7 +24,8 @@ public class RemainFoodEatenEvent {
     public static void onAfterMaidEat(MaidAfterEatEvent event) {
         ItemStack foodAfterEat = event.getFoodAfterEat();
         if (!foodAfterEat.isEmpty()) {
-            ItemStack craftingRemainingItem = foodAfterEat.getCraftingRemainingItem();
+            ItemStackTemplate remainder = foodAfterEat.getCraftingRemainder();
+            ItemStack craftingRemainingItem = remainder == null ? ItemStack.EMPTY : remainder.create();
 
             if (craftingRemainingItem.isEmpty()) {
                 String itemId = ItemsUtil.getItemId(foodAfterEat.getItem());
@@ -41,7 +43,7 @@ public class RemainFoodEatenEvent {
                 ItemStack result = ItemHandlerHelper.insertItemStacked(availableInv, craftingRemainingItem, false);
                 // 如果女仆背包满了，掉落在地上
                 if (!result.isEmpty()) {
-                    ItemEntity itemEntity = new ItemEntity(maid.level, maid.getX(), maid.getY(), maid.getZ(), craftingRemainingItem);
+                    ItemEntity itemEntity = new ItemEntity(maid.level, maid.getX(), maid.getY(), maid.getZ(), result);
                     maid.level.addFreshEntity(itemEntity);
                 }
             }

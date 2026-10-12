@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.init;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.animation.HardcodedAnimationManger;
@@ -36,6 +37,8 @@ import static net.neoforged.neoforge.client.gui.VanillaGuiLayers.HOTBAR;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = TouhouLittleMaid.MOD_ID)
 public class ClientSetupEvent {
+    public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "main"));
+
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(AnimationRegister::registerAnimationState);
@@ -63,6 +66,7 @@ public class ClientSetupEvent {
 
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+        event.registerCategory(KEY_CATEGORY);
         event.register(STTChatKey.STT_CHAT_KEY);
         event.register(DismountBroomKey.DISMOUNT_KEY);
     }

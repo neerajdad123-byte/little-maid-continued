@@ -14,7 +14,7 @@ import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class ShowPowerOverlay implements GuiLayer.Layer {
+public class ShowPowerOverlay implements GuiLayer {
     private static ItemStack POWER_POINT;
 
     @Override
@@ -22,7 +22,7 @@ public class ShowPowerOverlay implements GuiLayer.Layer {
         Minecraft minecraft = Minecraft.getInstance();
         Options options = minecraft.options;
         Player player = minecraft.player;
-        if (player == null || options.hideGui) {
+        if (player == null || Minecraft.getInstance().gui.hud.isHidden()) {
             return;
         }
         ItemStack stack = player.getMainHandItem();

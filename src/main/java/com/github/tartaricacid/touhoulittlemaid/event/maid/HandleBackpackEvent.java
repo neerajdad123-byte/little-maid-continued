@@ -26,7 +26,7 @@ public class HandleBackpackEvent {
         if (stack.is(Tags.Items.TOOLS_SHEAR)) {
             if (maid.isOwnedBy(player) && !maid.backpackHasDelay() && maidBackpack != BackpackManager.getEmptyBackpack()) {
                 maid.setBackpackDelay();
-                player.getCooldowns().addCooldown(stack.getItem(), 20);
+                player.getCooldowns().addCooldown(stack, 20);
                 ItemHandlerHelper.giveItemToPlayer(player, maidBackpack.getTakeOffItemStack(stack, player, maid));
                 maidBackpack.onTakeOff(stack, player, maid);
                 maid.setMaidBackpackType(BackpackManager.getEmptyBackpack());

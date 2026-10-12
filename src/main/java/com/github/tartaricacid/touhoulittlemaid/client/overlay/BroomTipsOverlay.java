@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class BroomTipsOverlay implements GuiLayer.Layer {
+public class BroomTipsOverlay implements GuiLayer {
     private static final Identifier BG = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "textures/gui/download_background.png");
 
     @Override
@@ -26,7 +26,7 @@ public class BroomTipsOverlay implements GuiLayer.Layer {
         Minecraft minecraft = Minecraft.getInstance();
         Options options = minecraft.options;
         Player player = minecraft.player;
-        if (options.hideGui) {
+        if (Minecraft.getInstance().gui.hud.isHidden()) {
             return;
         }
         if (player == null) {

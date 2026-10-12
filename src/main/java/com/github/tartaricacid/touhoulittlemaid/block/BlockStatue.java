@@ -50,7 +50,7 @@ public class BlockStatue extends Block implements EntityBlock {
 
         @Override
         public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
-            Minecraft.getInstance().particleEngine.destroy(pos, Blocks.CLAY.defaultBlockState());
+            world.addDestroyBlockEffect(pos, Blocks.CLAY.defaultBlockState());
             return true;
         }
 

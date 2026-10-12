@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.input;
 
+import com.github.tartaricacid.touhoulittlemaid.client.init.ClientSetupEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.github.tartaricacid.touhoulittlemaid.network.message.DismountPackage;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -24,7 +25,7 @@ public class DismountBroomKey {
             KeyModifier.NONE,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_C,
-            "key.category.touhou_little_maid");
+            ClientSetupEvent.KEY_CATEGORY);
 
     @SubscribeEvent
     public static void onDismountPress(InputEvent.Key event) {
@@ -43,16 +44,14 @@ public class DismountBroomKey {
         }
     }
 
-    @SuppressWarnings("removal")
     private static boolean keyIsMatch(InputEvent.Key event) {
-        return DISMOUNT_KEY.matches(event.getKey(), event.getScanCode())
-                && DISMOUNT_KEY.getKeyModifier().equals(KeyModifier.getActiveModifier());
+        return DISMOUNT_KEY.isActiveAndMatches(InputConstants.getKey(event.getKeyEvent()));;
     }
 
     private static boolean isInGame() {
         Minecraft mc = Minecraft.getInstance();
         // 不能是加载界面
-        if (mc.getOverlay() != null) {
+        if (mc.gui.overlay() != null) {
             return false;
         }
         // 不能打开任何 GUI

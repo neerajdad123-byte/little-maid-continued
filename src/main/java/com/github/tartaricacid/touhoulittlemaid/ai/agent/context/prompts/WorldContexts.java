@@ -87,7 +87,7 @@ public final class WorldContexts {
         @Override
         public String getValue(EntityMaid maid) {
             Biome biome = maid.level.getBiome(maid.blockPosition()).value();
-            Identifier key = maid.level.registryAccess().registryOrThrow(Registries.BIOME).getKey(biome);
+            Identifier key = maid.level.registryAccess().lookupOrThrow(Registries.BIOME).getKey(biome);
             return key == null ? UNKNOWN_BIOME : key.toString();
         }
     }

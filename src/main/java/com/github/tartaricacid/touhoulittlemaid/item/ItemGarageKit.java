@@ -64,7 +64,7 @@ public class ItemGarageKit extends BlockItem {
             MutableComponent prefix = Component.translatable("block.touhou_little_maid.garage_kit.prefix");
             CustomData data = getMaidData(stack);
 
-            String entityId = data.read(Codec.STRING.fieldOf(ENTITY_ID_TAG_NAME)).result().orElse(DEFAULT_ENTITY_ID);
+            String entityId = data.copyTag().getString(ENTITY_ID_TAG_NAME).orElse(DEFAULT_ENTITY_ID);
             // 如果是其他实体，那么不需要显示 model id
             if (!entityId.equals(DEFAULT_ENTITY_ID)) {
                 EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(entityId));
@@ -84,7 +84,7 @@ public class ItemGarageKit extends BlockItem {
             }
 
             // 然后才是默认模型名
-            String modelId = data.read(Codec.STRING.fieldOf(MODEL_ID_TAG_NAME)).result().orElse(DEFAULT_MODEL_ID);
+            String modelId = data.copyTag().getString(MODEL_ID_TAG_NAME).orElse(DEFAULT_MODEL_ID);
             MaidModelInfo info = CustomPackLoader.MAID_MODELS.getInfo(modelId).orElse(null);
             if (info != null) {
                 return prefix.append(ParseI18n.parse(info.getName()));

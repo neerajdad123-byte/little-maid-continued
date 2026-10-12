@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.command;
 
+import net.minecraft.server.permissions.Permissions;
 import com.github.tartaricacid.touhoulittlemaid.command.subcommand.*;
 import com.github.tartaricacid.touhoulittlemaid.debug.command.MaidDebugCommand;
 import com.mojang.brigadier.CommandDispatcher;
@@ -12,7 +13,7 @@ public final class RootCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal(ROOT_NAME)
-                .requires((source -> source.hasPermission(2)));
+                .requires((source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)));
         root.then(PackCommand.get());
         root.then(PowerCommand.get());
         root.then(MaidNumCommand.get());

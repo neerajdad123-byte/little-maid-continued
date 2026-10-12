@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.event;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MiscConfig;
 import com.github.tartaricacid.touhoulittlemaid.data.MaidNumAttachment;
 import com.github.tartaricacid.touhoulittlemaid.data.PowerAttachment;
@@ -35,7 +36,7 @@ public class EntityDeathEvent {
         Player newEntity = event.getEntity();
         Player oldEntity = event.getOriginal();
         boolean wasDeath = event.isWasDeath();
-        boolean isKeep = newEntity.level.getGameRules().getBoolean(GameRules.KEEP_INVENTORY);
+        boolean isKeep = PortUtil.gameRule(newEntity.level(), GameRules.KEEP_INVENTORY);
 
         PowerAttachment power = oldEntity.getData(POWER_NUM);
         MaidNumAttachment maidNum = oldEntity.getData(MAID_NUM);

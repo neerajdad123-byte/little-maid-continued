@@ -84,14 +84,14 @@ public class ItemServantBell extends Item {
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
+    public boolean releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         if (!(entityLiving instanceof Player player) || timeLeft < MIN_USE_DURATION) {
-            return;
+            return false;
         }
         UUID searchUuid = getMaidUuid(stack);
         if (searchUuid == null) {
             player.sendSystemMessage(Component.translatable("message.touhou_little_maid.servant_bell.data_is_empty"));
-            return;
+            return false;
         }
         if (worldIn instanceof ServerLevel serverLevel) {
             List<? extends EntityMaid> maids = serverLevel.getEntities(EntityMaid.TYPE, maid -> checkMaidUuid(player, maid, searchUuid));
@@ -106,7 +106,8 @@ public class ItemServantBell extends Item {
         if (player instanceof ServerPlayer serverPlayer) {
             InitTrigger.MAID_EVENT.get().trigger(serverPlayer, TriggerType.USE_SERVANT_BELL);
         }
-        player.getCooldowns().addCooldown(this, 20);
+        player.getCooldowns().addCooldown(this.getDefaultInstance(), 20);
+        return true;
     }
 
     @Nullable

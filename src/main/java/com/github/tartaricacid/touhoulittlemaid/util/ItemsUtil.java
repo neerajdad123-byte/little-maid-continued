@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
+import net.minecraft.server.level.ServerLevel;
 import com.github.tartaricacid.touhoulittlemaid.api.bauble.IMaidBauble;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidRequestItemEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -36,7 +37,9 @@ public final class ItemsUtil {
             ItemStack stackInSlot = itemHandler.getStackInSlot(i);
             ItemStack extractItem = itemHandler.extractItem(i, stackInSlot.getCount(), false);
             if (!extractItem.isEmpty()) {
-                entity.spawnAtLocation(extractItem);
+                if (entity.level() instanceof ServerLevel level) {
+                    entity.spawnAtLocation(level, extractItem);
+                }
             }
         }
     }

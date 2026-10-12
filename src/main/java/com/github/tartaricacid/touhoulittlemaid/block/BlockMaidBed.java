@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ScheduledTickAccess;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -64,7 +65,9 @@ public class BlockMaidBed extends HorizontalDirectionalBlock implements EntityBl
     protected static final VoxelShape BASE = Block.box(0.0, 0.0, 0.0, 16.0, 9.0, 16.0);
 
     public BlockMaidBed() {
-        super(BlockBehaviour.Properties.of().sound(SoundType.WOOD).sound(SoundType.WOOD).strength(0.2F).noOcclusion());
+        super(BlockBehaviour.Properties.of().sound(SoundType.WOOD).strength(0.2F).noOcclusion()
+                // same bounce as the MC 1.21.1 hook (non-living entities get 0.8 of it from the engine)
+                .bounceRestitution(0.66F));
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.FOOT).setValue(OCCUPIED, false));
     }
 
@@ -81,7 +84,7 @@ public class BlockMaidBed extends HorizontalDirectionalBlock implements EntityBl
         if (!(itemStack.getItem() instanceof DyeItem dyeItem)) {
             return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
-        DyeColor dyeColor = dyeItem.getDyeColor();
+        DyeColor dyeColor = itemStack.get(DataComponents.DYE);
         // 检查染料颜色是否在可用颜色列表中
         if (!AVAILABLE_COLOR.contains(dyeColor)) {
             return InteractionResult.TRY_WITH_EMPTY_HAND;
@@ -146,7 +149,7 @@ public class BlockMaidBed extends HorizontalDirectionalBlock implements EntityBl
         if (!worldIn.isClientSide()) {
             BlockPos headPos = pos.relative(state.getValue(FACING));
             worldIn.setBlock(headPos, state.setValue(PART, BedPart.HEAD), Block.UPDATE_ALL);
-            worldIn.blockUpdated(pos, Blocks.AIR);
+            worldIn.updateNeighborsAt(pos, Blocks.AIR, null);
             state.updateNeighbourShapes(worldIn, pos, Block.UPDATE_ALL);
 
             if (worldIn.getBlockEntity(headPos) instanceof TileEntityMaidBed bed) {
@@ -158,19 +161,6 @@ public class BlockMaidBed extends HorizontalDirectionalBlock implements EntityBl
     @Override
     public void fallOn(Level worldIn, BlockState blockState, BlockPos pos, Entity entityIn, double fallDistance) {
         super.fallOn(worldIn, blockState, pos, entityIn, fallDistance * 0.5f);
-    }
-
-    // TODO(Little Maid Continued): no longer a Block hook in MC 26.x (bed bounce)
-    public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entity) {
-        if (entity.isSuppressingBounce()) {
-            super.updateEntityAfterFallOn(worldIn, entity);
-        } else {
-            Vec3 movement = entity.getDeltaMovement();
-            if (movement.y < 0) {
-                double modulus = entity instanceof LivingEntity ? 1.0D : 0.8D;
-                entity.setDeltaMovement(movement.x, -movement.y * (double) 0.66F * modulus, movement.z);
-            }
-        }
     }
 
     @Override

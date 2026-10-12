@@ -76,7 +76,7 @@ public class BackpackManager {
 
     public static void addBackpackCooldown(Player player) {
         for (Item backpack : BACKPACK_ITEM_MAP.keySet()) {
-            player.getCooldowns().addCooldown(backpack, 20);
+            player.getCooldowns().addCooldown(backpack.getDefaultInstance(), 20);
         }
     }
 

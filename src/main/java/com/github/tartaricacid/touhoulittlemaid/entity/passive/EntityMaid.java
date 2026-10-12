@@ -1685,6 +1685,15 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
     }
 
     @Override
+    public void handleExtraItemsCreatedOnUse(ItemStack extra) {
+        // MC 26.x throws these away for non-players (e.g. bottles from a stack of honey); keep them in the maid's bag
+        ItemStack left = ItemHandlerHelper.insertItemStacked(this.getAvailableInv(false), extra, false);
+        if (!left.isEmpty()) {
+            this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), left));
+        }
+    }
+
+    @Override
     protected boolean isAlwaysExperienceDropper() {
         return true;
     }

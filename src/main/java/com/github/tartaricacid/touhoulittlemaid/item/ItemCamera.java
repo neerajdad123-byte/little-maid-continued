@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -51,7 +52,7 @@ public class ItemCamera extends Item {
                 if (!worldIn.isClientSide() && maid.isAlive() && maid.isOwnedBy(playerIn) && !maid.isSleeping()) {
                     spawnMaidPhoto(worldIn, maid, playerIn);
                     maid.discard();
-                    playerIn.getCooldowns().addCooldown(this, 20);
+                    playerIn.getCooldowns().addCooldown(this.getDefaultInstance(), 20);
                     camera.hurtAndBreak(1, playerIn, EquipmentSlot.MAINHAND);
                     if (playerIn instanceof ServerPlayer serverPlayer) {
                         InitTrigger.MAID_EVENT.get().trigger(serverPlayer, TriggerType.PHOTO_MAID);
@@ -73,7 +74,7 @@ public class ItemCamera extends Item {
             return;
         }
         maid.setHomeModeEnable(false);
-        maid.saveWithoutId(maidTag);
+        maidTag.merge(PortUtil.saveEntity(maid));
         maidTag.putString("id", Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.getKey(InitEntities.MAID.get())).toString());
 
         var event = new MaidAndItemTransformEvent.ToItem(maid, photo, maidTag);
@@ -87,7 +88,7 @@ public class ItemCamera extends Item {
         ItemStack photo = InitItems.PHOTO.get().getDefaultInstance();
         CompoundTag maidTag = new CompoundTag();
         maid.setHomeModeEnable(false);
-        maid.saveWithoutId(maidTag);
+        maidTag.merge(PortUtil.saveEntity(maid));
         maidTag.putString("id", Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.getKey(InitEntities.MAID.get())).toString());
 
         var event = new MaidAndItemTransformEvent.ToItem(maid, photo, maidTag);

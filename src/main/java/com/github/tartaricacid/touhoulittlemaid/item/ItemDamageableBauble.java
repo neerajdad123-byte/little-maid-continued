@@ -9,7 +9,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 
 public class ItemDamageableBauble extends Item {
     public ItemDamageableBauble(int durability) {
-        super((new Properties()).durability(durability).setNoRepair());
+        super((new Properties()).durability(durability));
     }
 
     @Override

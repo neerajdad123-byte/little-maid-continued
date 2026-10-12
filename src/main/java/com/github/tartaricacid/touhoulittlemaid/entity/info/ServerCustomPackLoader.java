@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.info;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.ai.manager.setting.SettingReader;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.pojo.ChairModelInfo;
@@ -37,7 +38,7 @@ import static com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid.LOGGER;
 
 public final class ServerCustomPackLoader {
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(Identifier.class, new Identifier.Serializer())
+            .registerTypeAdapter(Identifier.class, new PortUtil.IdentifierAdapter())
             .create();
     public static final ServerMaidModels SERVER_MAID_MODELS = ServerMaidModels.getInstance();
     public static final ServerChairModels SERVER_CHAIR_MODELS = ServerChairModels.getInstance();

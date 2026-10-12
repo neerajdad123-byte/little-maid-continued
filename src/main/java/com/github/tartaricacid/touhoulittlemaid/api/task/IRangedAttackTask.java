@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.api.task;
 
+import net.minecraft.server.level.ServerLevel;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
@@ -51,7 +52,7 @@ public interface IRangedAttackTask extends IAttackTask {
      */
     static boolean targetConditionsTest(EntityMaid maid, LivingEntity target, ModConfigSpec.IntValue configRange) {
         TARGET_CONDITIONS.range(configRange.get());
-        return TARGET_CONDITIONS.test(maid, target);
+        return maid.level() instanceof ServerLevel level && TARGET_CONDITIONS.test(level, maid, target);
     }
 
     /**

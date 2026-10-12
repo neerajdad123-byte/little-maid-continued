@@ -162,8 +162,9 @@ public class EntityBox extends Entity {
         {
             serverLevel.sendParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY() + 0.25, this.getZ(),
                     20, 1, 1, 1, 0.2);
-            ResourceKey<LootTable> table = this.getType().getDefaultLootTable();
-            LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(table);
+            LootTable lootTable = this.getType().getDefaultLootTable()
+                    .map(table -> serverLevel.getServer().reloadableRegistries().getLootTable(table))
+                    .orElse(LootTable.EMPTY);
             LootParams.Builder builder = new LootParams.Builder(serverLevel)
                     .withParameter(LootContextParams.THIS_ENTITY, this)
                     .withParameter(LootContextParams.ORIGIN, this.position())

@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.event.maid;
 
+import net.neoforged.fml.loading.FMLEnvironment;
 import com.github.tartaricacid.touhoulittlemaid.advancements.maid.TriggerType;
 import com.github.tartaricacid.touhoulittlemaid.api.event.InteractMaidEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -26,7 +27,7 @@ public class SaddleMaidEvent {
         if (stack.is(Items.SADDLE)) {
             if (player.getPassengers().isEmpty() && maid.getPassengers().isEmpty()) {
                 boolean success = maid.startRiding(player);
-                if (success && FMLLoader.getDist() == Dist.CLIENT) {
+                if (success && FMLEnvironment.getDist() == Dist.CLIENT) {
                     SaddleMaidEvent.showTips();
                 }
                 if (maid.isHomeModeEnable()) {

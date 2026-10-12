@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task;
 
+import net.minecraft.world.entity.item.ItemEntity;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.util.ItemsUtil;
 import com.google.common.collect.ImmutableMap;
@@ -60,7 +61,11 @@ public class MaidMilkTask extends MaidCheckRateTask {
             ItemStack bucket = ItemsUtil.getStack(availableInv, stack -> stack.getItem() == Items.BUCKET);
             if (bucket != ItemStack.EMPTY) {
                 bucket.shrink(1);
-                ItemHandlerHelper.insertItemStacked(availableInv, new ItemStack(Items.MILK_BUCKET), false);
+                ItemStack left = ItemHandlerHelper.insertItemStacked(availableInv, new ItemStack(Items.MILK_BUCKET), false);
+                // full bag: drop the milk instead of losing it
+                if (!left.isEmpty()) {
+                    maid.level().addFreshEntity(new ItemEntity(maid.level(), maid.getX(), maid.getY(), maid.getZ(), left));
+                }
             }
             maid.swing(InteractionHand.MAIN_HAND);
             maid.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);

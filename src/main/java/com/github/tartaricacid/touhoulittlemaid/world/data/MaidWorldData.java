@@ -15,14 +15,23 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.level.storage.LevelResource;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.resources.Identifier;
+import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -34,24 +43,39 @@ public class MaidWorldData extends SavedData {
     private final Map<UUID, List<MaidInfo>> infos = Maps.newHashMap();
     private final Map<UUID, List<MaidInfo>> tombstones = Maps.newHashMap();
 
-    public static SavedData.Factory<MaidWorldData> factory() {
-        // 可能是 ENTITY_CHUNK 吧
-        return new SavedData.Factory<>(MaidWorldData::new, MaidWorldData::load, DataFixTypes.ENTITY_CHUNK);
-    }
+    private static final SavedDataType<MaidWorldData> TYPE = new SavedDataType<>(
+            Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "world_data"), MaidWorldData::new,
+            CompoundTag.CODEC.xmap(tag -> load(tag, PortUtil.registries()), data -> data.save(new CompoundTag(), PortUtil.registries())));
 
     @Nullable
     public static MaidWorldData get(Level level) {
-        if (level instanceof ServerLevel) {
-            ServerLevel overWorld = level.getServer().getLevel(Level.OVERWORLD);
-            if (overWorld == null) {
-                return null;
+        if (level instanceof ServerLevel serverLevel) {
+            SavedDataStorage storage = serverLevel.getServer().getDataStorage();
+            MaidWorldData data = storage.get(TYPE);
+            if (data == null) {
+                data = loadLegacy(serverLevel.getServer());
+                storage.set(TYPE, data);
             }
-            DimensionDataStorage storage = overWorld.getDataStorage();
-            MaidWorldData data = storage.computeIfAbsent(MaidWorldData.factory(), IDENTIFIER);
             data.setDirty();
             return data;
         }
         return null;
+    }
+
+    /**
+     * MC 1.21.1 kept this in {@code data/touhou_little_maid_world_data.dat}; 26.x names saved data by namespace.
+     */
+    private static MaidWorldData loadLegacy(MinecraftServer server) {
+        Path legacy = server.getWorldPath(LevelResource.DATA).resolve(IDENTIFIER + ".dat");
+        if (Files.isRegularFile(legacy)) {
+            try {
+                CompoundTag root = NbtIo.readCompressed(legacy, NbtAccounter.unlimitedHeap());
+                return load(root.getCompoundOrEmpty("data"), server.registryAccess());
+            } catch (IOException e) {
+                TouhouLittleMaid.LOGGER.error("Failed to read old maid world data {}", legacy, e);
+            }
+        }
+        return new MaidWorldData();
     }
 
     public static MaidWorldData load(CompoundTag tag, HolderLookup.@NotNull Provider provider) {
@@ -99,7 +123,6 @@ public class MaidWorldData extends SavedData {
         return data;
     }
 
-    @Override
     public @NotNull CompoundTag save(CompoundTag tag, HolderLookup.@NotNull Provider provider) {
         CompoundTag infosTag = new CompoundTag();
         infos.forEach((id, data) -> {

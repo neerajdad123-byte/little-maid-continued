@@ -86,7 +86,7 @@ public class TileEntityStatue extends BlockEntity {
         super.loadAdditional(valueInput);
         size = Size.getSizeByIndex(getPersistentData().getIntOr(STATUE_SIZE_TAG, 0));
         isCoreBlock = getPersistentData().getBooleanOr(CORE_BLOCK_TAG, false);
-        NbtUtils.readBlockPos(getPersistentData(), CORE_BLOCK_POS_TAG).ifPresent(pos -> coreBlockPos = pos);
+        getPersistentData().read(CORE_BLOCK_POS_TAG, BlockPos.CODEC).ifPresent(pos -> coreBlockPos = pos);
         facing = Direction.byName(getPersistentData().getStringOr(STATUE_FACING_TAG, ""));
         allBlocks.clear();
         ListTag blockList = getPersistentData().getListOrEmpty(ALL_BLOCKS_TAG);

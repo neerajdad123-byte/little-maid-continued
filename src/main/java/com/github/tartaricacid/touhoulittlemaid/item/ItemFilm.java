@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.item;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -41,7 +42,7 @@ public class ItemFilm extends AbstractStoreMaidItem {
         ItemStack film = InitItems.FILM.get().getDefaultInstance();
         CompoundTag maidTag = new CompoundTag();
         maid.setHomeModeEnable(false);
-        maid.saveWithoutId(maidTag);
+        maidTag.merge(PortUtil.saveEntity(maid));
         removeMaidSomeData(maidTag);
         maidTag.putString(ID_TAG, Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.getKey(InitEntities.MAID.get())).toString());
 

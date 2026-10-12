@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.animation.gecko.condition;
 
+import net.minecraft.tags.ItemTags;
 import com.github.tartaricacid.touhoulittlemaid.api.entity.IMaid;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemHakureiGohei;
 import net.minecraft.world.InteractionHand;
@@ -11,11 +12,16 @@ public class InnerClassify {
     public static String doClassifyTest(String extraPre, IMaid maid, InteractionHand hand) {
         ItemStack itemInHand = maid.asEntity().getItemInHand(hand);
         Item item = itemInHand.getItem();
+        // MC 26.x has no sword/pickaxe item classes; tags decide
+        if (itemInHand.is(ItemTags.SWORDS)) {
+            return extraPre + "sword";
+        }
+        if (itemInHand.is(ItemTags.PICKAXES)) {
+            return extraPre + "pickaxe";
+        }
         return switch (item) {
             case ItemHakureiGohei ignored -> extraPre + "gohei";
-            case SwordItem ignored -> extraPre + "sword";
             case AxeItem ignored -> extraPre + "axe";
-            case PickaxeItem ignored -> extraPre + "pickaxe";
             case ShovelItem ignored -> extraPre + "shovel";
             case HoeItem ignored -> extraPre + "hoe";
             case ShieldItem ignored -> extraPre + "shield";

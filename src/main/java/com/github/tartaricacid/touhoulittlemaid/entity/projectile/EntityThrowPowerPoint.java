@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.projectile;
 
+import net.minecraft.world.item.ItemStack;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.registries.Registries;
@@ -30,11 +31,11 @@ public class EntityThrowPowerPoint extends ThrowableItemProjectile {
     }
 
     public EntityThrowPowerPoint(Level world, LivingEntity thrower) {
-        super(TYPE, thrower, world);
+        super(TYPE, thrower, world, new ItemStack(InitItems.POWER_POINT.get()));
     }
 
     public EntityThrowPowerPoint(Level world, double x, double y, double z) {
-        super(TYPE, x, y, z, world);
+        super(TYPE, x, y, z, world, new ItemStack(InitItems.POWER_POINT.get()));
     }
 
     @Override
@@ -51,7 +52,7 @@ public class EntityThrowPowerPoint extends ThrowableItemProjectile {
     protected void onHit(HitResult result) {
         super.onHit(result);
         if (!this.level.isClientSide()) {
-            this.level.levelEvent(LevelEvent.PARTICLES_SPELL_POTION_SPLASH, this.blockPosition(), PotionContents.getColor(Potions.HEALING));
+            this.level.levelEvent(LevelEvent.PARTICLES_SPELL_POTION_SPLASH, this.blockPosition(), new PotionContents(Potions.HEALING).getColor());
             int count = 30 + this.level.getRandom().nextInt(30) + this.level.getRandom().nextInt(30);
             while (count > 0) {
                 int value = EntityPowerPoint.getPowerValue(count);

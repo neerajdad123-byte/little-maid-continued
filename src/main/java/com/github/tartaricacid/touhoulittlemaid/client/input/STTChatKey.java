@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.input;
 
+import com.github.tartaricacid.touhoulittlemaid.client.init.ClientSetupEvent;
 import com.github.tartaricacid.touhoulittlemaid.ai.manager.entity.STTCallback;
 import com.github.tartaricacid.touhoulittlemaid.ai.manager.site.AvailableSites;
 import com.github.tartaricacid.touhoulittlemaid.ai.service.stt.STTConfig;
@@ -36,7 +37,7 @@ public class STTChatKey {
             KeyModifier.NONE,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_X,
-            "key.category.touhou_little_maid");
+            ClientSetupEvent.KEY_CATEGORY);
 
     @SubscribeEvent
     public static void onSttChatPress(InputEvent.Key event) {
@@ -67,10 +68,8 @@ public class STTChatKey {
         }
     }
 
-    @SuppressWarnings("removal")
     private static boolean keyIsMatch(InputEvent.Key event) {
-        return STT_CHAT_KEY.matches(event.getKey(), event.getScanCode())
-               && STT_CHAT_KEY.getKeyModifier().equals(KeyModifier.getActiveModifier());
+        return STT_CHAT_KEY.isActiveAndMatches(InputConstants.getKey(event.getKeyEvent()));;
     }
 
     private static void getNearestMaid(LocalPlayer player, Consumer<EntityMaid> consumer, boolean isStart) {
@@ -91,7 +90,7 @@ public class STTChatKey {
     private static boolean isInGame() {
         Minecraft mc = Minecraft.getInstance();
         // 不能是加载界面
-        if (mc.getOverlay() != null) {
+        if (mc.gui.overlay() != null) {
             return false;
         }
         // 不能打开任何 GUI

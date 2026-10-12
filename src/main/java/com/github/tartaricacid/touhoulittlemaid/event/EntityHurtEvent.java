@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.event;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MaidConfig;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -22,7 +23,7 @@ public final class EntityHurtEvent {
             Entity victim = hitResult.getEntity();
             if (victim instanceof TamableAnimal tameable) {
                 // 同一主人，那么免伤
-                if (tameable.getOwnerUUID() != null && tameable.getOwnerUUID().equals(thrower.getOwnerUUID())) {
+                if (PortUtil.ownerUUID(tameable) != null && PortUtil.ownerUUID(tameable).equals(PortUtil.ownerUUID(thrower))) {
                     event.setCanceled(true);
                 }
             }

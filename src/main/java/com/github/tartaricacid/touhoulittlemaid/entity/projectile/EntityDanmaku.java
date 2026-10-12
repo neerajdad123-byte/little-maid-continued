@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.projectile;
 
+import java.util.UUID;
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -45,7 +47,8 @@ public class EntityDanmaku extends ThrowableProjectile {
     }
 
     public EntityDanmaku(Level worldIn, LivingEntity throwerIn) {
-        super(TYPE, throwerIn, worldIn);
+        super(TYPE, throwerIn.getX(), throwerIn.getEyeY() - 0.1, throwerIn.getZ(), worldIn);
+        this.setOwner(throwerIn);
     }
 
     public EntityDanmaku(Level worldIn, double x, double y, double z) {
@@ -53,10 +56,8 @@ public class EntityDanmaku extends ThrowableProjectile {
     }
 
     private static boolean hasSameOwner(TamableAnimal tameableA, TamableAnimal tameableB) {
-        if (tameableA.getOwnerUUID() == null) {
-            return false;
-        }
-        return tameableA.getOwnerUUID().equals(tameableB.getOwnerUUID());
+        UUID owner = PortUtil.ownerUUID(tameableA);
+        return owner != null && owner.equals(PortUtil.ownerUUID(tameableB));
     }
 
     @Override

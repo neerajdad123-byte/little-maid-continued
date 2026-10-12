@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.core.UUIDUtil;
 import com.github.tartaricacid.touhoulittlemaid.block.LegacyRemovalBlock;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -55,7 +57,7 @@ public class TileEntityModelSwitcher extends BlockEntity {
             }
             getPersistentData().put(INFO_LIST, listTag);
             if (this.uuid != null) {
-                getPersistentData().put(ENTITY_UUID, NbtUtils.createUUID(this.uuid));
+                getPersistentData().put(ENTITY_UUID, UUIDUtil.CODEC.encodeStart(NbtOps.INSTANCE, this.uuid).getOrThrow());
             }
             getPersistentData().putInt(LIST_INDEX, this.index);
             super.saveAdditional(valueOutput);
@@ -78,7 +80,7 @@ public class TileEntityModelSwitcher extends BlockEntity {
         }
         Tag uuidTag = getPersistentData().get(ENTITY_UUID);
         if (uuidTag != null) {
-            this.uuid = NbtUtils.loadUUID(uuidTag);
+            this.uuid = PortUtil.loadUUID(uuidTag);
         }
         this.index = getPersistentData().getIntOr(LIST_INDEX, 0);
     }

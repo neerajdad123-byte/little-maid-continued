@@ -75,7 +75,6 @@ public class MaidFishingHook extends Projectile {
 
     protected MaidFishingHook(EntityType<? extends MaidFishingHook> entityType, Level level, int luck, int lureSpeed) {
         super(entityType, level);
-        this.noCulling = true;
         this.luck = Math.max(0, luck);
         this.lureSpeed = Math.max(0, lureSpeed);
     }
@@ -87,7 +86,7 @@ public class MaidFishingHook extends Projectile {
     public MaidFishingHook(EntityMaid maid, Level level, int luck, int lureSpeed, Vec3 pos) {
         this(TYPE, level, luck, lureSpeed);
         this.setOwner(maid);
-        this.moveTo(pos);
+        this.snapTo(pos);
     }
 
     @Override
@@ -111,10 +110,6 @@ public class MaidFishingHook extends Projectile {
         return distance < 64 * 64;
     }
 
-
-    @Override
-    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pSteps) {
-    }
 
     @Override
     public void tick() {

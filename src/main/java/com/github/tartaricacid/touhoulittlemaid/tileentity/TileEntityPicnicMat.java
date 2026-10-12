@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.tileentity;
 
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -97,7 +99,7 @@ public class TileEntityPicnicMat extends BlockEntity {
             getPersistentData().put(STORAGE_ITEM, PortUtil.serializeItems(handler, pRegistries));
             ListTag listTag = new ListTag();
             for (UUID uuid : sitIds) {
-                listTag.add(NbtUtils.createUUID(uuid));
+                listTag.add(UUIDUtil.CODEC.encodeStart(NbtOps.INSTANCE, uuid).getOrThrow());
             }
             getPersistentData().put(SIT_IDS, listTag);
             super.saveAdditional(valueOutput);
@@ -111,12 +113,12 @@ public class TileEntityPicnicMat extends BlockEntity {
         HolderLookup.Provider pRegistries = valueInput.lookup();
         CompoundTag pTag = PortUtil.readRoot(valueInput);
         super.loadAdditional(valueInput);
-        NbtUtils.readBlockPos(getPersistentData(), CENTER_POS_NAME).ifPresent(pos -> centerPos = pos);
+        getPersistentData().read(CENTER_POS_NAME, BlockPos.CODEC).ifPresent(pos -> centerPos = pos);
         PortUtil.deserializeItems(this.handler, pRegistries, getPersistentData().getCompoundOrEmpty(STORAGE_ITEM));
         ListTag sitIdsTag = getPersistentData().getListOrEmpty(SIT_IDS);
         int i = 0;
         for (Tag tag : sitIdsTag) {
-            this.sitIds[i] = NbtUtils.loadUUID(tag);
+            this.sitIds[i] = PortUtil.loadUUID(tag);
             i = i + 1;
             if (i >= 4) {
                 break;
