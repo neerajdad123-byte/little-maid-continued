@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.block;
 
+import net.minecraft.core.component.DataComponents;
 import com.github.tartaricacid.touhoulittlemaid.block.properties.PicnicMatPart;
 import com.github.tartaricacid.touhoulittlemaid.entity.favorability.Type;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntitySit;
@@ -117,7 +118,7 @@ public class BlockPicnicMat extends Block implements EntityBlock {
             return InteractionResult.FAIL;
         }
         ItemStack itemInHand = playerIn.getItemInHand(hand);
-        if (itemInHand.getFoodProperties(null) != null) {
+        if (itemInHand.get(DataComponents.FOOD) != null) {
             return placeFood(itemInHand, playerIn, picnicMatCenter);
         }
         if (itemInHand.isEmpty() && playerIn.isDiscrete()) {

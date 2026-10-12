@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.event.maid;
 
+import net.minecraft.core.component.DataComponents;
 
 import com.github.tartaricacid.touhoulittlemaid.advancements.maid.TriggerType;
 import com.github.tartaricacid.touhoulittlemaid.api.event.InteractMaidEvent;
@@ -21,7 +22,7 @@ public final class ApplyGoldenAppleEvent {
         ItemStack stack = event.getStack();
         EntityMaid maid = event.getMaid();
         Level world = event.getWorld();
-        FoodProperties food = stack.getItem().getFoodProperties(stack, maid);
+        FoodProperties food = stack.get(DataComponents.FOOD);
         Player player = event.getPlayer();
 
         if (player.isDiscrete() && (food == Foods.GOLDEN_APPLE || food == Foods.ENCHANTED_GOLDEN_APPLE)) {

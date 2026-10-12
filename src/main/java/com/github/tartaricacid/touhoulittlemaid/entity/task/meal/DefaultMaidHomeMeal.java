@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.task.meal;
 
+import net.minecraft.core.component.DataComponents;
 import com.github.tartaricacid.touhoulittlemaid.api.task.meal.IMaidMeal;
 import com.github.tartaricacid.touhoulittlemaid.api.task.meal.MaidMealType;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MaidConfig;
@@ -16,7 +17,7 @@ public class DefaultMaidHomeMeal implements IMaidMeal {
     private static final int MAX_PROBABILITY = 15;
 
     public static boolean isHomeMeal(ItemStack stack) {
-        return stack.getFoodProperties(null) != null
+        return stack.get(DataComponents.FOOD) != null
                && !IMaidMeal.isBlockList(stack, MaidConfig.MAID_HOME_MEALS_BLOCK_LIST.get())
                && !IMaidMeal.isBlockList(stack, MaidMealRegConfigEvent.HOME_MEAL_REGEX);
     }
@@ -28,7 +29,7 @@ public class DefaultMaidHomeMeal implements IMaidMeal {
 
     @Override
     public void onMaidEat(EntityMaid maid, ItemStack stack, InteractionHand hand) {
-        FoodProperties foodProperties = stack.getFoodProperties(maid);
+        FoodProperties foodProperties = stack.get(DataComponents.FOOD);
         if (foodProperties != null) {
             // 调用饰品
             maid.getMaidBauble().fireEvent((b, s) -> {

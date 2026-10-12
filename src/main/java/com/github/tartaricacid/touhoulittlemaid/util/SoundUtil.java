@@ -35,7 +35,7 @@ public final class SoundUtil {
         if (rand.nextFloat() < probability && world.isRaining() && isSnowyBiome(biome, pos)) {
             return InitSounds.MAID_SNOW.get();
         }
-        if (rand.nextFloat() < probability && biome.coldEnoughToSnow(pos)) {
+        if (rand.nextFloat() < probability && biome.coldEnoughToSnow(pos, maid.level().getSeaLevel())) {
             return InitSounds.MAID_COLD.get();
         }
         if (rand.nextFloat() < probability && shouldSnowGolemBurn(biome, pos)) {

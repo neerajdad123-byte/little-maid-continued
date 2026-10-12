@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.event.food;
 
+import net.minecraft.core.component.DataComponents;
 import com.github.tartaricacid.touhoulittlemaid.api.event.MaidAfterEatEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -18,7 +19,7 @@ public class ConvertFoodEatenEvent {
     public static void onAfterMaidEat(MaidAfterEatEvent event) {
         ItemStack foodAfterEat = event.getFoodAfterEat();
         EntityMaid maid = event.getMaid();
-        FoodProperties foodProperties = foodAfterEat.getFoodProperties(maid);
+        FoodProperties foodProperties = foodAfterEat.get(DataComponents.FOOD);
         if (!foodAfterEat.isEmpty() && foodProperties != null) {
             Optional<ItemStack> convertedStack = foodProperties.usingConvertsTo();
             if (convertedStack.isPresent() && !convertedStack.get().isEmpty()) {

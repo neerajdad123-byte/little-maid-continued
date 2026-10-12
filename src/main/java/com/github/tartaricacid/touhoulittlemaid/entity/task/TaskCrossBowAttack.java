@@ -50,8 +50,8 @@ public class TaskCrossBowAttack implements IRangedAttackTask {
 
     @Override
     public List<Pair<Integer, BehaviorControl<? super EntityMaid>>> createBrainTasks(EntityMaid maid) {
-        BehaviorControl<EntityMaid> supplementedTask = StartAttacking.create(entityMaid -> hasCrossBow(entityMaid) && hasAmmunition(entityMaid), IRangedAttackTask::findFirstValidAttackTarget);
-        BehaviorControl<EntityMaid> findTargetTask = StopAttackingIfTargetInvalid.create((target) -> !hasCrossBow(maid) || !hasAmmunition(maid) || farAway(target, maid));
+        BehaviorControl<EntityMaid> supplementedTask = StartAttacking.create((level, entityMaid) -> hasCrossBow(entityMaid) && hasAmmunition(entityMaid), (level, body) -> IRangedAttackTask.findFirstValidAttackTarget(body));
+        BehaviorControl<EntityMaid> findTargetTask = StopAttackingIfTargetInvalid.create((level, target) -> !hasCrossBow(maid) || !hasAmmunition(maid) || farAway(target, maid));
         BehaviorControl<EntityMaid> moveToTargetTask = MaidRangedWalkToTarget.create(0.6f);
         BehaviorControl<EntityMaid> maidAttackStrafingTask = new MaidAttackStrafingTask();
         BehaviorControl<EntityMaid> shootTargetTask = new MaidCrossbowAttack();
@@ -67,8 +67,8 @@ public class TaskCrossBowAttack implements IRangedAttackTask {
 
     @Override
     public List<Pair<Integer, BehaviorControl<? super EntityMaid>>> createRideBrainTasks(EntityMaid maid) {
-        BehaviorControl<EntityMaid> supplementedTask = StartAttacking.create(entityMaid -> hasCrossBow(entityMaid) && hasAmmunition(entityMaid), IRangedAttackTask::findFirstValidAttackTarget);
-        BehaviorControl<EntityMaid> findTargetTask = StopAttackingIfTargetInvalid.create((target) -> !hasCrossBow(maid) || !hasAmmunition(maid) || farAway(target, maid));
+        BehaviorControl<EntityMaid> supplementedTask = StartAttacking.create((level, entityMaid) -> hasCrossBow(entityMaid) && hasAmmunition(entityMaid), (level, body) -> IRangedAttackTask.findFirstValidAttackTarget(body));
+        BehaviorControl<EntityMaid> findTargetTask = StopAttackingIfTargetInvalid.create((level, target) -> !hasCrossBow(maid) || !hasAmmunition(maid) || farAway(target, maid));
         BehaviorControl<EntityMaid> shootTargetTask = new MaidCrossbowAttack();
 
         return Lists.newArrayList(

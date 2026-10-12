@@ -155,7 +155,7 @@ public class MaidBreathAirTask extends Behavior<EntityMaid> {
     private void startEatBreatheItem(EntityMaid maid, ItemStack stack, InteractionHand hand) {
         maid.getSwimManager().setEatBreatheItem(true);
 
-        FoodProperties foodProperties = stack.getFoodProperties(maid);
+        FoodProperties foodProperties = stack.get(DataComponents.FOOD);
         float total = 0;
         if (foodProperties != null) {
             int nutrition = foodProperties.nutrition();
@@ -188,7 +188,7 @@ public class MaidBreathAirTask extends Behavior<EntityMaid> {
         }
 
         // 或者能提供水下呼吸的食物
-        FoodProperties foodProperties = stack.getFoodProperties(maid);
+        FoodProperties foodProperties = stack.get(DataComponents.FOOD);
         if (foodProperties == null) {
             return false;
         }

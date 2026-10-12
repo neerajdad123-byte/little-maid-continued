@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.inventory.container.other;
 
+import net.minecraft.core.component.DataComponents;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemPicnicBasket;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,7 +28,7 @@ public class PicnicBasketContainer extends AbstractContainerMenu {
             this.addSlot(new SlotItemHandler(container, i, 8 + i * 18, 18) {
                 @Override
                 public boolean mayPlace(@NotNull ItemStack stack) {
-                    return stack.getFoodProperties(null) != null;
+                    return stack.get(DataComponents.FOOD) != null;
                 }
             });
         }

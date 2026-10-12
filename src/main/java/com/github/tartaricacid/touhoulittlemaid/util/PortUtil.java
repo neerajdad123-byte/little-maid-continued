@@ -2,8 +2,16 @@ package com.github.tartaricacid.touhoulittlemaid.util;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.resources.Identifier;
@@ -87,6 +95,31 @@ public final class PortUtil {
         if (!tag.isEmpty()) {
             output.store(ROOT, tag);
         }
+    }
+
+    /**
+     * Replacement for the removed {@code ItemStack#getDrinkingSound()/getEatingSound()}.
+     */
+    public static SoundEvent consumeSound(ItemStack stack) {
+        Consumable consumable = stack.get(DataComponents.CONSUMABLE);
+        return consumable == null ? SoundEvents.GENERIC_EAT.value() : consumable.sound().value();
+    }
+
+    /**
+     * Replacement for the removed {@code FoodProperties#effects()}: status effects applied when the item is consumed.
+     */
+    public static List<MobEffectInstance> foodEffects(ItemStack stack) {
+        Consumable consumable = stack.get(DataComponents.CONSUMABLE);
+        if (consumable == null) {
+            return List.of();
+        }
+        List<MobEffectInstance> effects = new ArrayList<>();
+        for (ConsumeEffect effect : consumable.onConsumeEffects()) {
+            if (effect instanceof ApplyStatusEffectsConsumeEffect apply) {
+                effects.addAll(apply.effects());
+            }
+        }
+        return effects;
     }
 
     /**

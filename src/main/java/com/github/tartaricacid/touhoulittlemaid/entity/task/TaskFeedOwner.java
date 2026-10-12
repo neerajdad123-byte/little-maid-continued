@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.task;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PortUtil;
+import net.minecraft.core.component.DataComponents;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.task.IFeedTask;
 import com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task.MaidFeedOwnerTask;
@@ -21,7 +23,6 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemUseAnimation;
-import net.neoforged.neoforge.common.EffectCures;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -43,17 +44,17 @@ public class TaskFeedOwner implements IFeedTask {
     public boolean isFood(ItemStack stack, Player owner) {
         if (stack.getItem() == Items.MILK_BUCKET) {
             for (MobEffectInstance effect : owner.getActiveEffects()) {
-                if (isHarmfulEffect(effect) && effect.getDuration() > 60 && effect.getCures().contains(EffectCures.MILK)) {
+                if (isHarmfulEffect(effect) && effect.getDuration() > 60) {
                     return true;
                 }
             }
             return false;
         }
-        if (stack.getItem().getFoodProperties(stack, owner) != null) {
-            FoodProperties food = stack.getItem().getFoodProperties(stack, owner);
+        if (stack.get(DataComponents.FOOD) != null) {
+            FoodProperties food = stack.get(DataComponents.FOOD);
             if (food != null) {
-                return food.effects().isEmpty() ||
-                       food.effects().stream().noneMatch(effect -> isHarmfulEffect(effect.effect()));
+                return PortUtil.foodEffects(stack).isEmpty() ||
+                       PortUtil.foodEffects(stack).stream().noneMatch(this::isHarmfulEffect);
             }
         }
         return false;
@@ -78,12 +79,12 @@ public class TaskFeedOwner implements IFeedTask {
             }
         }
 
-        if (stack.getItem().getFoodProperties(stack, owner) != null) {
+        if (stack.get(DataComponents.FOOD) != null) {
             FoodData foodData = owner.getFoodData();
             if (!foodData.needsFood()) {
                 return Priority.LOWEST;
             }
-            FoodProperties food = stack.getItem().getFoodProperties(stack, owner);
+            FoodProperties food = stack.get(DataComponents.FOOD);
             int heal = 0;
             if (food != null) {
                 heal = food.nutrition();
@@ -102,7 +103,7 @@ public class TaskFeedOwner implements IFeedTask {
     @Override
     public ItemStack feed(ItemStack stack, Player owner) {
         if (stack.getUseAnimation() == ItemUseAnimation.DRINK) {
-            owner.level.playSound(null, owner, stack.getDrinkingSound(), SoundSource.NEUTRAL,
+            owner.level.playSound(null, owner, PortUtil.consumeSound(stack), SoundSource.NEUTRAL,
                     0.5f, owner.level.getRandom().nextFloat() * 0.1f + 0.9f);
         }
         return stack.getItem().finishUsingItem(stack, owner.level, owner);

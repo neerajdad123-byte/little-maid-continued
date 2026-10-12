@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.task;
 
+import net.minecraft.world.item.BlockItem;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.api.task.IFarmTask;
 import com.github.tartaricacid.touhoulittlemaid.api.task.ISpecialCropHandler;
@@ -40,7 +41,7 @@ public class TaskNormalFarm implements IFarmTask {
         }
         // 然后是默认情况
         // 自己新建一个 tag 用了存储可种的种子
-        return stack.is(TagItem.MAID_PLANTABLE_SEEDS) && stack.getItem() instanceof ItemNameBlockItem;
+        return stack.is(TagItem.MAID_PLANTABLE_SEEDS) && stack.getItem() instanceof BlockItem;
     }
 
     @Override
@@ -100,7 +101,7 @@ public class TaskNormalFarm implements IFarmTask {
         if (!aboveState.canBeReplaced() || aboveState.liquid()) {
             return false;
         }
-        if (seed.getItem() instanceof ItemNameBlockItem blockNamedItem) {
+        if (seed.getItem() instanceof BlockItem blockNamedItem) {
             BlockState plantBlockState = blockNamedItem.getBlock().defaultBlockState();
             return plantBlockState.canSurvive(maid.level, abovePos);
         }
@@ -116,7 +117,7 @@ public class TaskNormalFarm implements IFarmTask {
             return handler.plant(maid, basePos, baseState, seed);
         }
         // 然后是默认情况
-        if (item instanceof ItemNameBlockItem) {
+        if (item instanceof BlockItem) {
             maid.placeItemBlock(basePos.above(), seed);
         }
         return seed;
