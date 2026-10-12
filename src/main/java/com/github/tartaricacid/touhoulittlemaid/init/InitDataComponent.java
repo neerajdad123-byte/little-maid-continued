@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.init;
 
+import net.minecraft.core.registries.Registries;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemBoardState;
 import com.github.tartaricacid.touhoulittlemaid.item.ItemFoxScroll.TrackInfo;
@@ -21,7 +22,7 @@ import java.util.UUID;
 
 @SuppressWarnings({"removal", "deprecation"})
 public class InitDataComponent {
-    public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(TouhouLittleMaid.MOD_ID);
+    public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, TouhouLittleMaid.MOD_ID);
 
     public static final String ENTITY_ID_TAG_NAME = "id";
     public static final String OWNER_UUID_TAG_NAME = "owner_uuid";

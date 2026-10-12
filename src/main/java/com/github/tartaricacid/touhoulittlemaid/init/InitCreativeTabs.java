@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.init;
 
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.block.BlockGarageKit;
 import com.github.tartaricacid.touhoulittlemaid.datagen.EnchantmentKeys;
@@ -9,7 +10,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.neoforged.api.distmarker.Dist;
@@ -119,7 +119,7 @@ public class InitCreativeTabs {
     private static void addEnchantmentBook(Optional<Holder.Reference<Enchantment>> holder, CreativeModeTab.Output output) {
         holder.ifPresent(ref -> {
             EnchantmentInstance instance = new EnchantmentInstance(ref, ref.value().getMaxLevel());
-            output.accept(EnchantedBookItem.createForEnchantment(instance));
+            output.accept(EnchantmentHelper.createBook(instance));
         });
     }
 }

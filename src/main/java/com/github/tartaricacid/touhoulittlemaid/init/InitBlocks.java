@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.init;
 
+import com.github.tartaricacid.touhoulittlemaid.util.PendingIds;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.block.*;
 import com.github.tartaricacid.touhoulittlemaid.tileentity.*;
@@ -15,22 +16,22 @@ public final class InitBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(TouhouLittleMaid.MOD_ID);
     public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, TouhouLittleMaid.MOD_ID);
 
-    public static DeferredBlock<Block> MAID_BED = BLOCKS.register("maid_bed", BlockMaidBed::new);
-    public static DeferredBlock<Block> ALTAR = BLOCKS.register("altar", BlockAltar::new);
-    public static DeferredBlock<Block> STATUE = BLOCKS.register("statue", BlockStatue::new);
-    public static DeferredBlock<Block> GARAGE_KIT = BLOCKS.register("garage_kit", BlockGarageKit::new);
-    public static DeferredBlock<Block> MAID_BEACON = BLOCKS.register("maid_beacon", BlockMaidBeacon::new);
-    public static DeferredBlock<Block> MODEL_SWITCHER = BLOCKS.register("model_switcher", BlockModelSwitcher::new);
-    public static DeferredBlock<Block> PICNIC_MAT = BLOCKS.register("picnic_mat", BlockPicnicMat::new);
-    public static DeferredBlock<Block> GOMOKU = BLOCKS.register("gomoku", BlockGomoku::new);
-    public static DeferredBlock<Block> CCHESS = BLOCKS.register("cchess", BlockCChess::new);
-    public static DeferredBlock<Block> WCHESS = BLOCKS.register("wchess", BlockWChess::new);
-    public static DeferredBlock<Block> KEYBOARD = BLOCKS.register("keyboard", BlockKeyboard::new);
-    public static DeferredBlock<Block> BOOKSHELF = BLOCKS.register("bookshelf", BlockBookshelf::new);
-    public static DeferredBlock<Block> COMPUTER = BLOCKS.register("computer", BlockComputer::new);
-    public static DeferredBlock<Block> SHRINE = BLOCKS.register("shrine", BlockShrine::new);
-    public static DeferredBlock<Block> SCARECROW = BLOCKS.register("scarecrow", BlockScarecrow::new);
-    public static DeferredBlock<Block> SNACK_CABINET = BLOCKS.register("snack_cabinet", BlockSnackCabinet::new);
+    public static DeferredBlock<Block> MAID_BED = BLOCKS.register("maid_bed", id -> PendingIds.block(id, BlockMaidBed::new));
+    public static DeferredBlock<Block> ALTAR = BLOCKS.register("altar", id -> PendingIds.block(id, BlockAltar::new));
+    public static DeferredBlock<Block> STATUE = BLOCKS.register("statue", id -> PendingIds.block(id, BlockStatue::new));
+    public static DeferredBlock<Block> GARAGE_KIT = BLOCKS.register("garage_kit", id -> PendingIds.block(id, BlockGarageKit::new));
+    public static DeferredBlock<Block> MAID_BEACON = BLOCKS.register("maid_beacon", id -> PendingIds.block(id, BlockMaidBeacon::new));
+    public static DeferredBlock<Block> MODEL_SWITCHER = BLOCKS.register("model_switcher", id -> PendingIds.block(id, BlockModelSwitcher::new));
+    public static DeferredBlock<Block> PICNIC_MAT = BLOCKS.register("picnic_mat", id -> PendingIds.block(id, BlockPicnicMat::new));
+    public static DeferredBlock<Block> GOMOKU = BLOCKS.register("gomoku", id -> PendingIds.block(id, BlockGomoku::new));
+    public static DeferredBlock<Block> CCHESS = BLOCKS.register("cchess", id -> PendingIds.block(id, BlockCChess::new));
+    public static DeferredBlock<Block> WCHESS = BLOCKS.register("wchess", id -> PendingIds.block(id, BlockWChess::new));
+    public static DeferredBlock<Block> KEYBOARD = BLOCKS.register("keyboard", id -> PendingIds.block(id, BlockKeyboard::new));
+    public static DeferredBlock<Block> BOOKSHELF = BLOCKS.register("bookshelf", id -> PendingIds.block(id, BlockBookshelf::new));
+    public static DeferredBlock<Block> COMPUTER = BLOCKS.register("computer", id -> PendingIds.block(id, BlockComputer::new));
+    public static DeferredBlock<Block> SHRINE = BLOCKS.register("shrine", id -> PendingIds.block(id, BlockShrine::new));
+    public static DeferredBlock<Block> SCARECROW = BLOCKS.register("scarecrow", id -> PendingIds.block(id, BlockScarecrow::new));
+    public static DeferredBlock<Block> SNACK_CABINET = BLOCKS.register("snack_cabinet", id -> PendingIds.block(id, BlockSnackCabinet::new));
 
     public static Supplier<BlockEntityType<TileEntityAltar>> ALTAR_TE = TILE_ENTITIES.register("altar", () -> TileEntityAltar.TYPE);
     public static Supplier<BlockEntityType<TileEntityStatue>> STATUE_TE = TILE_ENTITIES.register("statue", () -> TileEntityStatue.TYPE);

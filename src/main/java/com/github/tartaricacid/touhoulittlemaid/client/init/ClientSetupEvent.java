@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.client.init;
 
+import net.minecraft.resources.Identifier;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.animation.HardcodedAnimationManger;
 import com.github.tartaricacid.touhoulittlemaid.client.animation.gecko.AnimationRegister;

@@ -17,7 +17,6 @@ public class InitCapabilities {
         event.registerEntity(HAND_ITEM, InitEntities.MAID.get(), (maid, direction) -> maid.getHandsInvWrapper());
         event.registerEntity(ARMOR_ITEM, InitEntities.MAID.get(), (maid, direction) -> maid.getArmorInvWrapper());
 
-        // 适配 forge 的实体 cap
-        event.registerEntity(Capabilities.ItemHandler.ENTITY, InitEntities.MAID.get(), (maid, direction) -> maid.getAllInv());
+        // TODO(Little Maid Continued): NeoForge 26.x moved entity item access to the ResourceHandler transfer API
     }
 }

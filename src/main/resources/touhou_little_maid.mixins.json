@@ -3,9 +3,11 @@
   "minVersion": "0.8",
   "package": "com.github.tartaricacid.touhoulittlemaid.mixin",
   "plugin": "com.github.tartaricacid.touhoulittlemaid.mixin.plugin.MixinPlugin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "refmap": "touhou_little_maid.refmap.json",
   "mixins": [
+    "BlockPropertiesIdMixin",
+    "ItemPropertiesIdMixin",
     "ArrowMixin",
     "BlockBurningCache",
     "ConduitBlockEntityMixin",
