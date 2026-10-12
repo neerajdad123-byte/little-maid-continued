@@ -1,5 +1,8 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
+import org.jspecify.annotations.Nullable;
+import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.SubmitBufferSource;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -15,13 +18,33 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 public final class RenderHelper {
+    /**
+     * Little Maid Continued: recording buffer of the world overlay currently being drawn (see {@link #draw}).
+     */
+    public static @Nullable SubmitBufferSource BUFFERS;
+
+    /**
+     * Runs a MC 1.21.1 style world overlay renderer inside the MC 26.x submit pipeline.
+     */
+    public static void draw(SubmitCustomGeometryEvent event, Runnable renderer) {
+        try (SubmitBufferSource buffers = new SubmitBufferSource(event.getSubmitNodeCollector())) {
+            BUFFERS = buffers;
+            renderer.run();
+        } finally {
+            BUFFERS = null;
+        }
+    }
+
     public static void renderFloatingText(PoseStack poseStack, String text, Vec3 vec, int color, float scale, float yOffset) {
         renderFloatingText(poseStack, text, vec.x + 0.5, vec.y + 1.5, vec.z + 0.5, color, scale, true, yOffset, true);
     }
 
     public static void renderFloatingText(PoseStack poseStack, String text, double x, double y, double z, int color, float scale, boolean center, float yOffset, boolean seeThrough) {
         Minecraft minecraft = Minecraft.getInstance();
-        MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
+        MultiBufferSource buffer = BUFFERS;
+        if (buffer == null) {
+            return;
+        }
         Camera camera = minecraft.gameRenderer.mainCamera();
         if (camera.isInitialized()) {
             Font font = minecraft.font;
@@ -35,7 +58,6 @@ public final class RenderHelper {
             float fontX = center ? (float) (-font.width(text)) / 2.0F : 0.0F;
             LegacyDraw.text(font, text, fontX, yOffset, color, false, poseStack.last().pose(), buffer, seeThrough ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL, 0, 0xf000f0);
             poseStack.popPose();
-            buffer.endBatch();
         }
     }
 

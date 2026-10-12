@@ -14,7 +14,6 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.settings.KeyModifier;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -39,8 +38,7 @@ public class PressAIChatKeyEvent {
     private static boolean keyIsMatch(InputEvent.Key event) {
         KeyMapping keyChat = Minecraft.getInstance().options.keyChat;
         return event.getAction() == GLFW.GLFW_PRESS
-               && keyChat.matches(event.getKey(), event.getScanCode())
-               && keyChat.getKeyModifier().equals(KeyModifier.getActiveModifier());
+               && keyChat.matches(event.getKeyEvent());
     }
 
     @Nullable
@@ -68,7 +66,7 @@ public class PressAIChatKeyEvent {
     private static boolean isInGame() {
         Minecraft mc = Minecraft.getInstance();
         // 不能是加载界面
-        if (mc.getOverlay() != null) {
+        if (mc.gui.overlay() != null) {
             return false;
         }
         // 不能打开任何 GUI

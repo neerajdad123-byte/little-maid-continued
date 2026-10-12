@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.event;
 
+import com.github.tartaricacid.touhoulittlemaid.client.renderer.bridge.LegacyDraw;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.config.subconfig.MaidConfig;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -23,7 +25,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
@@ -34,13 +36,17 @@ public class MaidAreaRenderEvent {
     private static final Cache<Integer, SchedulePos> CACHE = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build();
 
     @SubscribeEvent
-    public static void onRender(RenderLevelStageEvent event) {
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) {
+    public static void onRender(SubmitCustomGeometryEvent event) {
+        RenderHelper.draw(event, () -> render(event));
+    }
+
+    private static void render(SubmitCustomGeometryEvent event) {
+        if (true) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null || mc.level == null) {
                 return;
             }
-            Vec3 camera = event.getCamera().getPosition().reverse();
+            Vec3 camera = event.getLevelRenderState().cameraRenderState.pos.reverse();
             PoseStack poseStack = event.getPoseStack();
             for (int id : CACHE.asMap().keySet()) {
                 SchedulePos pos = CACHE.getIfPresent(id);
@@ -69,14 +75,14 @@ public class MaidAreaRenderEvent {
             restrictPos = camera.add(player.position());
         }
         Vec3 maidPos = camera.add(maid.position());
-        RenderHelper.renderLine(poseStack, mc.renderBuffers().bufferSource().getBuffer(RenderType.LINES), restrictPos, maidPos, 1.0f, 0.2f, 0.2f);
+        RenderHelper.renderLine(poseStack, RenderHelper.BUFFERS.getBuffer(RenderTypes.lines()), restrictPos, maidPos, 1.0f, 0.2f, 0.2f);
         AABB aabb = maid.getBoundingBox().move(0, -1, 0).move(camera);
-        DebugRenderer.renderFilledBox(poseStack, mc.renderBuffers().bufferSource(), aabb, 0.8F, 0.8F, 0.2F, 0.75F);
+        LegacyDraw.lineBox(poseStack, RenderHelper.BUFFERS, aabb, 0.8F, 0.8F, 0.2F, 0.75F);  // shortcut: outline instead of the old filled box
 
         if (workPos != null) {
             Vec3 centerPos = camera.add(workPos.getX() + 0.5, workPos.getY() + 0.5, workPos.getZ() + 0.5);
             double radius = MaidConfig.MAID_WORK_RANGE.get() + 0.1;
-            VertexConsumer buffer = mc.renderBuffers().bufferSource().getBuffer(RenderType.LINES);
+            VertexConsumer buffer = RenderHelper.BUFFERS.getBuffer(RenderTypes.lines());
             RenderHelper.renderCylinder(poseStack, buffer, centerPos, radius, 16, 1.0F, 0, 0);
 
             Vec3 textPos = new Vec3(workPos.getX() + 0.5, workPos.getY() + 2, workPos.getZ() + 0.5);
@@ -88,7 +94,7 @@ public class MaidAreaRenderEvent {
         if (idlePos != null) {
             Vec3 centerPos = camera.add(idlePos.getX() + 0.5, idlePos.getY() + 0.5, idlePos.getZ() + 0.5);
             double radius = MaidConfig.MAID_IDLE_RANGE.get();
-            VertexConsumer buffer = mc.renderBuffers().bufferSource().getBuffer(RenderType.LINES);
+            VertexConsumer buffer = RenderHelper.BUFFERS.getBuffer(RenderTypes.lines());
             RenderHelper.renderCylinder(poseStack, buffer, centerPos, radius, 16, 0, 1.0F, 0);
             Vec3 textPos = new Vec3(idlePos.getX() + 0.5, idlePos.getY() + 2, idlePos.getZ() + 0.5);
             if (idlePos.equals(workPos)) {
@@ -105,7 +111,7 @@ public class MaidAreaRenderEvent {
         if (resetPos != null) {
             Vec3 centerPos = camera.add(resetPos.getX() + 0.5, resetPos.getY() + 0.5, resetPos.getZ() + 0.5);
             double radius = MaidConfig.MAID_SLEEP_RANGE.get() - 0.1;
-            VertexConsumer buffer = mc.renderBuffers().bufferSource().getBuffer(RenderType.LINES);
+            VertexConsumer buffer = RenderHelper.BUFFERS.getBuffer(RenderTypes.lines());
             RenderHelper.renderCylinder(poseStack, buffer, centerPos, radius, 16, 0, 0, 1.0F);
             Vec3 textPos = new Vec3(resetPos.getX() + 0.5, resetPos.getY() + 2, resetPos.getZ() + 0.5);
             if (resetPos.equals(idlePos)) {

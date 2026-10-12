@@ -13,7 +13,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 
 import java.util.Optional;
 
@@ -21,10 +21,14 @@ import java.util.Optional;
 @EventBusSubscriber(modid = TouhouLittleMaid.MOD_ID, value = Dist.CLIENT)
 public class ScrollRenderEvent {
     @SubscribeEvent
-    public static void onRenderWorldLastEvent(RenderLevelStageEvent event) {
+    public static void onRenderWorldLastEvent(SubmitCustomGeometryEvent event) {
+        RenderHelper.draw(event, () -> render(event));
+    }
+
+    private static void render(SubmitCustomGeometryEvent event) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-        if (RenderLevelStageEvent.Stage.AFTER_PARTICLES.equals(event.getStage()) && player != null) {
+        if (true && player != null) {
             Optional<ItemFoxScroll.TrackInfo> trackInfo = getInfo(player, player.getMainHandItem());
             if (trackInfo.isEmpty()) {
                 return;

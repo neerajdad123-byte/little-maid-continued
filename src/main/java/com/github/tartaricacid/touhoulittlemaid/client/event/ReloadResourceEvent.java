@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.client.event;
 
+import net.minecraft.resources.Identifier;
+
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.client.animation.inner.InnerAnimation;
 import com.github.tartaricacid.touhoulittlemaid.client.resource.CustomPackLoader;
@@ -25,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public final class ReloadResourceEvent extends SimplePreparableReloadListener<Void> {
     @SubscribeEvent
     public static void onRegister(AddClientReloadListenersEvent event) {
-        event.registerReloadListener(new ReloadResourceEvent());
+        event.addListener(Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "reload_resource"), new ReloadResourceEvent());
     }
 
     public static void asyncReloadAllPack() {

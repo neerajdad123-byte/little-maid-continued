@@ -75,6 +75,6 @@ public class ClientSetupEvent {
 
     @SubscribeEvent
     public static void onRegisterClientReloadListeners(AddClientReloadListenersEvent event) {
-        event.registerReloadListener(new EmojiReloadListener());
+        event.addListener(Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "emoji"), new EmojiReloadListener());
     }
 }
