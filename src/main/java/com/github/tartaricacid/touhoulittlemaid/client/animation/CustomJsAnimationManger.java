@@ -28,7 +28,10 @@ import java.util.zip.ZipFile;
 
 @OnlyIn(Dist.CLIENT)
 public class CustomJsAnimationManger {
-    public static final ScriptEngine NASHORN = new NashornScriptEngineFactory().getScriptEngine(className -> false);
+    // pack scripts may only use the mod's animation wrappers (script/*); servers can push packs, so no other Java access
+    private static final String SCRIPT_API_PACKAGE = "com.github.tartaricacid.touhoulittlemaid.client.animation.script.";
+    public static final ScriptEngine NASHORN = new NashornScriptEngineFactory().getScriptEngine(
+            className -> className.startsWith(SCRIPT_API_PACKAGE) && className.indexOf('.', SCRIPT_API_PACKAGE.length()) < 0);
     private static final Map<Identifier, Object> CUSTOM_ANIMATION_MAP = Maps.newHashMap();
 
     @Nullable
@@ -81,7 +84,8 @@ public class CustomJsAnimationManger {
             Object scriptObject = NASHORN.eval(IOUtils.toString(stream, StandardCharsets.UTF_8), bindings);
             CUSTOM_ANIMATION_MAP.put(resourceLocation, scriptObject);
             return scriptObject;
-        } catch (IOException | ScriptException e) {
+        } catch (IOException | ScriptException | RuntimeException e) {
+            // one broken pack script must not abort the whole resource reload (that leaves a black screen)
             TouhouLittleMaid.LOGGER.error("Failed to load custom animation {}", resourceLocation, e);
         }
         return null;
@@ -107,7 +111,8 @@ public class CustomJsAnimationManger {
             Object scriptObject = NASHORN.eval(IOUtils.toString(stream, StandardCharsets.UTF_8), bindings);
             CUSTOM_ANIMATION_MAP.put(resourceLocation, scriptObject);
             return scriptObject;
-        } catch (IOException | ScriptException e) {
+        } catch (IOException | ScriptException | RuntimeException e) {
+            // one broken pack script must not abort the whole resource reload (that leaves a black screen)
             TouhouLittleMaid.LOGGER.error("Failed to load custom animation {}", resourceLocation, e);
         }
         return null;

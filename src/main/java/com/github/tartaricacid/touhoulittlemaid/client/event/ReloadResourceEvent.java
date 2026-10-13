@@ -60,6 +60,11 @@ public final class ReloadResourceEvent extends SimplePreparableReloadListener<Vo
 
     @Override
     protected void apply(Void pObject, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
-        reloadAllPack();
+        try {
+            reloadAllPack();
+        } catch (RuntimeException e) {
+            // a broken model pack must not make Minecraft drop every resource pack (black screen)
+            TouhouLittleMaid.LOGGER.error("Failed to load Touhou Little Maid model packs", e);
+        }
     }
 }
