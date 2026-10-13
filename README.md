@@ -50,3 +50,7 @@ The mod jar is written to `build/libs/`.
 - **Code:** MIT. Original code © TartaricAcid and contributors; see `LICENSE`.
 - **Assets (textures, models, sounds):** CC BY-NC-SA 4.0, inherited from upstream.
   No commercial use, credit is required, and derivatives share the same license.
+
+## Beta Tester 
+All testes performed under supervision of Javier 
+
