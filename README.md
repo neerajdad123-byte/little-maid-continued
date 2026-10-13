@@ -20,3 +20,7 @@ An unofficial, community port of [Touhou Little Maid](https://github.com/Tartari
 - **Code:** MIT. Original code © TartaricAcid; see upstream `LICENSE`.
 - **Assets (textures, models, sounds):** CC BY-NC-SA 4.0, inherited from upstream.
   That means no commercial use, credit is required, and derivatives share the same license.
+
+## Beta Tester 
+All testes performed under supervision of Javier 
+  
