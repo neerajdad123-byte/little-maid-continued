@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.util;
 
+import net.neoforged.fml.jarcontents.JarContents;
+import net.neoforged.fml.ModList;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import org.apache.commons.io.FileUtils;
 
@@ -51,38 +53,19 @@ public final class GetJarResources {
     }
 
     public static void copyFolder(String sourcePath, Path targetPath) throws IOException, URISyntaxException {
-        URL url = TouhouLittleMaid.class.getResource(sourcePath);
-        if (url == null) {
-            return;
-        }
-        URI uri = url.toURI();
-        Path sourceFolderPath = Paths.get(uri);
-        try (Stream<Path> stream = Files.walk(sourceFolderPath, Integer.MAX_VALUE)) {
-            stream.forEach(source -> {
-                // 尝试对 kilt 的兼容修改，感谢 B 站用户：shiroha233
-                // 使用相对路径计算，避免URI转换产生的非法字符
-                Path relativePath = sourceFolderPath.relativize(source);
-                // 将 JAR 文件系统的相对路径转换为字符串，然后让目标文件系统重新解析
-                // 这样避免了不同文件系统 Provider 之间的冲突
-                String relativePathString = relativePath.toString().replace('\\', '/');
-                Path target = targetPath.resolve(relativePathString);
-                try {
-                    if (Files.isDirectory(source)) {
-                        Files.createDirectories(target);
-                    } else {
-                        // 确保目标目录存在
-                        Path parentDir = target.getParent();
-                        if (parentDir != null && !Files.isDirectory(parentDir)) {
-                            Files.createDirectories(parentDir);
-                        }
-                        Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-                    }
-                } catch (IOException e) {
-                    TouhouLittleMaid.LOGGER.error("Failed to copy file from {} to target: {}", source, e.getMessage());
-                } catch (Exception e) {
-                    TouhouLittleMaid.LOGGER.error("Unexpected error during file copy: {}", e.getMessage());
+        // Little Maid Continued: FML 11 does not resolve folders through Class#getResource; list them through the mod's jar contents
+        String prefix = sourcePath.startsWith("/") ? sourcePath.substring(1) : sourcePath;
+        JarContents contents = ModList.get().getModFileById(TouhouLittleMaid.MOD_ID).getFile().getContents();
+        contents.visitContent(prefix, (path, resource) -> {
+            Path target = targetPath.resolve(path.substring(prefix.length()).replaceFirst("^/", ""));
+            try {
+                Files.createDirectories(target.getParent());
+                try (InputStream in = resource.open()) {
+                    Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
                 }
-            });
-        }
+            } catch (IOException e) {
+                TouhouLittleMaid.LOGGER.error("Failed to copy built-in file {} to {}", path, target, e);
+            }
+        });
     }
 }

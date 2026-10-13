@@ -160,6 +160,11 @@ public class EntityMaidRenderer extends LegacyMobRenderer<Mob, BedrockModel<Mob>
             return;
         }
 
+        // no model pack loaded (e.g. the default pack failed to unpack): draw nothing rather than crash the game
+        if (this.mainInfo == null) {
+            return;
+        }
+
         // GeckoLib 接管渲染
         if (this.mainInfo.isGeckoModel()) {
             this.geckoEntityMaidRenderer.getAnimatableEntity(entity).setMaidInfo(this.mainInfo);
