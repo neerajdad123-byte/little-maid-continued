@@ -35,3 +35,8 @@ forge*changelog.txt
 build-log.txt
 _syms.txt
 run/
+
+# local build/run logs
+build-log.txt
+run-log.txt
+client-run.txt
