@@ -51,8 +51,7 @@ public class BedrockModel<T extends LivingEntity> extends AbstractBedrockEntityM
     @Override
     @NullMarked
     public void setupAnim(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (animations != null) {
-            Invocable invocable = (Invocable) CustomJsAnimationManger.NASHORN;
+        if (animations != null && CustomJsAnimationManger.engine() instanceof Invocable invocable) {
             if (entityIn instanceof Mob mob) {
                 IMaid maid = IMaid.convert(mob);
                 if (maid != null) {

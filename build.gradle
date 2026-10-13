@@ -223,8 +223,12 @@ dependencies {
     // YAML 库
     mcLib "org.yaml:snakeyaml:2.4"
 
-    // Little Maid Continued: NeoForge 26.x no longer ships Nashorn (custom pack JS animations); ASM comes from the game
-    mcLib("org.openjdk.nashorn:nashorn-core:15.6") {
+    // Little Maid Continued: NeoForge 26.x no longer ships Nashorn (custom pack JS animations); ASM comes from the game.
+    // Nested jar-in-jar, not shaded: Nashorn defines its own runtime module and must not live inside the mod's module.
+    implementation("org.openjdk.nashorn:nashorn-core:15.7") {
+        exclude group: 'org.ow2.asm'
+    }
+    jarJar("org.openjdk.nashorn:nashorn-core:[15.6,16)") {
         exclude group: 'org.ow2.asm'
     }
 
@@ -257,10 +261,9 @@ shadowJar {
     exclude 'META-INF/LICENSE'
 
     mergeServiceFiles()
-    minimize {
-        // Nashorn loads its classes reflectively
-        exclude(dependency('org.openjdk.nashorn:nashorn-core:.*'))
-    }
+    minimize()
+    // nested library jars (META-INF/jarjar), normally added to the disabled default jar task
+    from(tasks.named('jarJar'))
 }
 
 assemble {

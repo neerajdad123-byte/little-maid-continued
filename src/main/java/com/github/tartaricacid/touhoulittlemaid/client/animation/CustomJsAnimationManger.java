@@ -30,8 +30,24 @@ import java.util.zip.ZipFile;
 public class CustomJsAnimationManger {
     // pack scripts may only use the mod's animation wrappers (script/*); servers can push packs, so no other Java access
     private static final String SCRIPT_API_PACKAGE = "com.github.tartaricacid.touhoulittlemaid.client.animation.script.";
-    public static final ScriptEngine NASHORN = new NashornScriptEngineFactory().getScriptEngine(
-            className -> className.startsWith(SCRIPT_API_PACKAGE) && className.indexOf('.', SCRIPT_API_PACKAGE.length()) < 0);
+    private static @Nullable ScriptEngine engine;
+    private static boolean engineFailed;
+
+    /**
+     * The script engine, created on first use; null if it cannot start (pack animations are then skipped).
+     */
+    public static @Nullable ScriptEngine engine() {
+        if (engine == null && !engineFailed) {
+            try {
+                engine = new NashornScriptEngineFactory().getScriptEngine(
+                        className -> className.startsWith(SCRIPT_API_PACKAGE) && className.indexOf('.', SCRIPT_API_PACKAGE.length()) < 0);
+            } catch (Throwable e) {
+                engineFailed = true;
+                TouhouLittleMaid.LOGGER.error("JavaScript engine unavailable; custom pack animations are disabled", e);
+            }
+        }
+        return engine;
+    }
     private static final Map<Identifier, Object> CUSTOM_ANIMATION_MAP = Maps.newHashMap();
 
     @Nullable
@@ -80,11 +96,15 @@ public class CustomJsAnimationManger {
             return null;
         }
         try (InputStream stream = new FileInputStream(file)) {
-            Bindings bindings = NASHORN.createBindings();
-            Object scriptObject = NASHORN.eval(IOUtils.toString(stream, StandardCharsets.UTF_8), bindings);
+            ScriptEngine nashorn = engine();
+            if (nashorn == null) {
+                return null;
+            }
+            Bindings bindings = nashorn.createBindings();
+            Object scriptObject = nashorn.eval(IOUtils.toString(stream, StandardCharsets.UTF_8), bindings);
             CUSTOM_ANIMATION_MAP.put(resourceLocation, scriptObject);
             return scriptObject;
-        } catch (IOException | ScriptException | RuntimeException e) {
+        } catch (IOException | ScriptException | RuntimeException | LinkageError e) {
             // one broken pack script must not abort the whole resource reload (that leaves a black screen)
             TouhouLittleMaid.LOGGER.error("Failed to load custom animation {}", resourceLocation, e);
         }
@@ -107,11 +127,15 @@ public class CustomJsAnimationManger {
             return null;
         }
         try (InputStream stream = zipFile.getInputStream(entry)) {
-            Bindings bindings = NASHORN.createBindings();
-            Object scriptObject = NASHORN.eval(IOUtils.toString(stream, StandardCharsets.UTF_8), bindings);
+            ScriptEngine nashorn = engine();
+            if (nashorn == null) {
+                return null;
+            }
+            Bindings bindings = nashorn.createBindings();
+            Object scriptObject = nashorn.eval(IOUtils.toString(stream, StandardCharsets.UTF_8), bindings);
             CUSTOM_ANIMATION_MAP.put(resourceLocation, scriptObject);
             return scriptObject;
-        } catch (IOException | ScriptException | RuntimeException e) {
+        } catch (IOException | ScriptException | RuntimeException | LinkageError e) {
             // one broken pack script must not abort the whole resource reload (that leaves a black screen)
             TouhouLittleMaid.LOGGER.error("Failed to load custom animation {}", resourceLocation, e);
         }
