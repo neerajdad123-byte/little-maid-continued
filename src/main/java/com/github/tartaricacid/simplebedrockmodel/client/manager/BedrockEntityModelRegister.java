@@ -1,12 +1,10 @@
 package com.github.tartaricacid.simplebedrockmodel.client.manager;
 
+import net.neoforged.neoforge.client.resources.VanillaClientListeners;
 import com.github.tartaricacid.simplebedrockmodel.SimpleBedrockModel;
 import com.github.tartaricacid.simplebedrockmodel.client.bedrock.AbstractBedrockEntityModel;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,15 +26,15 @@ public class BedrockEntityModelRegister<T extends AbstractBedrockEntityModel<? e
 
     @SubscribeEvent
     public static void onRegisterClientReloadListenersEvent(AddClientReloadListenersEvent event) {
-        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        if (resourceManager instanceof ReloadableResourceManager manager) {
-            INSTANCE = new BedrockEntityModelRegister<>(new BedrockEntityModelSet<>());
-            ModLoader.postEvent(new BedrockEntityModelRegisterEvent(INSTANCE.modelSet));
-            // 将注册冻结
-            INSTANCE.modelSet.immutableKnowLocations();
-            // 添加到最前面，避免实体读取模型时模型还没加载完成
-            manager.listeners.addFirst(INSTANCE.modelSet);
-        }
+        INSTANCE = new BedrockEntityModelRegister<>(new BedrockEntityModelSet<>());
+        ModLoader.postEvent(new BedrockEntityModelRegisterEvent(INSTANCE.modelSet));
+        // 将注册冻结
+        INSTANCE.modelSet.immutableKnowLocations();
+        // entity and block entity renderers read these models when they are created
+        Identifier key = Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "bedrock_models");
+        event.addListener(key, INSTANCE.modelSet);
+        event.addDependency(key, VanillaClientListeners.ENTITY_RENDERER);
+        event.addDependency(key, VanillaClientListeners.BLOCK_ENTITY_RENDERER);
     }
 
     public AbstractBedrockEntityModel<? extends Entity> getModel(Identifier location) {

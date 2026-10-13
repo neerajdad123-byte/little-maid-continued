@@ -17,6 +17,12 @@ public class ImmersiveMelodiesCompat {
     }
 
     public static void addBinding(CtrlBinding binding) {
+        // animations reference these even without the mod installed
+        binding.livingEntityVar("im_pitch", ctx -> 0f);
+        binding.livingEntityVar("im_volume", ctx -> 0f);
+        binding.livingEntityVar("im_current", ctx -> 0f);
+        binding.livingEntityVar("im_delta", ctx -> 0L);
+        binding.livingEntityVar("im_time", ctx -> 0L);
     }
 
     public static final class ImmersiveMelodiesData {
