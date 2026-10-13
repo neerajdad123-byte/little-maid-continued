@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.crafting;
 
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.entity.EntityTypes;
 import com.github.tartaricacid.touhoulittlemaid.entity.item.EntityBox;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
@@ -33,11 +34,12 @@ public class AltarRecipe implements Recipe<CraftingInput> {
     private @Nullable PlacementInfo placementInfo;
     private final CraftingBookCategory category;
     private final float power;
-    private final ItemStack result;
+    // a template: item components are not bound yet while recipes load
+    private final ItemStackTemplate result;
     private final Identifier entityType;
     private final String langKey;
 
-    public AltarRecipe(String group, CraftingBookCategory category, List<Ingredient> ingredients, float power, ItemStack result, Identifier entityType, String langKey) {
+    public AltarRecipe(String group, CraftingBookCategory category, List<Ingredient> ingredients, float power, ItemStackTemplate result, Identifier entityType, String langKey) {
         this.ingredients = ingredients;
         this.group = group;
         this.category = category;
@@ -52,7 +54,7 @@ public class AltarRecipe implements Recipe<CraftingInput> {
     }
 
     public String getRecipeString() {
-        String recipeId = this.result.get(InitDataComponent.RECIPES_ID_TAG);
+        String recipeId = this.getResult().get(InitDataComponent.RECIPES_ID_TAG);
         return Objects.requireNonNullElse(recipeId, "spawn_box");
     }
 
@@ -114,7 +116,7 @@ public class AltarRecipe implements Recipe<CraftingInput> {
     }
 
     private void spawnItem(ServerLevel world, BlockPos pos) {
-        ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), this.result.copy());
+        ItemEntity itemEntity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), this.result.create());
         world.addFreshEntity(itemEntity);
     }
 
@@ -129,7 +131,7 @@ public class AltarRecipe implements Recipe<CraftingInput> {
 
     @Override
     public ItemStack assemble(CraftingInput input) {
-        return this.result.copy();
+        return this.result.create();
     }
 
     @Override
@@ -183,6 +185,10 @@ public class AltarRecipe implements Recipe<CraftingInput> {
     }
 
     public ItemStack getResult() {
+        return result.create();
+    }
+
+    public ItemStackTemplate getResultTemplate() {
         return result;
     }
 

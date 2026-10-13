@@ -1,5 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.crafting;
 
+import net.minecraft.world.item.ItemStackTemplate;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
@@ -24,7 +25,7 @@ public final class AltarRecipeSerializer {
                     CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(AltarRecipe::getCategory),
                     Ingredient.CODEC.listOf().fieldOf("ingredients").flatXmap(AltarRecipeSerializer::checkIngredients, DataResult::success).forGetter(AltarRecipe::getIngredients),
                     Codec.FLOAT.fieldOf("power").forGetter(AltarRecipe::getPower),
-                    ItemStack.CODEC.fieldOf("result").forGetter(AltarRecipe::getResult),
+                    ItemStackTemplate.CODEC.fieldOf("result").forGetter(AltarRecipe::getResultTemplate),
                     Identifier.CODEC.fieldOf("entity").forGetter(AltarRecipe::getEntityType),
                     Codec.STRING.optionalFieldOf("lang", StringUtils.EMPTY).forGetter(AltarRecipe::getLangKey)
             ).apply(instance, AltarRecipe::new)
@@ -52,7 +53,7 @@ public final class AltarRecipeSerializer {
             ingredients.add(Ingredient.CONTENTS_STREAM_CODEC.decode(byteBuf));
         }
         float power = byteBuf.readFloat();
-        ItemStack result = ItemStack.STREAM_CODEC.decode(byteBuf);
+        ItemStackTemplate result = ItemStackTemplate.STREAM_CODEC.decode(byteBuf);
         Identifier entityType = byteBuf.readIdentifier();
         String langKey = byteBuf.readUtf();
         return new AltarRecipe(group, category, ingredients, power, result, entityType, langKey);
@@ -66,7 +67,7 @@ public final class AltarRecipeSerializer {
             Ingredient.CONTENTS_STREAM_CODEC.encode(friendlyByteBuf, ingredient);
         }
         friendlyByteBuf.writeFloat(altarRecipe.getPower());
-        ItemStack.STREAM_CODEC.encode(friendlyByteBuf, altarRecipe.getResult());
+        ItemStackTemplate.STREAM_CODEC.encode(friendlyByteBuf, altarRecipe.getResultTemplate());
         friendlyByteBuf.writeIdentifier(altarRecipe.getEntityType());
         friendlyByteBuf.writeUtf(altarRecipe.getLangKey());
     }

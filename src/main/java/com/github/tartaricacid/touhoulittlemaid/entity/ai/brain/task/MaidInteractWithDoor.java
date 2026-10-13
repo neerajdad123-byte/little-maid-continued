@@ -1,7 +1,6 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.ai.brain.task;
 
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
-import com.github.tartaricacid.touhoulittlemaid.mixin.accessor.FenceGateBlockAccessor;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.kinds.OptionalBox;
 import net.minecraft.core.BlockPos;
@@ -179,10 +178,9 @@ public class MaidInteractWithDoor {
 
     private static void setFenceGate(@Nullable Entity entity, Level serverLevel, BlockState blockstate, BlockPos blockPos, boolean isOpen) {
         serverLevel.setBlock(blockPos, blockstate.setValue(FenceGateBlock.OPEN, isOpen), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
-        if (blockstate.getBlock() instanceof FenceGateBlockAccessor fenceGateBlock) {
-            SoundEvent openSound = fenceGateBlock.tlmOpenSound();
-            SoundEvent closeSound = fenceGateBlock.tlmCloseSound();
-            serverLevel.playSound(entity, blockPos, isOpen ? openSound : closeSound, SoundSource.BLOCKS, 1.0F, serverLevel.getRandom().nextFloat() * 0.1F + 0.9F);
+        if (blockstate.getBlock() instanceof FenceGateBlock fenceGateBlock) {
+            // sounds are public fields in 26.x
+            serverLevel.playSound(entity, blockPos, isOpen ? fenceGateBlock.openSound : fenceGateBlock.closeSound, SoundSource.BLOCKS, 1.0F, serverLevel.getRandom().nextFloat() * 0.1F + 0.9F);
         }
         serverLevel.gameEvent(entity, isOpen ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
     }

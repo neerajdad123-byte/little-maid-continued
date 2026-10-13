@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.mixin;
 
+import net.minecraft.world.phys.Vec3;
+import java.util.List;
 import com.github.tartaricacid.touhoulittlemaid.compat.immersivemelodies.server.ImmersiveMelodiesServerCompat;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import net.minecraft.core.NonNullList;
@@ -28,13 +30,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(value = Mob.class, priority = 999)
 public class MobInteractMixin {
-    @Shadow
-    @Final
-    private NonNullList<ItemStack> handItems;
-
     @SuppressWarnings("all")
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
-    private void touhouLittleMaid$RightClick(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+    private void touhouLittleMaid$RightClick(Player player, InteractionHand hand, Vec3 location, CallbackInfoReturnable<InteractionResult> cir) {
         if (!((Object) this instanceof EntityMaid maid)) {
             return;
         }
@@ -45,7 +43,7 @@ public class MobInteractMixin {
             return;
         }
         // 仅在手上有乐器时，才执行 mixin 过的逻辑，尽可能减少对原版交互逻辑的影响
-        for (ItemStack handItem : this.handItems) {
+        for (ItemStack handItem : List.of(maid.getMainHandItem(), maid.getOffhandItem())) {
             if (ImmersiveMelodiesServerCompat.isInstrumentItem(handItem)) {
                 InteractionResult result = maid.mobInteract(player, hand);
                 if (result.consumesAction()) {

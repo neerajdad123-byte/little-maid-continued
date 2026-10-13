@@ -26,7 +26,6 @@
     "accessor.ArrowAccessor",
     "accessor.CropBlockAccessor",
     "accessor.EntityAccessor",
-    "accessor.FenceGateBlockAccessor",
     "accessor.LivingEntityAccessor"
   ],
   "client": [

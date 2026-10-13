@@ -1,5 +1,12 @@
 package com.github.tartaricacid.touhoulittlemaid.client.init;
 
+import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.entity.ClientAvatarEntity;
+import net.minecraft.world.entity.Avatar;
+import net.neoforged.neoforge.client.renderstate.AvatarRenderStateModifier;
+import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
@@ -37,6 +44,7 @@ import static net.neoforged.neoforge.client.gui.VanillaGuiLayers.HOTBAR;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = TouhouLittleMaid.MOD_ID)
 public class ClientSetupEvent {
+    public static final ContextKey<Boolean> CARRYING_MAID = new ContextKey<>(Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "carrying_maid"));
     public static final KeyMapping.Category KEY_CATEGORY = new KeyMapping.Category(Identifier.fromNamespaceAndPath(TouhouLittleMaid.MOD_ID, "main"));
 
     @SubscribeEvent
@@ -62,6 +70,16 @@ public class ClientSetupEvent {
         event.registerAbove(CROSSHAIR, getResourceLocation("tlm_maid_tips"), new MaidTipsOverlay());
         event.registerAbove(CROSSHAIR, getResourceLocation("tlm_broom_tips"), new BroomTipsOverlay());
         event.registerAbove(HOTBAR, getResourceLocation("tlm_show_power"), new ShowPowerOverlay());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
+        event.registerAvatarEntityModifier(new AvatarRenderStateModifier() {
+            @Override
+            public <T extends Avatar & ClientAvatarEntity> void accept(T avatar, AvatarRenderState state) {
+                state.setRenderData(CARRYING_MAID, avatar.getFirstPassenger() instanceof EntityMaid);
+            }
+        });
     }
 
     @SubscribeEvent

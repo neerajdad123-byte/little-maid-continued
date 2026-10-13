@@ -1,5 +1,7 @@
 package com.github.tartaricacid.touhoulittlemaid.entity.passive;
 
+import java.util.function.Supplier;
+import com.google.common.base.Suppliers;
 import com.github.tartaricacid.touhoulittlemaid.client.renderer.legacy.HasCullingBox;
 
 import net.minecraft.world.item.ItemStackTemplate;
@@ -509,11 +511,12 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
     }
 
     @SuppressWarnings("deprecation")
-    private static final Brain.Provider<EntityMaid> BRAIN_PROVIDER = Brain.provider(MaidBrain.getMemoryTypes(), MaidBrain.getSensorTypes(), maid -> List.of());
+    // lazy: memory and sensor types are registered after the entity type
+    private static final Supplier<Brain.Provider<EntityMaid>> BRAIN_PROVIDER = Suppliers.memoize(() -> Brain.provider(MaidBrain.getMemoryTypes(), MaidBrain.getSensorTypes(), maid -> List.of()));
 
     @Override
     protected Brain<EntityMaid> makeBrain(Brain.Packed packedBrain) {
-        Brain<EntityMaid> brain = BRAIN_PROVIDER.makeBrain(this, packedBrain);
+        Brain<EntityMaid> brain = BRAIN_PROVIDER.get().makeBrain(this, packedBrain);
         MaidBrain.registerBrainGoals(brain, this);
         return brain;
     }
@@ -522,7 +525,7 @@ public class EntityMaid extends TamableAnimal implements CrossbowAttackMob, IMai
         Brain<EntityMaid> brain = this.getBrain();
         brain.stopAll(serverWorldIn, this);
         // Little Maid Continued: copyWithoutBehaviors() is gone; rebuild the brain keeping its memories
-        this.brain = BRAIN_PROVIDER.makeBrain(this, brain.pack());
+        this.brain = BRAIN_PROVIDER.get().makeBrain(this, brain.pack());
         MaidBrain.registerBrainGoals(this.getBrain(), this);
     }
 

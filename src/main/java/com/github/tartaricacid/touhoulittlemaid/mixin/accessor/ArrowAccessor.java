@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(value = AbstractArrow.class)
 public interface ArrowAccessor {
-    @Accessor("inGround")
+    @Invoker("isInGround")
     boolean tlmInGround();
 
     // MC 26.x removed the public getter
